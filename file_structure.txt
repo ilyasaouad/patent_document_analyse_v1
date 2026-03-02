@@ -1,0 +1,71 @@
+patent_document_analyse/
+|
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── test_extraction.py
+│
+├── analyzer/
+│   ├── __init__.py
+│   └── streamlit_app.py
+│
+├── backend_extract/
+│   ├── __init__.py
+│   ├── docx_extractor.py
+│   ├── docx_image_ocr.py
+│   ├── image_ocr.py
+│   ├── main.py
+│   ├── mineru_wrapper.py
+│   ├── pdf_extractor.py
+│   │
+│   ├── demo/
+│   │   ├── demo.py
+│   │   └── pdfs/
+│   │
+│   ├── mineru/
+│   │   ├── __init__.py
+│   │   ├── version.py
+│   │   │
+│   │   ├── backend/
+│   │   │   ├── __init__.py
+│   │   │   ├── utils.py
+│   │   │   ├── hybrid/
+│   │   │   ├── pipeline/
+│   │   │   └── vlm/
+│   │   │
+│   │   ├── cli/
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py
+│   │   │   ├── common.py
+│   │   │   ├── fast_api.py
+│   │   │   ├── gradio_app.py
+│   │   │   ├── models_download.py
+│   │   │   └── vlm_server.py
+│   │   │
+│   │   ├── data/
+│   │   │   ├── __init__.py
+│   │   │   ├── data_reader_writer/
+│   │   │   ├── io/
+│   │   │   └── utils/
+│   │   │
+│   │   ├── model/
+│   │   │   ├── __init__.py
+│   │   │   ├── layout/
+│   │   │   ├── mfd/
+│   │   │   ├── mfr/
+│   │   │   ├── ocr/
+│   │   │   ├── ori_cls/
+│   │   │   ├── reading_order/
+│   │   │   ├── table/
+│   │   │   ├── utils/
+│   │   │   └── vlm/
+│   │   │
+│   │   ├── resources/
+│   │   │
+│   │   └── utils/
+│   │
+│   └── models -> /c/Users/iao/.cache/modelscope (symlink)
+│
+└── config/
+    ├── __init__.py
+    └── settings.py

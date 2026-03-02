@@ -1,4 +1,4 @@
-# Patent Document Text Extract Service
+# Patent Document Analyse Service
 
 REST API service for extracting text from patent documents using MinerU OCR.
 

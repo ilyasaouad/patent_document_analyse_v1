@@ -1,4 +1,4 @@
-# Patent Document Text Extract Service Dependencies
+# Patent Document Analyse Service Dependencies
 
 # Web Framework
 fastapi>=0.100.0

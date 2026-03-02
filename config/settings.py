@@ -1,5 +1,5 @@
 """
-Configuration settings for the Patent Document Text Extract Service.
+Configuration settings for the Patent Document Analyse Service.
 """
 
 import os
@@ -9,7 +9,7 @@ from pathlib import Path
 class Settings:
     """Application configuration settings."""
 
-    APP_NAME = "Patent Document Text Extract Service"
+    APP_NAME = "Patent Document Analyse Service"
     APP_VERSION = "1.0.0"
 
     BASE_DIR = Path(__file__).parent.parent

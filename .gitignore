@@ -28,7 +28,20 @@ Thumbs.db
 
 # Logs
 *.log
+output.log
 
 # Temporary
 *.tmp
 temp/
+
+# Extracted text output (generated at runtime)
+*_text.txt
+analyzer/document_original_input/
+analyzer/document_text_output/
+
+# Model weights (too large for git)
+backend_extract/models
+backend_extract/mineru/resources/
+
+# Accidental pip artifacts
+=0.6.0b1
