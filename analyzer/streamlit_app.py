@@ -16,7 +16,6 @@ import shutil
 from pathlib import Path
 
 os.environ['MINERU_MODEL_SOURCE'] = 'local'
-os.environ['TESSDATA_PREFIX'] = r'C:\Users\iao\AppData\Local\Programs\Tesseract-OCR\tessdata'
 
 project_root = Path(__file__).parent.parent.absolute()
 analyzer_dir = Path(__file__).parent.absolute()
@@ -64,18 +63,22 @@ with col3:
 st.markdown("---")
 
 
-def save_to_input_dir(upload_file, doc_type: str) -> Path:
+def clear_folder(folder: Path):
+    """Delete all files in a folder."""
+    for f in folder.iterdir():
+        if f.is_file():
+            f.unlink()
+
+
+def save_to_input_dir(upload_file) -> Path:
     """
     Save uploaded file to analyzer/document_original_input/
-    with a clear name like 'description.pdf' or 'claims.docx'.
-    Returns the saved file path.
+    using its original file name.
     """
     if not upload_file:
         return None
 
-    ext = Path(upload_file.name).suffix.lower()
-    saved_name = f"{doc_type}{ext}"
-    saved_path = INPUT_DIR / saved_name
+    saved_path = INPUT_DIR / upload_file.name
 
     with open(saved_path, "wb") as f:
         f.write(upload_file.getvalue())
@@ -83,13 +86,13 @@ def save_to_input_dir(upload_file, doc_type: str) -> Path:
     return saved_path
 
 
-def save_to_output_dir(text: str, doc_type: str) -> Path:
+def save_to_output_dir(text: str, original_name: str) -> Path:
     """
     Save extracted text to analyzer/document_text_output/
-    as a .md file (e.g. 'description.md').
-    Returns the saved file path.
+    as a .md file using the original file name (with .md extension).
     """
-    output_path = OUTPUT_DIR / f"{doc_type}.md"
+    stem = Path(original_name).stem  # e.g. 'Besk_Patent_2025'
+    output_path = OUTPUT_DIR / f"{stem}.md"
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(text)
     return output_path
@@ -101,10 +104,14 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
     else:
         with st.spinner("Extracting text..."):
 
+            # ── Clear old files from both folders ──
+            clear_folder(INPUT_DIR)
+            clear_folder(OUTPUT_DIR)
+
             # ── Step 1: Save original uploads to document_original_input ──
-            desc_path = save_to_input_dir(desc_file, "description")
-            claims_path = save_to_input_dir(claims_file, "claims") if claims_file else None
-            drawings_path = save_to_input_dir(drawings_file, "drawings") if drawings_file else None
+            desc_path = save_to_input_dir(desc_file)
+            claims_path = save_to_input_dir(claims_file) if claims_file else None
+            drawings_path = save_to_input_dir(drawings_file) if drawings_file else None
 
             try:
                 # ── Step 2: Send to backend_extract for processing ──
@@ -120,9 +127,9 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 drawings_text = result.get("drawings_text", "")
 
                 # ── Step 3: Save extracted text to document_text_output as .md ──
-                desc_output = save_to_output_dir(desc_text, "description") if desc_text else None
-                claims_output = save_to_output_dir(claims_text, "claims") if claims_text else None
-                drawings_output = save_to_output_dir(drawings_text, "drawings") if drawings_text else None
+                desc_output = save_to_output_dir(desc_text, desc_file.name) if desc_text else None
+                claims_output = save_to_output_dir(claims_text, claims_file.name) if claims_text else None
+                drawings_output = save_to_output_dir(drawings_text, drawings_file.name) if drawings_text else None
 
                 # ── Step 4: Show results ──
                 st.success("✅ Extraction Complete!")

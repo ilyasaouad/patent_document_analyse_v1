@@ -10,7 +10,7 @@ pypdf>=3.0.0
 docx2pdf>=0.1.8
 
 # OCR
-pytesseract>=0.3.10
+surya-ocr>=0.17.0
 Pillow>=9.5.0
 
 # PDF Processing (MinerU dependencies)

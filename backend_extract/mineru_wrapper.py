@@ -146,16 +146,12 @@ class MinerUWrapper:
                 md_text = re.sub(r"\n{3,}", "\n\n", md_text).strip()
                 extracted_parts.append(md_text)
 
-            # ── Layer 3: Tesseract deep OCR on cropped images ──
+            # ── Layer 3: Surya deep OCR on cropped images ──
             try:
-                import pytesseract
                 from PIL import Image
-                import shutil
-                from backend_extract.docx_image_ocr import _find_tesseract
+                from backend_extract.image_ocr import ImageOCR
 
-                tesseract_cmd = _find_tesseract()
-                if tesseract_cmd:
-                    pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+                ocr = ImageOCR(lang=lang)
 
                 # Find all images in the MinerU output
                 img_files = []
@@ -165,31 +161,19 @@ class MinerUWrapper:
                             img_files.append(Path(root) / f)
 
                 if img_files:
-                    # Verify Tesseract is actually callable
-                    has_tesseract = False
-                    try:
-                        import subprocess
-                        cmd = pytesseract.pytesseract.tesseract_cmd or "tesseract"
-                        subprocess.run([cmd, "--version"], capture_output=True, check=True)
-                        has_tesseract = True
-                    except Exception:
-                        pass
+                    temp_ocr_results = []
+                    for img_file in img_files:
+                        try:
+                            img_text = ocr.extract_text(str(img_file))
+                            if img_text.strip():
+                                temp_ocr_results.append(
+                                    f"\n[Text from {img_file.name}]:\n{img_text.strip()}"
+                                )
+                        except Exception:
+                            pass
 
-                    if has_tesseract:
-                        temp_ocr_results = []
-                        for img_file in img_files:
-                            try:
-                                img = Image.open(img_file)
-                                img_text = pytesseract.image_to_string(img, config="--psm 11")
-                                if img_text.strip():
-                                    temp_ocr_results.append(
-                                        f"\n[Text from {img_file.name}]:\n{img_text.strip()}"
-                                    )
-                            except Exception:
-                                pass
-
-                        if temp_ocr_results:
-                            extracted_parts.extend(temp_ocr_results)
+                    if temp_ocr_results:
+                        extracted_parts.extend(temp_ocr_results)
             except ImportError:
                 pass
 
