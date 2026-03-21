@@ -21,6 +21,8 @@ project_root = Path(__file__).parent.parent.absolute()
 analyzer_dir = Path(__file__).parent.absolute()
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "backend_extract"))
+# Allow importing from ai-detect folder
+sys.path.insert(0, str(analyzer_dir / "ai-detect"))
 os.chdir(project_root)
 
 # Create input/output directories
@@ -31,6 +33,7 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 
 import streamlit as st
 from backend_extract import MinerUWrapper
+from ai_document_detect import ai_detect_analyse
 
 st.set_page_config(
     page_title="Patent Document Extractor", page_icon="📄", layout="wide"
@@ -86,13 +89,12 @@ def save_to_input_dir(upload_file) -> Path:
     return saved_path
 
 
-def save_to_output_dir(text: str, original_name: str) -> Path:
+def save_to_output_dir(text: str, file_name: str) -> Path:
     """
     Save extracted text to analyzer/document_text_output/
-    as a .md file using the original file name (with .md extension).
+    with the given file_name.
     """
-    stem = Path(original_name).stem  # e.g. 'Besk_Patent_2025'
-    output_path = OUTPUT_DIR / f"{stem}.md"
+    output_path = OUTPUT_DIR / file_name
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(text)
     return output_path
@@ -127,9 +129,26 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 drawings_text = result.get("drawings_text", "")
 
                 # ── Step 3: Save extracted text to document_text_output as .md ──
-                desc_output = save_to_output_dir(desc_text, desc_file.name) if desc_text else None
-                claims_output = save_to_output_dir(claims_text, claims_file.name) if claims_text else None
-                drawings_output = save_to_output_dir(drawings_text, drawings_file.name) if drawings_text else None
+                desc_output = save_to_output_dir(desc_text, "description.md") if desc_text else None
+                claims_output = save_to_output_dir(claims_text, "claims.md") if claims_text else None
+                drawings_output = save_to_output_dir(drawings_text, "drawings.md") if drawings_text else None
+
+                # ── Step 3.5: Post-Processing & Auto-Extract Claims ──
+                try:
+                    analyzer = ai_detect_analyse(input_dir=str(OUTPUT_DIR))
+                except Exception as analyzer_e:
+                    st.warning(f"AI Detection analyzer encountered an error: {analyzer_e}")
+
+                extracted_claims_path = OUTPUT_DIR / "claims_from_description.md"
+                extracted_claims_text = ""
+                if extracted_claims_path.exists():
+                    with open(extracted_claims_path, "r", encoding="utf-8") as f:
+                        extracted_claims_text = f.read()
+                        
+                desc_only_path = OUTPUT_DIR / "description_only.md"
+                if desc_only_path.exists():
+                    with open(desc_only_path, "r", encoding="utf-8") as f:
+                        desc_text = f.read()
 
                 # ── Step 4: Show results ──
                 st.success("✅ Extraction Complete!")
@@ -142,7 +161,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 output_files = [f for f in OUTPUT_DIR.iterdir() if f.is_file()]
                 st.code("\n".join([f"  {f.name}" for f in output_files]))
 
-                tab1, tab2, tab3 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings"])
+                tab1, tab2, tab3, tab4 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims"])
 
                 with tab1:
                     if desc_text:
@@ -161,6 +180,12 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         st.text_area("Drawings Text", value=drawings_text, height=500)
                     else:
                         st.info("No drawings file was provided")
+                        
+                with tab4:
+                    if extracted_claims_text:
+                        st.text_area("Claims (Auto-Extracted from Description)", value=extracted_claims_text, height=500)
+                    else:
+                        st.info("No claims were auto-extracted from the description.")
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
