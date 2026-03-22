@@ -21,8 +21,6 @@ project_root = Path(__file__).parent.parent.absolute()
 analyzer_dir = Path(__file__).parent.absolute()
 sys.path.insert(0, str(project_root))
 sys.path.insert(0, str(project_root / "backend_extract"))
-# Allow importing from ai-detect folder
-sys.path.insert(0, str(analyzer_dir / "ai-detect"))
 os.chdir(project_root)
 
 # Create input/output directories

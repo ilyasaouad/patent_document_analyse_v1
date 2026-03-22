@@ -41,7 +41,7 @@ class ClaimsExtractor:
         Check if 'claims.md' or 'claims_from_description.md' is among the loaded documents.
         If not, attempt to extract the claims section from 'description.md'.
         """
-        has_claims = any(doc['file_name'] in ['claims.md', 'claims_from_description.md'] for doc in self.documents)
+        has_claims = any(doc['file_name'] in ['claims.md', 'claims_from_description.md', 'claims_from_description_empty.md'] for doc in self.documents)
         if has_claims:
             return
             
@@ -79,31 +79,43 @@ class ClaimsExtractor:
             print("Regex extraction successfully validated. Bypassing LLM.")
             
         # --- Save the Final Decided Outputs ---
-        if final_claims:
-            claims_file_name = "claims_from_description.md"
-            claims_file_path = os.path.join(self.input_dir, claims_file_name)
-            
-            desc_only_file_name = "description_only.md"
-            desc_only_file_path = os.path.join(self.input_dir, desc_only_file_name)
-            
-            try:
+        desc_only_file_name = "description_only.md"
+        desc_only_file_path = os.path.join(self.input_dir, desc_only_file_name)
+        
+        try:
+            if final_claims:
+                claims_file_name = "claims_from_description.md"
+                claims_file_path = os.path.join(self.input_dir, claims_file_name)
+                
                 # Write the definitive claims
                 with open(claims_file_path, 'w', encoding='utf-8') as f:
                     f.write(final_claims)
-                    
-                # Write the remaining description
-                with open(desc_only_file_path, 'w', encoding='utf-8') as f:
-                    f.write(final_remaining)
-                    
-                # Delete the original description.md so downstream analysis only reads the split files
-                orig_desc_path = desc_doc['file_path']
-                if os.path.exists(orig_desc_path):
-                    os.remove(orig_desc_path)
-                
                 print(f"Successfully saved definitive backend claims to {claims_file_name}")
-                print(f"Updated description saved as {desc_only_file_name}")
-            except Exception as e:
-                print(f"Error saving updated files: {e}")
+                
+                output_remaining_desc = final_remaining
+            else:
+                claims_file_name = "claims_from_description_empty.md"
+                claims_file_path = os.path.join(self.input_dir, claims_file_name)
+                
+                # Write a completely empty file explicitly to denote zero claims found
+                open(claims_file_path, 'w').close()
+                print(f"Extraction thoroughly failed. Generated placeholder: {claims_file_name}")
+                
+                output_remaining_desc = orig_text
+                
+            # Always write the remaining description
+            with open(desc_only_file_path, 'w', encoding='utf-8') as f:
+                f.write(output_remaining_desc)
+                
+            # Always delete the original mixed description.md so downstream analysis is clean
+            orig_desc_path = desc_doc['file_path']
+            if os.path.exists(orig_desc_path):
+                os.remove(orig_desc_path)
+            
+            print(f"Updated description saved as {desc_only_file_name}")
+            
+        except Exception as e:
+            print(f"Error saving updated files: {e}")
 
     def _clean_margin_numbers(self, text: str) -> str:
         """
@@ -233,7 +245,7 @@ class ClaimsExtractor:
 
 if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    analyzer_dir = os.path.dirname(current_dir)
-    document_dir = os.path.join(analyzer_dir, "document_text_output")
+    # The script is now in the analyzer root folder
+    document_dir = os.path.join(current_dir, "document_text_output")
     print(f"Running ClaimsExtractor on: {document_dir}")
     extractor = ClaimsExtractor(input_dir=document_dir)
