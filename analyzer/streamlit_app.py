@@ -33,7 +33,7 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 
 import streamlit as st
 from backend_extract import MinerUWrapper
-from ai_document_detect import ai_detect_analyse
+from extract_claims_section import ClaimsExtractor
 
 st.set_page_config(
     page_title="Patent Document Extractor", page_icon="📄", layout="wide"
@@ -135,9 +135,9 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
 
                 # ── Step 3.5: Post-Processing & Auto-Extract Claims ──
                 try:
-                    analyzer = ai_detect_analyse(input_dir=str(OUTPUT_DIR))
+                    extractor = ClaimsExtractor(input_dir=str(OUTPUT_DIR))
                 except Exception as analyzer_e:
-                    st.warning(f"AI Detection analyzer encountered an error: {analyzer_e}")
+                    st.warning(f"Claims Extractor encountered an error: {analyzer_e}")
 
                 extracted_claims_path = OUTPUT_DIR / "claims_from_description.md"
                 extracted_claims_text = ""
@@ -183,9 +183,9 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         
                 with tab4:
                     if extracted_claims_text:
-                        st.text_area("Claims (Auto-Extracted from Description)", value=extracted_claims_text, height=500)
+                        st.text_area("Claims (Auto-Extracted definitively)", value=extracted_claims_text, height=500)
                     else:
-                        st.info("No claims were auto-extracted from the description.")
+                        st.info("No claims were algorithmically detected in the description.")
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
