@@ -33,6 +33,9 @@ import streamlit as st
 from backend_extract import MinerUWrapper
 from extract_claims_section import ClaimsExtractor
 
+sys.path.insert(0, str(analyzer_dir / "ai_generated_detection"))
+from ai_patent_analyzer import AIPatentAnalyzer
+
 st.set_page_config(
     page_title="Patent Document Extractor", page_icon="📄", layout="wide"
 )
@@ -62,13 +65,20 @@ with col3:
     )
 
 st.markdown("---")
+# Deep AI Detection is now always enabled automatically.
+st.markdown("---")
 
 
 def clear_folder(folder: Path):
-    """Delete all files in a folder."""
+    """Delete all files in a folder, safely jumping over files locked by Windows."""
     for f in folder.iterdir():
         if f.is_file():
-            f.unlink()
+            try:
+                f.unlink()
+            except PermissionError:
+                print(f"Warning: Could not delete {f.name} because it is locked by another process (like MS Word).")
+            except Exception as e:
+                print(f"Warning: Failed to delete {f.name}: {e}")
 
 
 def save_to_input_dir(upload_file) -> Path:
@@ -148,8 +158,25 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                     with open(desc_only_path, "r", encoding="utf-8") as f:
                         desc_text = f.read()
 
+                # ── Step 3.6: Deep AI Detection ──
+                ai_result = None
+                try:
+                    with st.spinner("🤖 Running Deep AI Detection (This can take a few minutes on local LLMs)..."):
+                        # Use the new modular AI Patent Analyzer
+                        ai_analyzer = AIPatentAnalyzer(input_dir=str(OUTPUT_DIR))
+                        ai_result = ai_analyzer.run_analysis()
+                except Exception as ai_e:
+                    st.warning(f"AI Detection encountered an error: {ai_e}")
+
                 # ── Step 4: Show results ──
-                st.success("✅ Extraction Complete!")
+                st.success("✅ Extraction & Processing Complete!")
+                
+                # Proactive Drawing Warning
+                if not drawings_text and desc_text:
+                    import re
+                    drawing_patterns = r'(?i)(brief description of the drawings?|accompanying drawings?|referring to figure|shown in fig|figur\s+\d+|fig\.\s*\d+|tegning\s+\d+|vist i figur)'
+                    if re.search(drawing_patterns, desc_text):
+                        st.warning("⚠️ **Notice:** Your description explicitly references drawings (like 'Fig. 1' or 'Tegning'), but no Drawing file was uploaded! You might want to upload it for a more complete analysis.")
 
                 st.markdown("**📂 Input documents saved to:**")
                 input_files = [f for f in INPUT_DIR.iterdir() if f.is_file()]
@@ -159,7 +186,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 output_files = [f for f in OUTPUT_DIR.iterdir() if f.is_file()]
                 st.code("\n".join([f"  {f.name}" for f in output_files]))
 
-                tab1, tab2, tab3, tab4 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims"])
+                tab1, tab2, tab3, tab4, tab5 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis"])
 
                 with tab1:
                     if desc_text:
@@ -184,6 +211,33 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         st.text_area("Claims (Auto-Extracted definitively)", value=extracted_claims_text, height=500)
                     else:
                         st.info("No claims were algorithmically detected in the description.")
+                        
+                with tab5:
+                    if ai_result:
+                        if ai_result.risk_level == "ERROR":
+                            st.error(f"AI Detection failed. Make sure documents were properly extracted.")
+                        else:
+                            st.subheader("📊 AI Detection Result")
+                            colA, colB = st.columns(2)
+                            with colA:
+                                st.metric("AI Generated", "YES ⚠️" if ai_result.is_likely_ai_generated else "NO ✓")
+                                st.metric("Risk Level", ai_result.risk_level)
+                            with colB:
+                                st.metric("Confidence Score", f"{ai_result.confidence_score:.1%}")
+                                st.metric("Main Driver", "Anchor Comparison")
+                            
+                            st.markdown("### 📋 Recommendations")
+                            for rec in ai_result.recommendations:
+                                st.markdown(f"- {rec}")
+                            
+                            st.markdown("### 📈 Feature Scores")    
+                            st.json(ai_result.feature_scores)
+                                
+                            st.markdown("### 🔍 Detailed Analysis")
+                            with st.expander("View Raw JSON Metrics"):
+                                st.json(ai_result.detailed_analysis)
+                    else:
+                        st.warning("No result produced by AI Analyzer.")
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")

@@ -27,6 +27,12 @@ class Settings:
 
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
+    # LLM Configuration for AI Detection
+    OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "gpt-oss:120b-cloud")
+    AI_DETECTION_THRESHOLD = float(os.getenv("AI_DETECTION_THRESHOLD", "0.6"))
+    LLM_API_KEY = os.getenv("LLM_API_KEY", "")
+
     @classmethod
     def ensure_directories(cls):
         """Create necessary directories if they don't exist."""

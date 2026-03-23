@@ -40,14 +40,25 @@ class MinerUWrapper:
         if not path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
 
-        # Auto-convert DOCX to PDF before sending to MinerU
-        pdf_path, was_converted = self._ensure_pdf(path)
-        try:
-            return self._extract_with_mineru(pdf_path, method, lang)
-        finally:
-            # Clean up the temporary PDF if we created one
-            if was_converted and pdf_path.exists():
-                pdf_path.unlink()
+        if path.suffix.lower() == ".docx":
+            try:
+                # Attempt to convert DOCX to PDF so MinerU can perform advanced layout OCR
+                pdf_path, was_converted = self._ensure_pdf(path)
+                try:
+                    return self._extract_with_mineru(pdf_path, method, lang)
+                finally:
+                    if was_converted and pdf_path.exists():
+                        pdf_path.unlink()
+            except Exception as e:
+                # Microsoft Word COM Error (e.g., Open.SaveAs) occurred.
+                # Fallback to the native DocxExtractor that bypasses PDF conversion entirely!
+                print(f"MinerU docx2pdf conversion failed ({str(e)}). Automatically falling back to native Python DocxExtractor.")
+                from backend_extract.docx_extractor import DocxExtractor
+                extractor = DocxExtractor()
+                text = extractor.extract(str(path), lang=lang)
+                return text, str(path)
+        else:
+            return self._extract_with_mineru(path, method, lang)
 
     def _extract_with_mineru(self, path: Path, method: str, lang: str) -> Tuple[str, str]:
         """Standard extraction: MinerU + image OCR replacement."""
@@ -221,14 +232,24 @@ class MinerUWrapper:
             result["claims_text"] = ""
 
         if drawings_path:
-            # Auto-convert DOCX to PDF if needed, then use 3-layer drawing extraction
             draw_path = Path(drawings_path)
-            pdf_path, was_converted = self._ensure_pdf(draw_path)
-            try:
-                drawings_text, _ = self._extract_drawings(pdf_path, method, lang)
-            finally:
-                if was_converted and pdf_path.exists():
-                    pdf_path.unlink()
+            if draw_path.suffix.lower() == ".docx":
+                try:
+                    # Auto-convert DOCX to PDF if needed, then use 3-layer drawing extraction
+                    pdf_path, was_converted = self._ensure_pdf(draw_path)
+                    try:
+                        drawings_text, _ = self._extract_drawings(pdf_path, method, lang)
+                    finally:
+                        if was_converted and pdf_path.exists():
+                            pdf_path.unlink()
+                except Exception as e:
+                    print(f"Drawings docx2pdf conversion failed ({str(e)}). Falling back to DocxExtractor.")
+                    from backend_extract.docx_extractor import DocxExtractor
+                    extractor = DocxExtractor()
+                    drawings_text = extractor.extract(str(draw_path), lang=lang)
+            else:
+                drawings_text, _ = self._extract_drawings(draw_path, method, lang)
+                
             result["drawings_text"] = drawings_text
         else:
             result["drawings_text"] = ""
