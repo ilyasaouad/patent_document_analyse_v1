@@ -1,0 +1,101 @@
+{
+  "is_likely_ai_generated": false,
+  "confidence_score": 0.542,
+  "risk_level": "LOW",
+  "feature_scores": {
+    "fingerprint": 0.42,
+    "anchor_similarity": 0.55,
+    "hallucination": 0.78,
+    "drawing": 0.4
+  },
+  "detailed_analysis": {
+    "fingerprint_analysis": {
+      "score": 0.42,
+      "findings": [
+        "Moderately uniform sentence length with many long, complex sentences",
+        "Repetitive structural phrasing such as \"In one aspect\", \"In another aspect\", \"In yet another aspect\"",
+        "Frequent use of passive constructions and generic terminology",
+        "Overly structured sections and paragraphs of similar length typical of templated writing"
+      ]
+    },
+    "anchor_analysis": {
+      "similarity": 0.55,
+      "findings": [
+        "Both texts use the same core technical terminology (e.g., \"multi‑dimensional probability wave\", \"n‑dimensional space\", \"satellite applications\", \"quantum‑inspired\").",
+        "The conceptual description of encoding information as probability distributions/wave functions for on‑board processing is present in both, indicating a shared underlying idea.",
+        "The phrasing and word choice differ: the original employs narrative patent language (\"Bottom Line\", \"Technical Field\", \"Background\"), while the AI‑generated version uses a structured summary with tables, bullet points, and more formal engineering descriptors.",
+        "Logical flow and structure are distinct: the original follows a conventional patent narrative flow, whereas the AI version presents a system overview table and technical summary, resulting in different sentence patterns and organization."
+      ]
+    },
+    "hallucination_analysis": {
+      "score": 0.78,
+      "findings": [
+        "quantum-inspired wave functions",
+        "all spatial dimensions",
+        "military domains",
+        "deterministic data processing",
+        "classical electromagnetic wave transmission",
+        "power constraints",
+        "radiation effects",
+        "computational resource constraints",
+        "fundamentally new approaches",
+        "entirely new paradigm",
+        "space-based computing",
+        "bandwidth constraints (as a problem)",
+        "signal interference (as a problem)",
+        "computational efficiency",
+        "accuracy limitations in navigation"
+      ]
+    },
+    "drawing_analysis": {
+      "score": 0.4,
+      "findings": [
+        "The description provides only a high‑level overview and does not detail a concrete multi‑dimensional probability wave processor as recited in claim 1 (e.g., hardware, initialization, Hamiltonian evolution, decision logic).",
+        "Specific claim elements such as representing communication channels as probability distributions, dynamic bandwidth allocation, signal routing, and interference management (claim 2) are not explicitly disclosed in the description.",
+        "Claim 3's features—positioning information representation, anomaly detection, constellation optimization, and integrity monitoring—are absent from the description.",
+        "The description lacks enablement for the claimed methods (initializing wave functions, evolving them with a system‑specific Hamiltonian, calculating probability distributions, and making operational decisions)."
+      ]
+    },
+    "enablement_assessment": {
+      "enablement_conclusion": "NOT ENABLED",
+      "missing_elements": [
+        "Detailed hardware architecture of the multi‑dimensional probability wave processor (e.g., processor type, quantum‑inspired circuits, radiation‑hardening measures)",
+        "Specific mathematical formulation of the Hamiltonian operator used for wave‑function evolution",
+        "Algorithmic steps for initializing, evolving, and measuring the wave function, including discretization methods and numerical solvers",
+        "Concrete examples or case studies demonstrating how communication bandwidth is allocated, how navigation data is processed, or how Earth‑observation data is compressed",
+        "Parameter values and performance metrics (e.g., dimensionality n, computational load, power consumption, latency, error rates)",
+        "Integration details for the data storage system and communication interface (protocols, interfaces, timing diagrams)",
+        "Testing or validation data showing that the system operates under typical satellite environmental conditions (radiation, temperature, power limits)"
+      ],
+      "technical_deficiencies": [
+        "The disclosure provides only a high‑level conceptual description without concrete implementation guidance, making it impossible for a skilled practitioner to construct the processor.",
+        "No specific algorithms or software flowcharts are disclosed for wave‑function manipulation, probability calculation, or decision making.",
+        "Absence of hardware implementation details (e.g., ASIC/FPGA design, quantum‑inspired components) prevents replication of the claimed system.",
+        "The claim language references “Hamiltonian operator” and “wave function evolution” without defining the operators, boundary conditions, or numerical methods required for satellite‑grade computation.",
+        "Lacks any experimental or simulation results to substantiate that the proposed approach meets satellite constraints such as power budget, computational resources, and radiation tolerance."
+      ]
+    },
+    "model_used": "gpt-oss:120b-cloud"
+  },
+  "recommendations": [
+    "✓ LOW RISK: Minimal AI indicators",
+    "\n⚖️ ENABLEMENT ISSUE:",
+    "   CRITICAL: Patent disclosure lacks enablement",
+    "   Action: Request additional technical details",
+    "• Moderately uniform sentence length with many long, complex sentences",
+    "• Repetitive structural phrasing such as \"In one aspect\", \"In another aspect\", \"In yet another aspect\""
+  ],
+  "applied_rules": [],
+  "metadata": {
+    "timestamp": "2026-03-28T22:09:14.786263",
+    "config": {
+      "threshold": 0.6,
+      "weights": {
+        "fingerprint": 0.3,
+        "anchor": 0.4,
+        "hallucination": 0.2,
+        "drawing": 0.1
+      }
+    }
+  }
+}

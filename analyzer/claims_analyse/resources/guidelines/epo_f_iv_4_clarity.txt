@@ -1,0 +1,26 @@
+[EPO GUIDELINES FOR EXAMINATION - PART F-IV, 4]
+[Topic: Clarity and interpretation of claims | Art. 84 EPC]
+[Version: October 2025 | Source: https://www.epo.org/en/legal/guidelines-epc/2025/f_iv_4.html]
+
+§4.1 General clarity
+"The claims must define the matter for which protection is sought in clear and concise terms. They must be clear not only in themselves but also when read in the light of the common general knowledge."
+
+§4.6 Relative terms
+"Terms such as 'large', 'thin', 'strong', 'high temperature' are unclear unless the skilled person would understand their objective technical meaning in the context of the invention."
+
+§4.7 Qualifying terms ("about", "approximately", "substantially")
+"Qualifying terms are only acceptable if: (a) they have a well-understood meaning in the art, OR (b) the description provides objective criteria for their interpretation."
+
+§4.10 Result to be achieved
+"A claim defining the invention in terms of a result to be achieved is allowed only if: (a) the skilled person knows how to achieve that result across the full scope of the claim, AND (b) the description provides sufficient guidance."
+
+§4.11 Parameters
+"Where a claim contains a parameter, the method of measurement must be specified unless it is standard in the art."
+
+§4.17 Reference to description or drawings
+"Claims should normally be understandable without recourse to the description or drawings. References to the description are only acceptable for features that are not essential to defining the invention."
+
+§4.22 Broad claims
+"A claim must not be broader than is justified by the extent of the contribution to the art and the enablement provided in the description."
+
+[END OF EXCERPTS]

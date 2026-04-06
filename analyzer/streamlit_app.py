@@ -35,6 +35,10 @@ from extract_claims_section import ClaimsExtractor
 
 sys.path.insert(0, str(analyzer_dir / "ai_generated_detection"))
 from ai_patent_analyzer import AIPatentAnalyzer
+from utils.helpers import remove_margin_numbers
+
+sys.path.insert(0, str(analyzer_dir / "claims_analyse"))
+from claims_legal_analyzer import PatentLegalAnalyzer
 
 st.set_page_config(
     page_title="Patent Document Extractor", page_icon="📄", layout="wide"
@@ -135,6 +139,12 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 desc_text = result.get("description_text", "")
                 claims_text = result.get("claims_text", "")
                 drawings_text = result.get("drawings_text", "")
+                
+                # Physically clean margin numbers out of the string BEFORE saving files
+                if desc_text:
+                    desc_text = remove_margin_numbers(desc_text)
+                if claims_text:
+                    claims_text = remove_margin_numbers(claims_text)
 
                 # ── Step 3: Save extracted text to document_text_output as .md ──
                 desc_output = save_to_output_dir(desc_text, "description.md") if desc_text else None
@@ -168,6 +178,24 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 except Exception as ai_e:
                     st.warning(f"AI Detection encountered an error: {ai_e}")
 
+                # ── Step 3.7: Legal Analysis (EPO/NIPO) ──
+                legal_result = None
+                try:
+                    with st.spinner("⚖️ Running Patent Legal Analysis (EPO/NIPO standards)..."):
+                        legal_analyzer = PatentLegalAnalyzer()
+                        
+                        claims_to_analyze = claims_text if claims_text else extracted_claims_text
+                        if claims_to_analyze and desc_text:
+                            legal_result = legal_analyzer.analyze(
+                                claims=claims_to_analyze,
+                                description=desc_text,
+                                drawings=drawings_text if drawings_text else None
+                            )
+                        else:
+                            st.warning("Legal analysis skipped: Requires both claims and description text.")
+                except Exception as legal_e:
+                    st.warning(f"Legal Analysis encountered an error: {legal_e}")
+
                 # ── Step 4: Show results ──
                 st.success("✅ Extraction & Processing Complete!")
                 
@@ -186,7 +214,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 output_files = [f for f in OUTPUT_DIR.iterdir() if f.is_file()]
                 st.code("\n".join([f"  {f.name}" for f in output_files]))
 
-                tab1, tab2, tab3, tab4, tab5 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis"])
+                tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis", "⚖️ Legal Analysis"])
 
                 with tab1:
                     if desc_text:
@@ -238,6 +266,44 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                                 st.json(ai_result.detailed_analysis)
                     else:
                         st.warning("No result produced by AI Analyzer.")
+
+                with tab6:
+                    if legal_result:
+                        st.subheader("⚖️ Legal Examination Decision")
+                        
+                        if legal_result.examination_decision == "GRANT":
+                            st.success(f"## {legal_result.examination_decision}")
+                        elif legal_result.examination_decision == "OBJECT":
+                            st.error(f"## {legal_result.examination_decision}")
+                        else:
+                            st.warning(f"## {legal_result.examination_decision}")
+                            
+                        st.markdown(f"**Risk Level:** {legal_result.risk_level}")
+                        st.markdown(f"_{legal_result.summary}_")
+                        
+                        st.markdown("---")
+                        colA, colB, colC = st.columns(3)
+                        
+                        with colA:
+                            st.metric("Enablement (Art. 83)", "✓ PASS" if legal_result.enablement.status == "ENABLED" else "❌ FAIL")
+                        with colB:
+                            st.metric("Clarity (Art. 84)", "✓ PASS" if legal_result.clarity.status == "CLEAR" else "❌ FAIL")
+                        with colC:
+                            st.metric("Support (Art. 84)", "✓ PASS" if legal_result.support.status == "SUPPORTED" else "❌ FAIL")
+                            
+                        if legal_result.critical_issues:
+                            st.error("**Critical Issues:**\n" + "\n".join([f"- {i}" for i in legal_result.critical_issues]))
+                            
+                        st.markdown("### Recommendations")
+                        for rec in legal_result.recommendations:
+                            st.markdown(f"- {rec}")
+                            
+                        with st.expander("View Full Detailed Report"):
+                            st.text(legal_result.get_summary_report())
+                            st.markdown("**Raw JSON Data:**")
+                            st.json(legal_result.to_dict())
+                    else:
+                        st.warning("No result produced by Patent Legal Analyzer.")
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")

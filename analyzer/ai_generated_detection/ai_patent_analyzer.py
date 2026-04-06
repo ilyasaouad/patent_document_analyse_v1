@@ -109,19 +109,6 @@ class AIPatentAnalyzer:
                     # Determine document type
                     doc_type = self._determine_doc_type(file_name)
                     
-                    # Store in appropriate variable
-                    if doc_type == "claims":
-                        self.claims_text = content
-                        print(f"✓ Loaded claims: {os.path.basename(file_path)}")
-                    elif doc_type == "description":
-                        self.description_text = content
-                        print(f"✓ Loaded description: {os.path.basename(file_path)}")
-                    elif doc_type == "drawings":
-                        self.drawings_text = content
-                        print(f"✓ Loaded drawings: {os.path.basename(file_path)}")
-                    else:
-                        print(f"✓ Loaded: {os.path.basename(file_path)}")
-                    
                     # Store document object
                     doc = PatentDocument(
                         file_name=os.path.basename(file_path),
@@ -129,7 +116,25 @@ class AIPatentAnalyzer:
                         content=content,
                         doc_type=doc_type
                     )
+                    
+                    if doc.is_empty():
+                        print(f"⚠️ Skipping empty document: {doc.file_name}")
+                        continue
+                        
                     self.documents.append(doc)
+                    
+                    # Store in appropriate variable
+                    if doc_type == "claims":
+                        self.claims_text = content
+                        print(f"✓ Loaded claims: {doc.file_name} ({doc.get_word_count()} words)")
+                    elif doc_type == "description":
+                        self.description_text = content
+                        print(f"✓ Loaded description: {doc.file_name} ({doc.get_word_count()} words)")
+                    elif doc_type == "drawings":
+                        self.drawings_text = content
+                        print(f"✓ Loaded drawings: {doc.file_name} ({doc.get_word_count()} words)")
+                    else:
+                        print(f"✓ Loaded: {doc.file_name} ({doc.get_word_count()} words)")
                     
             except Exception as e:
                 print(f"⚠️ Error reading {file_path}: {e}")
@@ -517,9 +522,7 @@ DESCRIPTION:
         print(f"\n{'='*70}")
         print("📊 AI DETECTION RESULT")
         print(f"{'='*70}")
-        print(f"AI Generated: {'YES ⚠️' if result.is_likely_ai_generated else 'NO ✓'}")
-        print(f"Confidence: {result.confidence_score:.1%}")
-        print(f"Risk Level: {result.risk_level}")
+        print(result.get_summary())
         print(f"{'='*70}")
         
         scores = result.feature_scores

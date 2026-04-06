@@ -1,0 +1,14 @@
+[EPO GUIDELINES FOR EXAMINATION - PART F-IV, 6]
+[Topic: Claims supported by the description | Art. 84 EPC]
+[Version: October 2025 | Source: https://www.epo.org/en/legal/guidelines-epc/2025/f_iv_6.html]
+
+§6.1 General Support
+"The claims must be supported by the description. This means that there must be a basis in the description for the subject-matter of every claim and that the scope of the claims must not be broader than is justified by the extent of the description and drawings."
+
+§6.2 Extent of Generalisation
+"Most claims are generalizations from one or more particular examples. The extent of generalization permissible is a matter which the examiner must judge in each particular case in the light of the relevant prior art. Thus an invention which opens up a whole new field is entitled to more generality than one which is concerned with advances in a known technology."
+
+§6.3 Objection of lack of support
+"An objection of lack of support under Art. 84 can often, as in the cases discussed above, also be considered as an objection of insufficient disclosure of the invention under Art. 83."
+
+[END OF EXCERPTS]
