@@ -101,8 +101,16 @@ class PatentLegalAnalyzer:
         support_result = self._analyze_support(claims, description, drawings)
         
         # Phase 4: Overall Assessment
-        print("Step 4/4: Overall assessment...")
+        print("Step 4/5: Overall assessment...")
         overall = self._overall_assessment(
+            enablement_result,
+            clarity_result,
+            support_result
+        )
+
+        # Phase 5: Formal Report Synthesis
+        print("Step 5/5: Drafting formal NIPO/EPO examination report...")
+        formal_report = self._generate_formal_report(
             enablement_result,
             clarity_result,
             support_result
@@ -117,7 +125,8 @@ class PatentLegalAnalyzer:
             summary=overall["summary"],
             critical_issues=overall["critical_issues"],
             recommendations=overall["recommendations"],
-            examination_decision=overall["examination_decision"]
+            examination_decision=overall["examination_decision"],
+            formal_report=formal_report
         )
         
         # Print summary
@@ -139,14 +148,13 @@ class PatentLegalAnalyzer:
         """
         prompt = LegalAnalysisPrompts.format_prompt(
             LegalAnalysisPrompts.ENABLEMENT_USER,
+            guidelines=self.enablement_guidelines or "No official guidelines provided.",
             claims=truncate_text(claims, 6000),
             description=truncate_text(description, 8000),
             drawings=truncate_text(drawings, 2000) if drawings else "Not provided"
         )
         
         sys_prompt = LegalAnalysisPrompts.ENABLEMENT_SYSTEM
-        if self.enablement_guidelines:
-            sys_prompt += f"\n\nOFFICIAL GUIDELINES TO APPLY:\n{self.enablement_guidelines}"
             
         response = self.client.generate(
             prompt=prompt,
@@ -157,20 +165,26 @@ class PatentLegalAnalyzer:
         
         result_dict = parse_json_safe(response, {
             "status": "NOT_ENABLED",
+            "status_reason": "Analysis incomplete or missing.",
             "issues": ["Analysis incomplete"],
             "missing_elements": [],
             "technical_deficiencies": [],
             "reproducibility_score": 0.5,
-            "confidence": "LOW"
+            "confidence": "LOW",
+            "detailed_issues": [],
+            "guideline_version": "Unknown"
         })
         
         return EnablementResult(
             status=result_dict.get("status", "NOT_ENABLED"),
+            status_reason=result_dict.get("status_reason", ""),
             issues=result_dict.get("issues", []),
             missing_elements=result_dict.get("missing_elements", []),
             technical_deficiencies=result_dict.get("technical_deficiencies", []),
             reproducibility_score=result_dict.get("reproducibility_score", 0.5),
-            confidence=result_dict.get("confidence", "LOW")
+            confidence=result_dict.get("confidence", "LOW"),
+            detailed_issues=result_dict.get("detailed_issues", []),
+            guideline_version=result_dict.get("guideline_version")
         )
     
     def _analyze_clarity(self, claims: str) -> ClarityResult:
@@ -181,12 +195,11 @@ class PatentLegalAnalyzer:
         """
         prompt = LegalAnalysisPrompts.format_prompt(
             LegalAnalysisPrompts.CLARITY_USER,
+            guidelines=self.clarity_guidelines or "No official guidelines provided.",
             claims=truncate_text(claims, 6000)
         )
         
         sys_prompt = LegalAnalysisPrompts.CLARITY_SYSTEM
-        if self.clarity_guidelines:
-            sys_prompt += f"\n\nOFFICIAL GUIDELINES TO APPLY:\n{self.clarity_guidelines}"
 
         response = self.client.generate(
             prompt=prompt,
@@ -197,22 +210,28 @@ class PatentLegalAnalyzer:
         
         result_dict = parse_json_safe(response, {
             "status": "UNCLEAR",
+            "status_reason": "Analysis incomplete or missing.",
             "issues": ["Analysis incomplete"],
             "vague_terms": [],
             "undefined_terms": [],
             "ambiguous_phrases": [],
             "clarity_score": 0.5,
-            "confidence": "LOW"
+            "confidence": "LOW",
+            "detailed_issues": [],
+            "guideline_version": "Unknown"
         })
         
         return ClarityResult(
             status=result_dict.get("status", "UNCLEAR"),
+            status_reason=result_dict.get("status_reason", ""),
             issues=result_dict.get("issues", []),
             vague_terms=result_dict.get("vague_terms", []),
             undefined_terms=result_dict.get("undefined_terms", []),
             ambiguous_phrases=result_dict.get("ambiguous_phrases", []),
             clarity_score=result_dict.get("clarity_score", 0.5),
-            confidence=result_dict.get("confidence", "LOW")
+            confidence=result_dict.get("confidence", "LOW"),
+            detailed_issues=result_dict.get("detailed_issues", []),
+            guideline_version=result_dict.get("guideline_version")
         )
     
     def _analyze_support(
@@ -228,14 +247,13 @@ class PatentLegalAnalyzer:
         """
         prompt = LegalAnalysisPrompts.format_prompt(
             LegalAnalysisPrompts.SUPPORT_USER,
+            guidelines=self.support_guidelines or "No official guidelines provided.",
             claims=truncate_text(claims, 6000),
             description=truncate_text(description, 8000),
             drawings=truncate_text(drawings, 2000) if drawings else "Not provided"
         )
         
         sys_prompt = LegalAnalysisPrompts.SUPPORT_SYSTEM
-        if self.support_guidelines:
-            sys_prompt += f"\n\nOFFICIAL GUIDELINES TO APPLY:\n{self.support_guidelines}"
 
         response = self.client.generate(
             prompt=prompt,
@@ -246,22 +264,28 @@ class PatentLegalAnalyzer:
         
         result_dict = parse_json_safe(response, {
             "status": "NOT_SUPPORTED",
+            "status_reason": "Analysis incomplete or missing.",
             "issues": ["Analysis incomplete"],
             "unsupported_elements": [],
             "broader_than_description": [],
             "missing_embodiments": [],
             "support_score": 0.5,
-            "confidence": "LOW"
+            "confidence": "LOW",
+            "detailed_issues": [],
+            "guideline_version": "Unknown"
         })
         
         return SupportResult(
             status=result_dict.get("status", "NOT_SUPPORTED"),
+            status_reason=result_dict.get("status_reason", ""),
             issues=result_dict.get("issues", []),
             unsupported_elements=result_dict.get("unsupported_elements", []),
             broader_than_description=result_dict.get("broader_than_description", []),
             missing_embodiments=result_dict.get("missing_embodiments", []),
             support_score=result_dict.get("support_score", 0.5),
-            confidence=result_dict.get("confidence", "LOW")
+            confidence=result_dict.get("confidence", "LOW"),
+            detailed_issues=result_dict.get("detailed_issues", []),
+            guideline_version=result_dict.get("guideline_version")
         )
     
     def _overall_assessment(
@@ -308,6 +332,38 @@ class PatentLegalAnalyzer:
             "recommendations": ["Manual review required"],
             "examination_decision": "FURTHER_EXAMINATION"
         })
+
+    def _generate_formal_report(
+        self,
+        enablement: EnablementResult,
+        clarity: ClarityResult,
+        support: SupportResult
+    ) -> str:
+        """
+        Synthesizes the JSON findings into a formal Norwegian Patent Office examiner report.
+        Disables strict JSON formatting to allow unstructured prose.
+        """
+        # Serialize the findings back to JSON so the LLM can read them natively
+        enb_json = json.dumps(enablement.__dict__, default=lambda x: str(x), indent=2)
+        clr_json = json.dumps(clarity.__dict__, default=lambda x: str(x), indent=2)
+        sup_json = json.dumps(support.__dict__, default=lambda x: str(x), indent=2)
+        
+        prompt = LegalAnalysisPrompts.format_prompt(
+            LegalAnalysisPrompts.FORMAL_REPORT_USER,
+            enablement_result=enb_json,
+            clarity_result=clr_json,
+            support_result=sup_json
+        )
+
+        response = self.client.generate(
+            prompt=prompt,
+            system_prompt=LegalAnalysisPrompts.FORMAL_REPORT_SYSTEM,
+            max_tokens=self.config.MAX_TOKENS,
+            temperature=0.3,           # Slight temperature increase for better prose writing
+            response_format=""         # DISABLE strict JSON constraint!
+        )
+        
+        return response.strip()
 
 
 # ============================================================================

@@ -25,11 +25,14 @@ class EnablementResult:
         confidence: "HIGH", "MEDIUM", or "LOW"
     """
     status: str  # "ENABLED" or "NOT_ENABLED"
+    status_reason: str
     issues: List[str]
     missing_elements: List[str]
     technical_deficiencies: List[str]
     reproducibility_score: float
     confidence: str
+    detailed_issues: List[Dict[str, Any]]
+    guideline_version: Optional[str] = None
     
     def is_enabled(self) -> bool:
         """Check if invention is sufficiently enabled."""
@@ -55,12 +58,15 @@ class ClarityResult:
         confidence: "HIGH", "MEDIUM", or "LOW"
     """
     status: str  # "CLEAR" or "UNCLEAR"
+    status_reason: str
     issues: List[str]
     vague_terms: List[str]
     undefined_terms: List[str]
     ambiguous_phrases: List[str]
     clarity_score: float
     confidence: str
+    detailed_issues: List[Dict[str, Any]]
+    guideline_version: Optional[str] = None
     
     def is_clear(self) -> bool:
         """Check if claims are sufficiently clear."""
@@ -86,12 +92,15 @@ class SupportResult:
         confidence: "HIGH", "MEDIUM", or "LOW"
     """
     status: str  # "SUPPORTED" or "NOT_SUPPORTED"
+    status_reason: str
     issues: List[str]
     unsupported_elements: List[str]
     broader_than_description: List[str]
     missing_embodiments: List[str]
     support_score: float
     confidence: str
+    detailed_issues: List[Dict[str, Any]]
+    guideline_version: Optional[str] = None
     
     def is_supported(self) -> bool:
         """Check if claims are sufficiently supported."""
@@ -128,6 +137,7 @@ class LegalAnalysisResult:
     critical_issues: List[str]
     recommendations: List[str]
     examination_decision: str  # "GRANT", "OBJECT", "FURTHER_EXAMINATION"
+    formal_report: str = ""
     metadata: Optional[Dict[str, Any]] = None
     
     def __post_init__(self):
@@ -153,6 +163,7 @@ class LegalAnalysisResult:
                 "recommendations": self.recommendations,
                 "examination_decision": self.examination_decision
             },
+            "formal_report": self.formal_report,
             "metadata": self.metadata
         }
     
@@ -198,10 +209,18 @@ class LegalAnalysisResult:
         report.append(f"RISK LEVEL: {self.risk_level}")
         report.append(f"\n{self.summary}")
         
+        if self.formal_report:
+            report.append("\n" + "="*70)
+            report.append("FORMAL EXAMINATION REPORT")
+            report.append("="*70)
+            report.append(f"\n{self.formal_report}\n")
+            
         report.append(f"\n{'='*70}")
         report.append("ENABLEMENT (Art. 83 EPC / §8)")
         report.append(f"{'='*70}")
         report.append(f"Status: {self.enablement.status}")
+        if getattr(self.enablement, "status_reason", ""):
+            report.append(f"Reason: {self.enablement.status_reason}")
         report.append(f"Reproducibility: {self.enablement.reproducibility_score:.1%}")
         if self.enablement.missing_elements:
             report.append("\nMissing Elements:")
@@ -212,6 +231,8 @@ class LegalAnalysisResult:
         report.append("CLARITY (Art. 84 EPC)")
         report.append(f"{'='*70}")
         report.append(f"Status: {self.clarity.status}")
+        if getattr(self.clarity, "status_reason", ""):
+            report.append(f"Reason: {self.clarity.status_reason}")
         report.append(f"Clarity Score: {self.clarity.clarity_score:.1%}")
         if self.clarity.vague_terms:
             report.append("\nVague Terms:")
@@ -222,11 +243,30 @@ class LegalAnalysisResult:
         report.append("SUPPORT (Art. 84 EPC)")
         report.append(f"{'='*70}")
         report.append(f"Status: {self.support.status}")
+        if getattr(self.support, "status_reason", ""):
+            report.append(f"Reason: {self.support.status_reason}")
         report.append(f"Support Score: {self.support.support_score:.1%}")
         if self.support.unsupported_elements:
             report.append("\nUnsupported Elements:")
             for elem in self.support.unsupported_elements:
                 report.append(f"  • {elem}")
+                
+        # Detailed Grounded Issues
+        def append_detailed_issues(domain_name, detailed_issues):
+            if detailed_issues:
+                report.append(f"\n--- Detailed {domain_name} Violations ---")
+                for issue in detailed_issues:
+                    citation = issue.get('citation', 'N/A')
+                    explanation = issue.get('explanation', 'N/A')
+                    amendment = issue.get('amendment', 'N/A')
+                    severity = issue.get('severity', 'N/A')
+                    report.append(f"[{severity}] Citation: {citation}")
+                    report.append(f"          Reason: {explanation}")
+                    report.append(f"          Suggestion: {amendment}")
+                    
+        append_detailed_issues("Enablement", getattr(self.enablement, "detailed_issues", []))
+        append_detailed_issues("Clarity", getattr(self.clarity, "detailed_issues", []))
+        append_detailed_issues("Support", getattr(self.support, "detailed_issues", []))
         
         if self.critical_issues:
             report.append(f"\n{'='*70}")

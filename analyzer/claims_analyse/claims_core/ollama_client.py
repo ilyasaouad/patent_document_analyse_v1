@@ -57,21 +57,27 @@ class OllamaClient:
         self,
         prompt: str,
         system_prompt: str = "",
-        max_tokens: int = 2048,
-        temperature: float = 0.1
+        max_tokens: int = 1000,
+        temperature: float = 0.1,
+        response_format: Optional[str] = "json"
     ) -> str:
         """
-        Generate text using Ollama.
+        Generate response from Ollama.
         
         Args:
             prompt: User prompt
-            system_prompt: System prompt for context
-            max_tokens: Maximum tokens to generate
-            temperature: Sampling temperature (0.0-1.0)
-        
+            system_prompt: System prompt
+            max_tokens: Maximum tokens to predict
+            temperature: Sampling temperature
+            response_format: Set to "json" to restrict output schema strictly to JSON
+            
         Returns:
-            str: Generated text or empty string on error
+            str: Generated text
         """
+        # Truncate prompt if too long to avoid context window issues
+        if len(prompt) > 20000:
+            prompt = prompt[:20000] + "\n...[TRUNCATED FOR LENGTH]"
+            
         try:
             payload = {
                 "model": self.model_name,
@@ -83,6 +89,9 @@ class OllamaClient:
                     "temperature": temperature
                 }
             }
+            
+            if response_format:
+                payload["format"] = response_format
             
             headers = {"Content-Type": "application/json"}
             

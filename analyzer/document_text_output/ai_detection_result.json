@@ -1,93 +1,87 @@
 {
-  "is_likely_ai_generated": false,
-  "confidence_score": 0.542,
-  "risk_level": "LOW",
+  "is_likely_ai_generated": true,
+  "confidence_score": 0.711,
+  "risk_level": "MEDIUM",
   "feature_scores": {
-    "fingerprint": 0.42,
-    "anchor_similarity": 0.55,
-    "hallucination": 0.78,
-    "drawing": 0.4
+    "fingerprint": 0.68,
+    "anchor_similarity": 0.7,
+    "hallucination": 0.71,
+    "drawing": 0.85
   },
   "detailed_analysis": {
     "fingerprint_analysis": {
-      "score": 0.42,
+      "score": 0.68,
       "findings": [
-        "Moderately uniform sentence length with many long, complex sentences",
-        "Repetitive structural phrasing such as \"In one aspect\", \"In another aspect\", \"In yet another aspect\"",
-        "Frequent use of passive constructions and generic terminology",
-        "Overly structured sections and paragraphs of similar length typical of templated writing"
+        "uniform sentence length and consistent clause structure",
+        "lack of technical idiosyncrasies or domain‑specific jargon",
+        "excessive use of passive voice and generic terminology",
+        "overly structured sections with similar paragraph lengths"
       ]
     },
     "anchor_analysis": {
-      "similarity": 0.55,
+      "similarity": 0.7,
       "findings": [
-        "Both texts use the same core technical terminology (e.g., \"multi‑dimensional probability wave\", \"n‑dimensional space\", \"satellite applications\", \"quantum‑inspired\").",
-        "The conceptual description of encoding information as probability distributions/wave functions for on‑board processing is present in both, indicating a shared underlying idea.",
-        "The phrasing and word choice differ: the original employs narrative patent language (\"Bottom Line\", \"Technical Field\", \"Background\"), while the AI‑generated version uses a structured summary with tables, bullet points, and more formal engineering descriptors.",
-        "Logical flow and structure are distinct: the original follows a conventional patent narrative flow, whereas the AI version presents a system overview table and technical summary, resulting in different sentence patterns and organization."
+        "Both texts describe a multimodal, adaptive virtual‑companion system with distinct \"friend\" (social dialogue) and \"expert\" (advice/training) modes, and both emphasize local wake‑word activation and microphone array processing.",
+        "The logical structure is alike: an overview of system architecture presented as a numbered list of functional modules/steps, followed by separate sections for friend mode, expert mode, and wake‑word/remote conversation.",
+        "While the original uses generic module names (e.g., speech interface module, adaptive persona simulator) the AI‑generated version substitutes more technical terms (e.g., ASR engine, transformer‑based language model, Response Selector), showing a shift in phrasing but retaining the same core concepts."
       ]
     },
     "hallucination_analysis": {
-      "score": 0.78,
+      "score": 0.71,
       "findings": [
-        "quantum-inspired wave functions",
-        "all spatial dimensions",
-        "military domains",
-        "deterministic data processing",
-        "classical electromagnetic wave transmission",
-        "power constraints",
-        "radiation effects",
-        "computational resource constraints",
-        "fundamentally new approaches",
-        "entirely new paradigm",
-        "space-based computing",
-        "bandwidth constraints (as a problem)",
-        "signal interference (as a problem)",
-        "computational efficiency",
-        "accuracy limitations in navigation"
+        "child-assistance module",
+        "stories, jokes, educational activities, singing",
+        "alert guardians in the event of restlessness, crying, or unusual behavior",
+        "beamforming for microphone array",
+        "encrypted internal data structures",
+        "personal synthetic voice for waking",
+        "emergency phrases detection",
+        "restlessness detection",
+        "crying detection",
+        "unusual behavior detection"
       ]
     },
     "drawing_analysis": {
-      "score": 0.4,
+      "score": 0.85,
       "findings": [
-        "The description provides only a high‑level overview and does not detail a concrete multi‑dimensional probability wave processor as recited in claim 1 (e.g., hardware, initialization, Hamiltonian evolution, decision logic).",
-        "Specific claim elements such as representing communication channels as probability distributions, dynamic bandwidth allocation, signal routing, and interference management (claim 2) are not explicitly disclosed in the description.",
-        "Claim 3's features—positioning information representation, anomaly detection, constellation optimization, and integrity monitoring—are absent from the description.",
-        "The description lacks enablement for the claimed methods (initializing wave functions, evolving them with a system‑specific Hamiltonian, calculating probability distributions, and making operational decisions)."
+        "Claim 5 states that the system automatically switches roles between functions, but the description does not explicitly describe an automatic role‑switching mechanism; it only describes separate friend and expert modes without clear automation of switching.",
+        "The description includes additional modules (child‑assistance module, sleep and wake module) that are not mentioned in the claims, which is acceptable but indicates the claims are narrower than the disclosed embodiment."
       ]
     },
     "enablement_assessment": {
       "enablement_conclusion": "NOT ENABLED",
       "missing_elements": [
-        "Detailed hardware architecture of the multi‑dimensional probability wave processor (e.g., processor type, quantum‑inspired circuits, radiation‑hardening measures)",
-        "Specific mathematical formulation of the Hamiltonian operator used for wave‑function evolution",
-        "Algorithmic steps for initializing, evolving, and measuring the wave function, including discretization methods and numerical solvers",
-        "Concrete examples or case studies demonstrating how communication bandwidth is allocated, how navigation data is processed, or how Earth‑observation data is compressed",
-        "Parameter values and performance metrics (e.g., dimensionality n, computational load, power consumption, latency, error rates)",
-        "Integration details for the data storage system and communication interface (protocols, interfaces, timing diagrams)",
-        "Testing or validation data showing that the system operates under typical satellite environmental conditions (radiation, temperature, power limits)"
+        "Detailed algorithms and models for real‑time speech analysis and natural language generation",
+        "Specific architecture and training data for the adaptive persona simulator (e.g., neural network structures, datasets, tuning parameters)",
+        "Implementation details of the expert module, including knowledge representation, domain ontologies, and advice generation logic",
+        "Sensor fusion methodology and algorithms for multimodal fall and emergency detection",
+        "Exact biometric processing techniques for facial and voice recognition, including feature extraction, matching thresholds, and hardware specifications",
+        "Design of the microphone array and beamforming parameters required for remote conversation",
+        "Security architecture specifics such as encryption algorithms, key management, and local data storage formats",
+        "Hardware platform specifications (processor, memory, audio components) and integration workflow for all modules"
       ],
       "technical_deficiencies": [
-        "The disclosure provides only a high‑level conceptual description without concrete implementation guidance, making it impossible for a skilled practitioner to construct the processor.",
-        "No specific algorithms or software flowcharts are disclosed for wave‑function manipulation, probability calculation, or decision making.",
-        "Absence of hardware implementation details (e.g., ASIC/FPGA design, quantum‑inspired components) prevents replication of the claimed system.",
-        "The claim language references “Hamiltonian operator” and “wave function evolution” without defining the operators, boundary conditions, or numerical methods required for satellite‑grade computation.",
-        "Lacks any experimental or simulation results to substantiate that the proposed approach meets satellite constraints such as power budget, computational resources, and radiation tolerance."
+        "Insufficient disclosure of software implementation details to allow replication of the system’s core functions",
+        "Lack of concrete examples, flowcharts, or pseudo‑code illustrating how context detection triggers role adaptation",
+        "No quantitative performance metrics or parameter values (e.g., latency, accuracy thresholds) for speech, biometric, or safety detection modules",
+        "Absence of training procedures and data sources for the AI components (persona simulator, expert advice generator)",
+        "Unclear how local processing is achieved while maintaining real‑time interaction across multiple modalities"
       ]
     },
     "model_used": "gpt-oss:120b-cloud"
   },
   "recommendations": [
-    "✓ LOW RISK: Minimal AI indicators",
+    "⚠️ MEDIUM RISK: Moderate AI indicators detected",
+    "   Action: Spot-check sections with repetitive patterns",
     "\n⚖️ ENABLEMENT ISSUE:",
     "   CRITICAL: Patent disclosure lacks enablement",
     "   Action: Request additional technical details",
-    "• Moderately uniform sentence length with many long, complex sentences",
-    "• Repetitive structural phrasing such as \"In one aspect\", \"In another aspect\", \"In yet another aspect\""
+    "• uniform sentence length and consistent clause structure",
+    "• lack of technical idiosyncrasies or domain‑specific jargon"
   ],
   "applied_rules": [],
   "metadata": {
-    "timestamp": "2026-03-28T22:09:14.786263",
+    "timestamp": "2026-04-07T17:55:10.406156",
     "config": {
       "threshold": 0.6,
       "weights": {

@@ -181,18 +181,28 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 # ── Step 3.7: Legal Analysis (EPO/NIPO) ──
                 legal_result = None
                 try:
-                    with st.spinner("⚖️ Running Patent Legal Analysis (EPO/NIPO standards)..."):
-                        legal_analyzer = PatentLegalAnalyzer()
-                        
-                        claims_to_analyze = claims_text if claims_text else extracted_claims_text
-                        if claims_to_analyze and desc_text:
+                    claims_to_analyze = claims_text if claims_text else extracted_claims_text
+                    if claims_to_analyze and desc_text:
+                        with st.spinner("⚖️ Running Patent Legal Analysis (gpt-oss:120b-cloud)..."):
+                            from claims_core import OllamaClient
+                            client = OllamaClient(model_name="gpt-oss:120b-cloud")
+                            legal_analyzer = PatentLegalAnalyzer(ollama_client=client)
+                            
                             legal_result = legal_analyzer.analyze(
                                 claims=claims_to_analyze,
                                 description=desc_text,
                                 drawings=drawings_text if drawings_text else None
                             )
-                        else:
-                            st.warning("Legal analysis skipped: Requires both claims and description text.")
+                            
+                            # Save the legal analysis report
+                            analyse_dir = Path(__file__).resolve().parent / "claims_analyse" / "analyse_result"
+                            analyse_dir.mkdir(parents=True, exist_ok=True)
+                            report_path = analyse_dir / "legal_analysis_report.md"
+                            with open(report_path, "w", encoding="utf-8") as f:
+                                f.write(legal_result.get_summary_report())
+                                
+                    else:
+                        st.warning("Legal analysis skipped: Requires both claims and description text.")
                 except Exception as legal_e:
                     st.warning(f"Legal Analysis encountered an error: {legal_e}")
 
@@ -278,6 +288,15 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         else:
                             st.warning(f"## {legal_result.examination_decision}")
                             
+                        # Formal Report Rendering
+                        st.markdown("---")
+                        st.markdown("### 📝 Formal Examination Report")
+                        if legal_result.formal_report:
+                            st.info(legal_result.formal_report)
+                        else:
+                            st.warning("Formal report not generated.")
+                        st.markdown("---")
+                            
                         st.markdown(f"**Risk Level:** {legal_result.risk_level}")
                         st.markdown(f"_{legal_result.summary}_")
                         
@@ -285,20 +304,20 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         colA, colB, colC = st.columns(3)
                         
                         with colA:
-                            st.metric("Enablement (Art. 83)", "✓ PASS" if legal_result.enablement.status == "ENABLED" else "❌ FAIL")
+                            st.metric("Enablement", "✓ PASS" if legal_result.enablement.status == "ENABLED" else "❌ FAIL")
                         with colB:
-                            st.metric("Clarity (Art. 84)", "✓ PASS" if legal_result.clarity.status == "CLEAR" else "❌ FAIL")
+                            st.metric("Clarity", "✓ PASS" if legal_result.clarity.status == "CLEAR" else "❌ FAIL")
                         with colC:
-                            st.metric("Support (Art. 84)", "✓ PASS" if legal_result.support.status == "SUPPORTED" else "❌ FAIL")
+                            st.metric("Support", "✓ PASS" if legal_result.support.status == "SUPPORTED" else "❌ FAIL")
                             
                         if legal_result.critical_issues:
-                            st.error("**Critical Issues:**\n" + "\n".join([f"- {i}" for i in legal_result.critical_issues]))
+                            st.error("**Critical Issues:**\n" + "\n".join([f"- {iss}" for iss in legal_result.critical_issues]))
                             
-                        st.markdown("### Recommendations")
+                        st.markdown("#### Recommendations")
                         for rec in legal_result.recommendations:
                             st.markdown(f"- {rec}")
                             
-                        with st.expander("View Full Detailed Report"):
+                        with st.expander("View Full Detailed Report", expanded=False):
                             st.text(legal_result.get_summary_report())
                             st.markdown("**Raw JSON Data:**")
                             st.json(legal_result.to_dict())
