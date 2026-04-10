@@ -62,11 +62,13 @@ class MinerUWrapper:
 
     def _extract_with_mineru(self, path: Path, method: str, lang: str) -> Tuple[str, str]:
         """Standard extraction: MinerU + image OCR replacement."""
-        from backend_extract.demo.demo import parse_doc
+        from mineru.cli.common import do_parse, read_fn
         from backend_extract.image_ocr import ImageOCR
 
         run_output = tempfile.mkdtemp(prefix="mineru_extract_", dir=self.output_dir)
-        parse_doc(path_list=[path], output_dir=run_output, lang=lang, backend="pipeline", method=method)
+        pdf_bytes = read_fn(path)
+        file_name = Path(path).stem
+        do_parse(output_dir=run_output, pdf_file_names=[file_name], pdf_bytes_list=[pdf_bytes], p_lang_list=[lang], backend="pipeline", parse_method=method)
 
         ocr = ImageOCR(lang=lang)
 
@@ -101,7 +103,7 @@ class MinerUWrapper:
         Layer 2: MinerU layout-aware extraction (understands page structure)
         Layer 3: Tesseract deep OCR on cropped images (catches scattered labels)
         """
-        from backend_extract.demo.demo import parse_doc
+        from mineru.cli.common import do_parse, read_fn
         from backend_extract.text_cleaning import full_clean_patent_text
 
         extracted_parts = []
@@ -126,12 +128,15 @@ class MinerUWrapper:
         # ── Layer 2: MinerU layout-aware extraction ──
         run_output = tempfile.mkdtemp(prefix="draw_extract_", dir=self.output_dir)
         try:
-            parse_doc(
-                path_list=[path],
+            pdf_bytes = read_fn(path)
+            file_name = Path(path).stem
+            do_parse(
                 output_dir=run_output,
-                lang=lang,
+                pdf_file_names=[file_name],
+                pdf_bytes_list=[pdf_bytes],
+                p_lang_list=[lang],
                 backend="pipeline",
-                method="ocr",
+                parse_method="ocr",
                 formula_enable=False,
                 table_enable=False,
             )

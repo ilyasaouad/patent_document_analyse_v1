@@ -1,0 +1,57 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+*.whl
+
+# ── Virtual Environment ──
+.venv/
+venv/
+ENV/
+
+# ── IDE / Editor ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Streamlit ──
+.streamlit/secrets.toml
+
+# ── MinerU / ML Models (large files) ──
+*.pth
+*.pt
+*.onnx
+*.bin
+*.safetensors
+*.h5
+temp_mineru/
+
+# ── Project temp files ──
+analyzer/document_original_input/
+analyzer/document_text_output/
+analyzer/claims_analyse/analyse_result/
+analyzer/search_strategy_analyse/analyse_result/
+
+# ── OS files ──
+Desktop.ini
+ehthumbs.db
+
+# ── Logs ──
+*.log
+
+# ── Backup files ──
+backend_extract/mineru_local_backup/
+
+# ── Misc ──
+*.tmp
+*.bak

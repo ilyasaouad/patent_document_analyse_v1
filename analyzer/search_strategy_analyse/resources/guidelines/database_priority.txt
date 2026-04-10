@@ -1,0 +1,110 @@
+RECOMMENDED PATENT DATABASE SEARCH ORDER AND TIPS
+==================================================
+
+PRIORITY ORDER FOR PRIOR-ART SEARCHES
+--------------------------------------
+Use the databases below in the order listed. Start with full-text databases
+(1–2) for keyword searches, then validate with classification searches (3–4),
+then extend to non-patent literature (5–6).
+
+─────────────────────────────────────────────────────────────────────────
+1. EPO ANSERA (Full-Text Search)
+─────────────────────────────────────────────────────────────────────────
+Access:   Internal EPO examiner tool
+Coverage: Full text of EP, WO, US, JP (machine-translated), CN (MT), DE, FR, GB
+Why:      Most powerful proximity and truncation operators; full claims/description
+          text indexed; best for nuanced technical queries.
+Tips:
+- Use CL= field code to restrict to claims text for higher precision.
+- Combine keyword strings with IPC= or CPC= codes to cut result counts.
+- Run broad string first (Mark A AND Mark C), review top 50, then add Marks.
+- Use nW proximity (3W–5W) instead of exact phrases for multi-word technical terms.
+
+─────────────────────────────────────────────────────────────────────────
+2. Espacenet (esp@cenet)
+─────────────────────────────────────────────────────────────────────────
+Access:   https://worldwide.espacenet.com
+Coverage: 140+ million documents worldwide
+Why:      Best for CPC classification browsing and family-level searches.
+          Good fallback when ANSERA returns too few results.
+Tips:
+- Use Smart Search for quick keyword entry; Advanced Search for field codes.
+- Browse CPC definition tree to find adjacent subgroups not in your initial list.
+- Use INPADOC family view to find equivalent documents in other jurisdictions.
+
+─────────────────────────────────────────────────────────────────────────
+3. USPTO PatFT / AppFT
+─────────────────────────────────────────────────────────────────────────
+Access:   https://patft.uspto.gov  /  https://appft.uspto.gov
+Coverage: US granted patents (PatFT) and published applications (AppFT)
+Why:      Essential for US prior art; many analog/hybrid computing inventions
+          originate from US research labs and companies.
+Tips:
+- Use Advanced Search with field codes: ACLM (claims), SPEC (specification).
+- Boolean: AND, OR, NOT; phrase: "word1 word2"; truncation: $  (dollar sign).
+  Example: ACLM/"time-division multiplex$" AND ACLM/"analog computer$"
+- Check both PatFT and AppFT — published applications are prior art from
+  their filing date even if not yet granted.
+
+─────────────────────────────────────────────────────────────────────────
+4. Google Patents
+─────────────────────────────────────────────────────────────────────────
+Access:   https://patents.google.com
+Coverage: Global; includes US, EP, WO, CN, JP, KR and more
+Why:      Useful for exploratory keyword searches and citation chaining.
+          Machine translation quality is high for JP/CN documents.
+Tips:
+- Use the Advanced Search filters (assignee, date range, CPC code) to narrow.
+- Click "Prior art" tab on any result to find semantically related documents.
+- Use citation chaining (forward and backward) to find related families.
+- Less precise than ANSERA for proximity searches — use for discovery only.
+
+─────────────────────────────────────────────────────────────────────────
+5. IEEE Xplore (Non-Patent Literature)
+─────────────────────────────────────────────────────────────────────────
+Access:   https://ieeexplore.ieee.org
+Coverage: IEEE journals, transactions, and conference proceedings
+Why:      Critical for electronics, signal processing, analog/mixed-signal,
+          computing hardware, and FPGA/reconfigurable logic inventions.
+          Academic disclosure often predates patents by several years.
+Tips:
+- Search All Metadata + Full Text for broadest coverage.
+- Filter by publication type: Journals for established results,
+  Conferences for cutting-edge / early disclosure.
+- Key journals: IEEE TCAS (Circuits and Systems), JSSC (Solid-State Circuits),
+  TPDS (Parallel and Distributed Systems), TCAD (Computer-Aided Design).
+
+─────────────────────────────────────────────────────────────────────────
+6. ACM Digital Library (Non-Patent Literature)
+─────────────────────────────────────────────────────────────────────────
+Access:   https://dl.acm.org
+Coverage: ACM conferences and journals — computing, architecture, systems
+Why:      Important for software-hardware co-design, scheduling, resource
+          sharing, accelerator architectures, and computing systems research.
+Tips:
+- Use full-text search; filter by ACM TOCS, ISCA, DAC, DATE conference series.
+- Combine with IEEE Xplore for complete academic coverage.
+
+─────────────────────────────────────────────────────────────────────────
+7. ArXiv (Non-Patent Literature — Preprints)
+─────────────────────────────────────────────────────────────────────────
+Access:   https://arxiv.org
+Coverage: Preprints in cs.AR (hardware architecture), cs.ET (emerging tech),
+          eess.SP (signal processing), cs.SY (systems and control)
+Why:      Captures very early public disclosure that may predate both patents
+          and peer-reviewed papers. Relevant for analog ML accelerators,
+          neuromorphic computing, and hybrid systems.
+Tips:
+- Search cs.AR and eess.SP categories specifically.
+- Note: ArXiv preprints are citable as prior art from their submission date.
+
+─────────────────────────────────────────────────────────────────────────
+GENERAL SEARCH WORKFLOW
+─────────────────────────────────────────────────────────────────────────
+Step 1:  Run broad keyword string in ANSERA — note top 20 hits.
+Step 2:  Run CPC classification search in Espacenet — browse subgroups.
+Step 3:  Combine keywords + CPC in ANSERA — narrow to 50–100 results.
+Step 4:  Run equivalent string in USPTO for US-origin art.
+Step 5:  Run exploratory search in Google Patents for citation chaining.
+Step 6:  Search IEEE Xplore and ACM DL for NPL.
+Step 7:  Document all search strings, result counts, and selected documents.

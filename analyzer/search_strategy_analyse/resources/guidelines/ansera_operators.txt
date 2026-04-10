@@ -1,0 +1,81 @@
+EPO ANSERA FULL-TEXT SEARCH OPERATOR REFERENCE
+===============================================
+
+TRUNCATION
+----------
+*   Unlimited truncation (replaces zero or more characters)
+    Example: comput*  matches compute, computer, computing, computation
+
+?   Single-character wildcard (replaces exactly one character)
+    Example: analy?e  matches analyse, analyze
+
+PROXIMITY OPERATORS
+-------------------
+nW  Within n words, any order (word-distance operator)
+    Example: analog 3W digital
+    Matches documents where "analog" and "digital" appear within 3 words
+    of each other in any order.
+
+nP  Within n words, ordered (positional operator)
+    Example: time 2P multiplex*
+    Matches documents where "time" appears within 2 words BEFORE "multiplex*"
+
+PRE/n  Precedes within n words (synonym for ordered proximity in some systems)
+    Example: digital PRE/3 control
+
+PHRASE SEARCH
+-------------
+"word1 word2"  Exact phrase, words must appear adjacent and in order
+    Example: "analog computation fabric"
+    NOTE: Wildcards (* ?) are NOT supported inside quoted phrases.
+          Use proximity operators instead of phrases when truncation is needed.
+    Correct:  analog* 2W fabric
+    Incorrect: "analog* fabric"
+
+BOOLEAN OPERATORS
+-----------------
+AND   Both terms must be present
+OR    Either term must be present
+NOT   Exclude documents containing the term
+      Example: analog NOT digital
+
+OPERATOR PRECEDENCE (high to low)
+----------------------------------
+1. Proximity operators (nW, nP)
+2. NOT
+3. AND
+4. OR
+
+Use parentheses to override precedence:
+    (analog OR mixed-signal) AND (time* 2W multiplex*)
+
+FIELD CODES (ANSERA / Espacenet)
+---------------------------------
+TI    Title
+AB    Abstract
+DE    Description
+CL    Claims
+PA    Applicant/Assignee
+IN    Inventor
+IPC   IPC classification code
+CPC   CPC classification code
+PN    Publication number
+PD    Publication date
+
+Field search syntax:
+    TI="hybrid analog"
+    CL=(time* AND multiplex*)
+    IPC=G06N
+
+COMBINING FIELD AND PROXIMITY
+-------------------------------
+    CL=(analog* 3W digital*) AND TI=(multiplex* OR "time-sharing")
+
+NOTES FOR EXAMINERS
+--------------------
+- Always test broad strings first, then add Marks one by one to narrow.
+- Proximity operators are more powerful than phrase search for technical terms
+  because they survive word-order variation across languages and authors.
+- Use * truncation on verb forms: calibrat* catches calibrate, calibration,
+  calibrated, calibrating.
+- Combine IPC/CPC codes with keyword strings using AND for best precision.

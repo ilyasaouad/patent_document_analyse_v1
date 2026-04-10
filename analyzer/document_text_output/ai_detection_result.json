@@ -1,87 +1,100 @@
 {
-  "is_likely_ai_generated": true,
-  "confidence_score": 0.711,
-  "risk_level": "MEDIUM",
+  "is_likely_ai_generated": false,
+  "confidence_score": 0.557,
+  "risk_level": "LOW",
   "feature_scores": {
-    "fingerprint": 0.68,
-    "anchor_similarity": 0.7,
-    "hallucination": 0.71,
-    "drawing": 0.85
+    "fingerprint": 0.22,
+    "anchor_similarity": 0.75,
+    "hallucination": 0.73,
+    "drawing": 0.45
   },
   "detailed_analysis": {
     "fingerprint_analysis": {
-      "score": 0.68,
+      "score": 0.22,
       "findings": [
-        "uniform sentence length and consistent clause structure",
-        "lack of technical idiosyncrasies or domain‑specific jargon",
-        "excessive use of passive voice and generic terminology",
-        "overly structured sections with similar paragraph lengths"
+        "Sentence length varies with occasional uniformity but not overly consistent",
+        "Transitions are appropriate and not overly repetitive (e.g., no excessive use of \"Furthermore\" or \"Moreover\")",
+        "Technical terminology and domain-specific details are present, indicating low lack of technical noise",
+        "Passive voice is used in standard patent phrasing but not excessively dominant",
+        "Paragraphs show natural variation in length rather than overly structured uniform blocks"
       ]
     },
     "anchor_analysis": {
-      "similarity": 0.7,
+      "similarity": 0.75,
       "findings": [
-        "Both texts describe a multimodal, adaptive virtual‑companion system with distinct \"friend\" (social dialogue) and \"expert\" (advice/training) modes, and both emphasize local wake‑word activation and microphone array processing.",
-        "The logical structure is alike: an overview of system architecture presented as a numbered list of functional modules/steps, followed by separate sections for friend mode, expert mode, and wake‑word/remote conversation.",
-        "While the original uses generic module names (e.g., speech interface module, adaptive persona simulator) the AI‑generated version substitutes more technical terms (e.g., ASR engine, transformer‑based language model, Response Selector), showing a shift in phrasing but retaining the same core concepts."
+        "Both texts use nearly identical technical terminology such as \"hybrid analog‑digital computing system\", \"time‑domain multiplexed\", \"continuous‑time\", \"calibration subsystem\", and \"digital control\".",
+        "The opening sentence structures are parallel: \"The present invention relates to...\" versus \"The present disclosure relates to...\", indicating a shared phrasing pattern.",
+        "Logical flow mirrors each other, moving from a high‑level overview of the hybrid architecture to detailed functional blocks (analog fabric, digital control, TDM mechanism).",
+        "Sentence patterns and word choices (e.g., \"energy‑efficiency\", \"low‑latency\", \"programmable logic\", \"host interface\") are closely aligned, suggesting the AI‑generated version is a rephrasing of the original."
       ]
     },
     "hallucination_analysis": {
-      "score": 0.71,
+      "score": 0.73,
       "findings": [
-        "child-assistance module",
-        "stories, jokes, educational activities, singing",
-        "alert guardians in the event of restlessness, crying, or unusual behavior",
-        "beamforming for microphone array",
-        "encrypted internal data structures",
-        "personal synthetic voice for waking",
-        "emergency phrases detection",
-        "restlessness detection",
-        "crying detection",
-        "unusual behavior detection"
+        "programmable hardware accelerators",
+        "high-speed",
+        "low-latency",
+        "energy-efficient",
+        "differential equations",
+        "optimization",
+        "control systems",
+        "real-time physical modeling",
+        "PCI Express (PCIe) card",
+        "software integration",
+        "patch cables",
+        "sampling",
+        "quantization",
+        "sequential arithmetic",
+        "phase error",
+        "short-horizon",
+        "real-time dynamic systems",
+        "scalability",
+        "repeatable",
+        "variants",
+        "advantages of the invention",
+        "industrial applicability"
       ]
     },
     "drawing_analysis": {
-      "score": 0.85,
+      "score": 0.45,
       "findings": [
-        "Claim 5 states that the system automatically switches roles between functions, but the description does not explicitly describe an automatic role‑switching mechanism; it only describes separate friend and expert modes without clear automation of switching.",
-        "The description includes additional modules (child‑assistance module, sleep and wake module) that are not mentioned in the claims, which is acceptable but indicates the claims are narrower than the disclosed embodiment."
+        "The drawing list shows a numbering inconsistency: the calibration loop is labeled both as “Figure 5: Calibration and measurement feedback loop” and earlier as “6 Figure — Calibration and Measurement Loop”, indicating a mismatch between the figure numbers referenced in the description and those actually present in the drawings.",
+        "The entry “7 Figure 6 — Software Control Interface” is confusing – it prefixes Figure 6 with a “7”, suggesting a stray or mis‑numbered reference that does not correspond to any separate Figure 7 in the drawings.",
+        "Only two element numbers (100 — Host Computer and 102 — PCIe) appear in the OCR excerpt, while the description of Figure 1 likely references additional numbered components (e.g., 104, 106) that are not present in the extracted drawing text, indicating missing element labels."
       ]
     },
     "enablement_assessment": {
       "enablement_conclusion": "NOT ENABLED",
       "missing_elements": [
-        "Detailed algorithms and models for real‑time speech analysis and natural language generation",
-        "Specific architecture and training data for the adaptive persona simulator (e.g., neural network structures, datasets, tuning parameters)",
-        "Implementation details of the expert module, including knowledge representation, domain ontologies, and advice generation logic",
-        "Sensor fusion methodology and algorithms for multimodal fall and emergency detection",
-        "Exact biometric processing techniques for facial and voice recognition, including feature extraction, matching thresholds, and hardware specifications",
-        "Design of the microphone array and beamforming parameters required for remote conversation",
-        "Security architecture specifics such as encryption algorithms, key management, and local data storage formats",
-        "Hardware platform specifications (processor, memory, audio components) and integration workflow for all modules"
+        "Detailed circuit schematics and component specifications for the analog computation fabric (e.g., integrator topology, resistor/capacitor values, op‑amp models)",
+        "Exact design of the time‑domain multiplexing mechanism (switching architecture, timing resolution, control signal waveforms)",
+        "Comprehensive calibration procedures (measurement methods, algorithms for extracting correction coefficients, calibration flowcharts)",
+        "Host interface specifications (communication protocol, register map, configuration command set)",
+        "Implementation details of the digital control subsystem (FPGA/PL logic description, state‑machine diagrams, timing constraints)",
+        "Performance benchmarks or example use‑case implementations demonstrating reproducibility"
       ],
       "technical_deficiencies": [
-        "Insufficient disclosure of software implementation details to allow replication of the system’s core functions",
-        "Lack of concrete examples, flowcharts, or pseudo‑code illustrating how context detection triggers role adaptation",
-        "No quantitative performance metrics or parameter values (e.g., latency, accuracy thresholds) for speech, biometric, or safety detection modules",
-        "Absence of training procedures and data sources for the AI components (persona simulator, expert advice generator)",
-        "Unclear how local processing is achieved while maintaining real‑time interaction across multiple modalities"
+        "Absence of concrete hardware diagrams or layout information prevents a skilled practitioner from reproducing the analog fabric",
+        "Insufficient timing information for multiplexed operation (slot duration, settling time requirements, synchronization method)",
+        "Calibration methodology is described only at a high level without quantitative models or step‑by‑step procedures",
+        "No description of how non‑idealities are measured (e.g., test points, instrumentation) or how correction coefficients are applied in hardware",
+        "Lack of detailed software/firmware interface description for host‑system integration",
+        "No guidance on scaling the architecture (number of channels, power/area considerations) which is essential for practical implementation"
       ]
     },
     "model_used": "gpt-oss:120b-cloud"
   },
   "recommendations": [
-    "⚠️ MEDIUM RISK: Moderate AI indicators detected",
-    "   Action: Spot-check sections with repetitive patterns",
+    "✓ LOW RISK: Minimal AI indicators",
     "\n⚖️ ENABLEMENT ISSUE:",
     "   CRITICAL: Patent disclosure lacks enablement",
     "   Action: Request additional technical details",
-    "• uniform sentence length and consistent clause structure",
-    "• lack of technical idiosyncrasies or domain‑specific jargon"
+    "• Sentence length varies with occasional uniformity but not overly consistent",
+    "• Transitions are appropriate and not overly repetitive (e.g., no excessive use of \"Furthermore\" or \"Moreover\")"
   ],
   "applied_rules": [],
   "metadata": {
-    "timestamp": "2026-04-07T17:55:10.406156",
+    "timestamp": "2026-04-08T23:48:13.726491",
     "config": {
       "threshold": 0.6,
       "weights": {

@@ -1,0 +1,83 @@
+COMMON IPC / CPC CLASSIFICATION CODES — QUICK REFERENCE
+=========================================================
+
+HOW TO USE
+----------
+These are starting-point codes. The LLM should select the most relevant
+codes based on the actual claims and refine to the most specific subgroup
+available. Always include both the IPC code and the closest CPC subgroup.
+
+─────────────────────────────────────────────────────────────────────────
+COMPUTING / INFORMATION TECHNOLOGY
+─────────────────────────────────────────────────────────────────────────
+G06F 7/00     Data processing — arithmetic/logic operations
+G06F 9/00     Digital computers — instruction execution, control
+G06F 15/00    Digital computers — general purpose
+G06F 17/00    Digital computing — mathematical/scientific computing
+G06N 3/00     Neural networks / machine learning architectures
+G06N 10/00    Quantum computing
+G06F 1/00     Digital computers — general hardware
+
+─────────────────────────────────────────────────────────────────────────
+ANALOG / MIXED-SIGNAL / HYBRID COMPUTING
+─────────────────────────────────────────────────────────────────────────
+G06G 7/00     Analog computers — general
+G06G 7/12     Analog computers — for solving differential equations
+G06G 7/22     Analog computers — function generators
+G06G 7/32     Analog computers — integrators
+G06G 7/48     Analog computers — hybrid (analog + digital)
+G06J 1/00     Hybrid computing systems (IPC — general hybrid)
+
+─────────────────────────────────────────────────────────────────────────
+SIGNAL PROCESSING
+─────────────────────────────────────────────────────────────────────────
+H03M 1/00     Analog-to-digital and digital-to-analog conversion
+H03M 3/00     Delta-sigma modulation
+H03F 3/00     Amplifiers
+H03H 17/00    Digital filters
+H03H 19/00    Hybrid filters (analog + digital)
+G06F 17/14    Fourier transforms / signal processing algorithms
+
+─────────────────────────────────────────────────────────────────────────
+TIME-DIVISION / MULTIPLEXING
+─────────────────────────────────────────────────────────────────────────
+H04J 3/00     Time-division multiplex systems
+H04L 5/00     Duplex / multiplex arrangements
+H04Q 11/00    Switching — time-division multiplex
+G06F 9/46     Multitasking / time-sharing in digital computers
+G06F 9/50     Resource allocation / scheduling
+
+─────────────────────────────────────────────────────────────────────────
+CALIBRATION / COMPENSATION
+─────────────────────────────────────────────────────────────────────────
+H03M 1/10     ADC/DAC calibration
+G01R 35/00    Calibration of measuring instruments
+H03F 1/26     Distortion correction in amplifiers
+G06F 11/00    Error detection and correction
+
+─────────────────────────────────────────────────────────────────────────
+HARDWARE ACCELERATORS / RECONFIGURABLE HARDWARE
+─────────────────────────────────────────────────────────────────────────
+G06F 15/78    Parallel processors / array processors
+H03K 19/177   Programmable logic (FPGA / PLD)
+G06F 13/00    Interconnection of computing units (buses, interfaces)
+G06F 13/38    Memory access / DMA
+G06F 13/40    Bus interface — PCIe and similar
+
+─────────────────────────────────────────────────────────────────────────
+CONTROL SYSTEMS / OPTIMIZATION
+─────────────────────────────────────────────────────────────────────────
+G05B 13/00    Adaptive control systems
+G05B 19/00    Programmable controllers
+G06F 17/11    Solving equations (numerical methods)
+G06F 17/16    Matrix operations
+
+─────────────────────────────────────────────────────────────────────────
+NOTES
+─────────────────────────────────────────────────────────────────────────
+- CPC codes are more granular than IPC — prefer CPC subgroups in EPO searches.
+- For hybrid analog-digital inventions, always check BOTH G06G and G06J.
+- Time-multiplexing claims may sit in H04J (telecom) OR G06F 9/46 (computing)
+  depending on the application context — search both.
+- Hardware accelerator cards targeting scientific computing often appear under
+  G06F 15/78 combined with G06G 7/48.

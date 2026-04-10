@@ -5,141 +5,128 @@ PATENT LEGAL ANALYSIS - EPO + NIPO
 EXAMINATION DECISION: OBJECT
 RISK LEVEL: HIGH
 
-The claims lack sufficient enablement and clarity; essential algorithms, parameters, and hardware details are missing, and numerous vague functional terms render the invention indeterminate despite adequate support.
+The application lacks essential enablement details (analog integrator specs, timing parameters, calibration algorithms, digital control architecture, host interface protocol) and contains unclear claim language (vague terms, functional wording, overly broad scope). While support is adequate, the combined enablement and clarity deficiencies constitute a high risk of rejection.
 
 ======================================================================
 FORMAL EXAMINATION REPORT
 ======================================================================
 
-**Examination Report – Formal Objection**
+**Examination Report – Formal Objection**  
 
-1. **Enablement (Norwegian Patents Act, § 1.3, § 1.2 and § 1.1)**  
-   The application fails to disclose the technical means necessary to carry out the subject‑matter of the independent claims.  The claims are limited to desired functions – e.g. “generates a response based on social dialogue and expert knowledge”, “automatically adapts conversation style, function and role”, “identifies the user using biometric signals” – without providing any mechanistic detail, algorithmic description, sensor configurations, parameter ranges or performance metrics.  Consequently, a person skilled in the art would be forced to engage in inventive trial‑and‑error to realise the claimed results, which is contrary to the requirement of a complete and enabling disclosure under § 1.3.  The description omits:
+The European Patent Office’s Regulations to the Norwegian Patents Act, in conjunction with the Norwegian Patents Act, require that a patent application (i) disclose the invention in a manner sufficiently clear and complete for a person skilled in the art to carry it out (Art. 71 (1) NP Act, corresponding to Art. 83 EPC); (ii) define the claimed subject‑matter in a clear and unambiguous way (Regulations §§ 4.1, 4.6, 4.10); and (iii) be supported by the description (Norwegian Patents Act, Section 8).  
 
-   * a real‑time speech‑analysis method (feature extraction, model architecture, processing latency);  
-   * the context‑detection mechanism (sensors, data‑fusion rules, thresholds);  
-   * the adaptive‑conversation‑style algorithm (how style, function and role are switched);  
-   * wake‑word activation details (model, sensitivity, false‑trigger handling);  
-   * biometric identification procedures (feature extraction, matching criteria, error rates);  
-   * critical‑event monitoring logic (event definitions, sensor fusion, decision thresholds);  
-   * emergency‑notification protocol (message format, contact selection, timing); and  
-   * hardware specifications (microphone‑array geometry, sensor types, processing unit).
+1. **Enablement (Art. 71 (1) NP Act / Art. 83 EPC)** – The independent claims recite a “plurality of logical computation channels … greater than the number of physical analog computation elements” and a “continuous‑time mathematical‑operation fabric” without providing the essential technical parameters required to reproduce the system over the full claimed scope. The description contains only high‑level block diagrams and functional statements; it omits:
 
-   The lack of step‑by‑step implementation and the reliance on broad functional statements render the invention **not enabled** over the whole claimed scope.  The claims therefore do not satisfy the provisions of the Norwegian Patents Act §§ 1.3, 1.2 and 1.1.
+   * quantitative specifications of the analog integrator circuits (component values, op‑amp models, bandwidth, and design rules for the TDM switching network);  
+   * exact timing parameters for the time‑domain multiplexing (slot length, settling time, jitter tolerances, allowable skew);  
+   * a complete calibration methodology (algorithmic steps, reference standards, frequency of recalibration, storage format of correction coefficients);  
+   * structural details of the digital control subsystem (FPGA/SoM resource allocation, state‑machine diagram, register map, firmware interfaces); and  
+   * a defined host‑interface protocol (e.g., PCI‑Express Gen 3 lane count, register map, DMA timing).
 
-2. **Clarity of the Claims (Norwegian Patents Act, § 4.6, § 4.10, § 4.11, § 4.17 and § 4.22)**  
-   The claims contain numerous relative and qualitative terms (“adaptive”, “critical events”, “human‑like”, “professional advice”, “friend mode”, “expert mode”, “local”, “remote”, “sleep‑onset support”, “child‑friendly content”, “appropriate”, “automatic”) that are not anchored to objective technical parameters.  Under § 4.6 such terms are ambiguous and prevent the skilled person from ascertaining the scope of protection.  
+   Consequently, a skilled person would be faced with an undue burden to determine the means for achieving the claimed functions, which is a clear breach of the enablement requirement. The deficiencies are classified as **critical** (see detailed issues § 1.2 and § 1.1 of the analysis).  
 
-   Moreover, the claims are drafted in a result‑oriented manner (e.g. “provides sleep‑onset support”, “detects falls”, “automatically sends an emergency notification”) without reciting the structural features that achieve those results, in breach of § 4.10.  The absence of measurement methods, sensor specifications and decision thresholds further contravenes § 4.11.  
+2. **Clarity of the claims (Regulations §§ 4.1, 4.6, 4.10)** – The claims suffer from multiple clarity defects:
 
-   Several essential features (e.g. “security architecture”, “expert module”, “multimodal sensor module”, “safety detection module”) are defined only in the description, making the claims dependent on the description for interpretation, which is prohibited by § 4.17.  
+   * Use of vague relative terms such as “high‑speed” (claim 8) without quantitative definition, violating § 4.6.  
+   * Undefined technical terms “non‑idealities”, “logical computation channels”, and “analog computation fabric” (claims 1, 5), contravening § 4.1.  
+   * Overly functional language (“configured to perform continuous‑time mathematical operations”, “configured to control, schedule, and supervise operation”) that does not recite structural features, breaching § 4.1.  
+   * Result‑to‑be‑achieved phrasing in claim 10 (“execute differential equation solving, optimisation, control, or signal‑processing tasks”) without reciting the means to obtain that result, in violation of § 4.10.  
 
-   Finally, the breadth of claim 1 – covering a multimodal, adaptive virtual companion system that performs social dialogue, expert knowledge provision, biometric identification, safety detection and emergency assistance – is not justified by the disclosed contribution and, together with the foregoing deficiencies, jeopardises both clarity and enablement in accordance with § 4.22.
+   These ambiguities render the claims unclear to the skilled person and therefore non‑compliant with the statutory clarity provisions. The most serious deficiencies are marked **critical** (functional language) and **moderate** (relative term “high‑speed”).  
 
-3. **Support (Norwegian Patents Act, § 6.1)**  
-   The support analysis indicates that each claim feature has a clear basis in the description and the claimed scope is not broader than the disclosed embodiment.  Accordingly, the requirement of § 6.1 is satisfied.
+3. **Support by the description (Norwegian Patents Act, Section 8)** – The analysis confirms that all claim features have a basis in the disclosed embodiments; the support requirement is satisfied.  
 
-**Conclusion and Required Amendments**  
+**Conclusion**  
 
-The application must be brought into compliance with the Norwegian Patents Act by:
+The application, in its present form, does **not** satisfy the enablement requirement of Art. 71 (1) NP Act (Art. 83 EPC) and fails to meet the clarity standards of the Regulations §§ 4.1, 4.6, 4.10. Accordingly, the claims are rejected insofar as they stand.  
 
-* Providing a complete technical disclosure for every functional block (speech analysis, context detection, adaptive persona generation, biometric identification, fall‑detection, emergency notification, hardware architecture) including algorithms, model architectures, sensor types, sampling rates, parameter ranges and decision thresholds, thereby satisfying §§ 1.3, 1.2 and 1.1.  
-* Replacing all relative and result‑oriented language with precise structural features and objective quantitative limits in order to meet §§ 4.6, 4.10, 4.11, 4.17 and 4.22.  
-* Introducing dependent claims that narrow the scope where appropriate, or alternatively furnishing detailed enabling examples for each functional aspect of the independent claims.
+**Required amendments**  
 
-Until the above deficiencies are remedied, the claims are **rejected** for lack of enablement and lack of clarity, notwithstanding the satisfactory support under § 6.1.  The applicant is invited to file amendments addressing the cited deficiencies within the statutory period.
+* Provide detailed schematics of the analog integrators (including component values, op‑amp models, and bandwidth), and specify the design rules for the TDM switching network (switch resistance, charge‑injection limits, maximum channel‑to‑element ratio).  
+* State the exact time‑slot duration, required analog settling time, jitter and skew tolerances, and include timing diagrams illustrating the multiplexing schedule.  
+* Describe the calibration routine in full, with algorithmic steps, reference standards, frequency of recalibration, and the format of correction coefficients.  
+* Disclose the digital control subsystem architecture (resource allocation, state‑machine diagram, register definitions, example HDL snippets) and the host‑interface protocol (PCI‑Express generation, lane count, register map, DMA parameters).  
+* Replace vague and functional language with concrete structural features, e.g., “comprising a digital control unit including a programmable logic device that generates control signals for the analog computation fabric” and define “high‑speed” by a quantitative data‑rate (e.g., ≥ 10 GB/s).  
+* Re‑phrase result‑to‑be‑achieved claims to recite the structural means that enable the stated tasks.  
+
+The applicant is invited to file a complete amendment addressing the above deficiencies within the statutory time limit. Failure to do so will result in the final refusal of the application.
 
 
 ======================================================================
 ENABLEMENT (Art. 83 EPC / §8)
 ======================================================================
 Status: NOT_ENABLED
-Reason: Fails §1.3 – the application merely describes desired functions (e.g., “generates a response based on social dialogue and expert knowledge”) without providing the technical parameters, algorithms or concrete steps required to achieve those functions across the whole claimed scope.
-Reproducibility: 15.0%
+Reason: Fails §1.2 Level of details and §1.3 Objections under Art. 83 – the disclosure lacks essential technical parameters and concrete implementation steps required for a skilled person to reproduce the system across the full claimed scope.
+Reproducibility: 28.0%
 
 Missing Elements:
-  • Real‑time speech analysis method (e.g., feature extraction, model architecture, processing latency)
-  • Context detection mechanism (sensors used, data fusion rules, thresholds)
-  • Adaptive conversation‑style algorithm (how style, function and role are switched)
-  • Voice‑command activation details (wake‑word model, sensitivity, false‑trigger handling)
-  • Biometric identification procedure (facial/voice feature extraction, matching criteria, error rates)
-  • Critical‑event monitoring logic (event definitions, sensor fusion, decision thresholds)
-  • Emergency notification protocol (message format, contact selection, timing)
-  • Hardware specifications (microphone array geometry, sensor types, processing unit)
+  • Analog integrator circuit topologies, component values, and bandwidth specifications.
+  • Exact time‑slot duration, required analog settling time, and allowable timing skew.
+  • Calibration sequence steps, reference standards, frequency of recalibration, and storage format of correction coefficients.
+  • FPGA/SoM resource allocation, control logic flowcharts, and timing diagrams for scheduling.
+  • PCIe (or alternative) register map, command set, and DMA transfer parameters.
 
 ======================================================================
 CLARITY (Art. 84 EPC)
 ======================================================================
 Status: UNCLEAR
-Reason: Fails §4.6 (relative terms) and §4.10 (result‑to‑be‑achieved) and contains multiple functional and undefined features that are not supported by the claim language alone.
-Clarity Score: 34.0%
+Reason: Multiple clarity defects: vague relative terms, undefined functional language and result‑to‑be‑achieved wording violate §§4.1, 4.6 and 4.10.
+Clarity Score: 38.0%
 
 Vague Terms:
-  • adaptive
-  • critical events
-  • human‑like
-  • professional advice
-  • friend mode
-  • expert mode
-  • local
-  • remote
-  • sleep‑onset support
-  • personal waking
-  • child‑friendly content
-  • appropriate
-  • automatic
+  • high‑speed
 
 ======================================================================
 SUPPORT (Art. 84 EPC)
 ======================================================================
 Status: SUPPORTED
-Reason: Meets §6.1 General Support – each claim feature has a clear basis in the description and the scope is not broader than disclosed.
+Reason: All claim features have a basis in the description; the scope does not exceed what is disclosed (§6.1 General Support).
 Support Score: 95.0%
 
 --- Detailed Enablement Violations ---
-[CRITICAL] Citation: §1.3
-          Reason: The claims describe results to be achieved (e.g., “automatically adapts conversation style” or “identifies the user using biometric signals”) but do not disclose the means—algorithms, sensor configurations, thresholds—required to achieve those results across the entire claimed range.
-          Suggestion: Add detailed descriptions of the algorithms, sensor data processing steps, parameter values and decision thresholds for each functional block (speech analysis, context detection, adaptive persona, biometric identification, fall detection, emergency notification).
-[CRITICAL] Citation: §1.2
-          Reason: The disclosure lacks sufficient detail for the skilled person to reproduce the invention without undue burden; essential implementation steps are omitted, forcing the skilled person to perform inventive trial‑and‑error to determine how to realize the adaptive behavior.
-          Suggestion: Provide a complete flowchart or pseudo‑code for the method, including timing constraints for real‑time processing, data fusion rules, and example model architectures (e.g., neural network sizes, training data).
-[MODERATE] Citation: §1.1
-          Reason: The overall description is vague and does not meet the general principle of clear and complete disclosure; many claim features are only mentioned in passing without technical elaboration.
-          Suggestion: Expand the description to explicitly define each module, its internal components, and how they interoperate, referencing known techniques where appropriate.
+[CRITICAL] Citation: §1.2 Level of details
+          Reason: The description provides only high‑level block diagrams and generic functional statements. A skilled person cannot reproduce the analog fabric, timing, or calibration without specific circuit parameters, timing budgets, and algorithmic steps, leading to an undue burden.
+          Suggestion: Add detailed schematics of the analog integrators (capacitor, resistor values, op‑amp models), specify the TDM slot length (e.g., 10 µs) and required settling time (e.g., 2 µs), and include a flowchart of the calibration routine with measurement points and coefficient calculation formulas.
+[MODERATE] Citation: §1.3 Objections under Art. 83
+          Reason: The application asserts that the system can compute “continuous‑time mathematical operations” across an arbitrary number of logical channels but does not disclose the means to achieve this across the entire claimed range (e.g., how many channels can be supported, how performance scales). This is a result‑oriented description lacking enabling means.
+          Suggestion: Provide a scalability analysis showing the maximum channel‑to‑element ratio, including switching network specifications, crosstalk limits, and timing constraints, together with example configurations (e.g., 8 logical channels on 2 integrators).
+[CRITICAL] Citation: §1.1 General Principle
+          Reason: The overall disclosure does not meet the requirement of being “sufficiently clear and complete” because key implementation details (digital control firmware, host‑interface protocol) are omitted, preventing a skilled person from carrying out the invention.
+          Suggestion: Include a detailed description of the digital control subsystem: state‑machine diagram, register definitions, timing of control signals, and example HDL code snippets. Also, specify the host interface protocol (PCIe Gen3, lane count, register map).
 
 --- Detailed Clarity Violations ---
-[CRITICAL] Citation: §4.6
-          Reason: Terms such as “adaptive”, “critical events”, “human‑like”, “professional advice”, “friend mode”, “expert mode”, “local”, “remote”, “sleep‑onset support”, and “child‑friendly content” are relative. The skilled person cannot determine their technical meaning without further limits.
-          Suggestion: Introduce objective technical parameters (e.g., “adaptive” defined by a change in dialogue model parameters exceeding 20 % within 2 s; “critical event” defined as a fall detected by accelerometer threshold >2 g).
+[CRITICAL] Citation: §4.1
+          Reason: The claim uses functional wording such as "configured to perform" and "configured to control, schedule, and supervise" without reciting structural features that achieve these functions. This makes the claim unclear to the skilled person.
+          Suggestion: Replace functional language with concrete structural elements, e.g., "comprising a digital control unit comprising a programmable logic device configured to generate control signals for the analog computation fabric".
+[MODERATE] Citation: §4.6
+          Reason: "high‑speed peripheral interconnect" is a relative term. Its technical meaning is not objectively defined in the claim, rendering it unclear.
+          Suggestion: Specify a quantitative parameter, e.g., "a peripheral interconnect having a data rate of at least 10 GB/s".
 [CRITICAL] Citation: §4.10
-          Reason: Claims 1, 10, 11, 14 and 15 define the invention in terms of results to be achieved (e.g., “provides sleep‑onset support”, “detects falls”, “automatically sends an emergency notification”). The claim does not disclose how the skilled person achieves these results across the full scope.
-          Suggestion: Replace result‑oriented language with structural features that achieve the result, e.g., “comprising a sleep‑onset module configured to emit audio stimuli of frequency 200‑500 Hz for at least 5 min when the user’s heart‑rate falls below 60 bpm”.
-[MODERATE] Citation: §4.11
-          Reason: The claim mentions “monitors critical events” and “detects falls via multisensor analysis” without specifying the measurement method or thresholds, which are required unless they are standard in the art.
-          Suggestion: Specify the sensor types, sampling rates and decision thresholds (e.g., “using a tri‑axial accelerometer sampling at 100 Hz and a fall detection algorithm that triggers when the resultant acceleration exceeds 2.5 g”).
-[MODERATE] Citation: §4.17
-          Reason: Claims 2‑15 refer to features that are not defined in the claim language but would require the description for interpretation (e.g., “security architecture”, “expert module”). This makes the claims dependent on the description for essential features.
-          Suggestion: Include essential structural features directly in the claim, e.g., “the security architecture comprising an on‑device encrypted storage unit and a sandboxed execution environment”.
-[CRITICAL] Citation: §4.22
-          Reason: The breadth of claim 1 (a multimodal, adaptive virtual companion system covering social dialogue, expert knowledge, biometric identification, safety detection, etc.) is not justified by the disclosed contribution and may lack enablement for the full scope.
-          Suggestion: Introduce a hierarchy of dependent claims that narrow the scope, or provide a detailed enabling disclosure for each functional block in the description.
+          Reason: Claim 10 defines the invention in terms of a result to be achieved ("execute differential equation solving, optimization, control, or signal processing tasks") without providing the means to achieve that result across the full scope.
+          Suggestion: Re‑phrase to recite the structural means that enable those tasks, e.g., "wherein the analog computation fabric comprises a network of integrators that, when driven by the digital control subsystem, solves differential equations".
+[MODERATE] Citation: §4.6
+          Reason: The term "non‑idealities" is undefined; the skilled person cannot determine which non‑idealities are covered (gain error, offset, drift, etc.).
+          Suggestion: Define the term in the claim or replace with specific parameters, e.g., "measure and compensate for gain error, offset voltage, temperature drift, and component mismatch".
+[MODERATE] Citation: §4.1
+          Reason: The phrase "hardware accelerator card installable in a computing system" is functional and does not describe the structural features that make the system an accelerator card.
+          Suggestion: Add structural features, e.g., "comprising a printed circuit board having a PCI‑Express form factor and a power connector".
 
 ======================================================================
 CRITICAL ISSUES
 ======================================================================
-  🚨 Absence of mechanistic detail for speech analysis, context detection, and adaptive persona generation
-  🚨 No quantitative parameters for biometric identification, wake‑word detection, and fall‑detection
-  🚨 Vague functional language (e.g., "adaptive", "critical events", "human‑like") without structural definition
-  🚨 Missing implementation steps for safety‑detection and emergency‑notification procedures
-  🚨 Broad claim scope not justified by the disclosed contribution
+  🚨 Insufficient quantitative and structural details to enable the analog computation fabric and its time‑domain multiplexing.
+  🚨 Missing timing specifications (slot length, settling time, jitter tolerances) for reliable operation.
+  🚨 Calibration methodology is only conceptual; no algorithms, sequences, or coefficient ranges are disclosed.
+  🚨 Digital control subsystem and host interface lack architectural description, state‑machine flow, and protocol/register specifications.
+  🚨 Claims use vague and functional language (e.g., "high‑speed", "non‑idealities", "configured to perform…") leading to lack of clarity and over‑broad scope.
 
 ======================================================================
 RECOMMENDATIONS
 ======================================================================
-  1. Provide detailed algorithms, model architectures, and processing parameters for real‑time speech analysis and context detection
-  2. Specify sensor types, data‑fusion rules, thresholds, and latency requirements for safety‑event monitoring
-  3. Define quantitative performance metrics (error rates, sensitivity, false‑trigger handling) for biometric identification and wake‑word detection
-  4. Include concrete hardware specifications (microphone array geometry, processing unit, sensor suite) and implementation steps for emergency notification
-  5. Rewrite claims to replace vague functional terms with clear, structural features and limit scope to the disclosed embodiments
+  1. Provide complete circuit diagrams with component values, bandwidth, and integrator topology details.
+  2. Specify exact time‑slot durations, required analog settling times, jitter tolerances, and timing diagrams for the multiplexing mechanism.
+  3. Include detailed calibration procedures: reference standards, step‑by‑step sequences, algorithmic description, frequency of recalibration, and storage format of correction coefficients.
+  4. Describe the digital control subsystem architecture (FPGA/SoC resource allocation, state‑machine flowcharts, firmware interfaces) and supply timing diagrams for scheduling.
+  5. Define all functional terms in the claims, replace vague language with concrete technical features, and narrow claim scope to match the disclosed embodiments.
 
 ======================================================================

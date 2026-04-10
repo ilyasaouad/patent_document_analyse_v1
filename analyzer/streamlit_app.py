@@ -15,7 +15,7 @@ import os
 import shutil
 from pathlib import Path
 
-os.environ['MINERU_MODEL_SOURCE'] = 'local'
+os.environ['MINERU_MODEL_SOURCE'] = 'huggingface'
 
 project_root = Path(__file__).parent.parent.absolute()
 analyzer_dir = Path(__file__).parent.absolute()
@@ -39,6 +39,9 @@ from utils.helpers import remove_margin_numbers
 
 sys.path.insert(0, str(analyzer_dir / "claims_analyse"))
 from claims_legal_analyzer import PatentLegalAnalyzer
+
+sys.path.insert(0, str(analyzer_dir / "search_strategy_analyse"))
+from search_strategy_analyzer import SearchStrategyAnalyzer
 
 st.set_page_config(
     page_title="Patent Document Extractor", page_icon="📄", layout="wide"
@@ -206,6 +209,24 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 except Exception as legal_e:
                     st.warning(f"Legal Analysis encountered an error: {legal_e}")
 
+                # ── Step 3.8: Search Strategy Analysis ──
+                search_result = None
+                try:
+                    claims_to_analyze = claims_text if claims_text else extracted_claims_text
+                    if claims_to_analyze and desc_text:
+                        with st.spinner("🔎 Running Search Strategy Analysis (gpt-oss:120b-cloud)..."):
+                            from search_core.ollama_client import OllamaClient as SearchOllamaClient
+                            search_client = SearchOllamaClient(model_name="gpt-oss:120b-cloud")
+                            search_analyzer = SearchStrategyAnalyzer(
+                                ollama_client=search_client,
+                                input_dir=str(OUTPUT_DIR),
+                            )
+                            search_result = search_analyzer.analyze()
+                    else:
+                        st.warning("Search Strategy skipped: Requires both claims and description text.")
+                except Exception as search_e:
+                    st.warning(f"Search Strategy Analysis encountered an error: {search_e}")
+
                 # ── Step 4: Show results ──
                 st.success("✅ Extraction & Processing Complete!")
                 
@@ -224,7 +245,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 output_files = [f for f in OUTPUT_DIR.iterdir() if f.is_file()]
                 st.code("\n".join([f"  {f.name}" for f in output_files]))
 
-                tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis", "⚖️ Legal Analysis"])
+                tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis", "⚖️ Legal Analysis", "🔎 Search Strategy"])
 
                 with tab1:
                     if desc_text:
@@ -323,6 +344,83 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                             st.json(legal_result.to_dict())
                     else:
                         st.warning("No result produced by Patent Legal Analyzer.")
+
+                with tab7:
+                    if search_result:
+                        if search_result.status == "ERROR":
+                            st.error(f"Search Strategy Analysis failed: {search_result.error_message}")
+                        else:
+                            st.subheader("🔎 Search Strategy Report")
+                            
+                            # Status badge
+                            if search_result.status == "SUCCESS":
+                                st.success(f"## Status: {search_result.status}")
+                            else:
+                                st.warning(f"## Status: {search_result.status}")
+                            
+                            # Key metrics
+                            st.markdown("---")
+                            colA, colB, colC = st.columns(3)
+                            with colA:
+                                st.metric("Marks Identified", search_result.num_marks)
+                            with colB:
+                                st.metric("Search Combinations", search_result.num_search_combinations)
+                            with colC:
+                                st.metric("IPC/CPC Codes", len(search_result.classification_codes))
+                            
+                            # Input file status
+                            st.markdown("---")
+                            st.markdown("#### 📂 Input Files")
+                            st.code(search_result.input_status.summary())
+                            
+                            # Technical Conclusion
+                            if search_result.technical_conclusion:
+                                st.markdown("#### 🧪 Technical Conclusion")
+                                st.info(search_result.technical_conclusion)
+                            
+                            # Marks
+                            if search_result.marks:
+                                st.markdown("#### 🏷️ Keyword Marks")
+                                for mark in search_result.marks:
+                                    with st.expander(f"Mark {mark.label} — {mark.concept}", expanded=False):
+                                        if mark.broad_terms:
+                                            st.markdown("**Broad terms:** " + ", ".join(mark.broad_terms))
+                                        if mark.narrow_terms:
+                                            st.markdown("**Narrow terms:** " + ", ".join(mark.narrow_terms))
+                                        if mark.must_have:
+                                            st.markdown("**Must-have:** " + ", ".join(mark.must_have))
+                                        if mark.optional:
+                                            st.markdown("**Optional:** " + ", ".join(mark.optional))
+                                        if mark.proximity_example:
+                                            st.code(mark.proximity_example)
+                            
+                            # Boolean strings
+                            if search_result.broad_boolean_string or search_result.narrow_boolean_string:
+                                st.markdown("#### 🔗 Boolean Search Strings")
+                                if search_result.broad_boolean_string:
+                                    st.markdown("**Broad:**")
+                                    st.code(search_result.broad_boolean_string, language="sql")
+                                if search_result.narrow_boolean_string:
+                                    st.markdown("**Narrow:**")
+                                    st.code(search_result.narrow_boolean_string, language="sql")
+                            
+                            # Classification codes
+                            if search_result.classification_codes:
+                                st.markdown("#### 📋 Classification Codes")
+                                st.markdown(", ".join([f"`{c}`" for c in search_result.classification_codes]))
+                            
+                            # Examiner notes
+                            if search_result.examiner_notes:
+                                st.markdown("#### 📝 Examiner Notes")
+                                st.info(search_result.examiner_notes)
+                            
+                            # Full report
+                            with st.expander("View Full Search Strategy Report", expanded=False):
+                                st.markdown(search_result.full_report)
+                                st.markdown("**Raw JSON Data:**")
+                                st.json(search_result.to_dict())
+                    else:
+                        st.warning("No result produced by Search Strategy Analyzer.")
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
