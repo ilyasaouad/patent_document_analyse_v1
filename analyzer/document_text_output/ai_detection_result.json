@@ -1,85 +1,77 @@
 {
   "is_likely_ai_generated": false,
-  "confidence_score": 0.557,
+  "confidence_score": 0.572,
   "risk_level": "LOW",
   "feature_scores": {
-    "fingerprint": 0.22,
-    "anchor_similarity": 0.75,
+    "fingerprint": 0.24,
+    "anchor_similarity": 0.71,
     "hallucination": 0.73,
-    "drawing": 0.45
+    "drawing": 0.7
   },
   "detailed_analysis": {
     "fingerprint_analysis": {
-      "score": 0.22,
+      "score": 0.24,
       "findings": [
-        "Sentence length varies with occasional uniformity but not overly consistent",
-        "Transitions are appropriate and not overly repetitive (e.g., no excessive use of \"Furthermore\" or \"Moreover\")",
-        "Technical terminology and domain-specific details are present, indicating low lack of technical noise",
-        "Passive voice is used in standard patent phrasing but not excessively dominant",
-        "Paragraphs show natural variation in length rather than overly structured uniform blocks"
+        "Sentence lengths vary with both short and complex constructions, indicating natural variation",
+        "Transition words are used sparingly and not overly repetitive",
+        "Technical terminology and domain-specific jargon present, reducing generic noise",
+        "Passive voice appears but is balanced with active constructions",
+        "Paragraphs differ in length and structure, lacking uniformity"
       ]
     },
     "anchor_analysis": {
-      "similarity": 0.75,
+      "similarity": 0.71,
       "findings": [
-        "Both texts use nearly identical technical terminology such as \"hybrid analog‑digital computing system\", \"time‑domain multiplexed\", \"continuous‑time\", \"calibration subsystem\", and \"digital control\".",
-        "The opening sentence structures are parallel: \"The present invention relates to...\" versus \"The present disclosure relates to...\", indicating a shared phrasing pattern.",
-        "Logical flow mirrors each other, moving from a high‑level overview of the hybrid architecture to detailed functional blocks (analog fabric, digital control, TDM mechanism).",
-        "Sentence patterns and word choices (e.g., \"energy‑efficiency\", \"low‑latency\", \"programmable logic\", \"host interface\") are closely aligned, suggesting the AI‑generated version is a rephrasing of the original."
+        "Both texts use very similar phrasing such as “present invention relates to” / “present disclosure relates to” and repeatedly refer to a “multi‑dimensional context space” and “oscillatory (wave‑like) representations”.",
+        "The logical flow mirrors each other: an introductory field/background section followed by a description of the system architecture and its components, reflecting a comparable structural outline.",
+        "Sentence patterns are alike, often employing compound sentences that introduce a concept and immediately qualify it (e.g., “the core of the invention is the representation of each data fragment as an oscillatory entity…”).",
+        "Technical terminology overlaps heavily – terms like “embedding”, “context engine”, “resonance score”, “data fragment”, “coordinate vector”, and “high‑dimensional” appear in both, indicating shared lexical choices.",
+        "Stylistic differences are evident: the original is more narrative and problem‑oriented, while the AI‑generated version is more formal, includes a table, and uses patent‑style boilerplate (“any modifications that fall within the scope of the appended claims”)."
       ]
     },
     "hallucination_analysis": {
       "score": 0.73,
       "findings": [
-        "programmable hardware accelerators",
-        "high-speed",
-        "low-latency",
-        "energy-efficient",
-        "differential equations",
-        "optimization",
-        "control systems",
-        "real-time physical modeling",
-        "PCI Express (PCIe) card",
-        "software integration",
-        "patch cables",
-        "sampling",
-        "quantization",
-        "sequential arithmetic",
-        "phase error",
-        "short-horizon",
-        "real-time dynamic systems",
+        "machine learning models",
+        "neural networks",
+        "latent vectors",
+        "attention mechanisms",
+        "keyword matching",
+        "probabilistic models",
+        "deterministic reliability",
+        "parallel context consideration",
+        "multiple hypotheses",
+        "redundancy",
         "scalability",
-        "repeatable",
-        "variants",
-        "advantages of the invention",
-        "industrial applicability"
+        "static relevance scores",
+        "dynamic context limitations"
       ]
     },
     "drawing_analysis": {
-      "score": 0.45,
+      "score": 0.7,
       "findings": [
-        "The drawing list shows a numbering inconsistency: the calibration loop is labeled both as “Figure 5: Calibration and measurement feedback loop” and earlier as “6 Figure — Calibration and Measurement Loop”, indicating a mismatch between the figure numbers referenced in the description and those actually present in the drawings.",
-        "The entry “7 Figure 6 — Software Control Interface” is confusing – it prefixes Figure 6 with a “7”, suggesting a stray or mis‑numbered reference that does not correspond to any separate Figure 7 in the drawings.",
-        "Only two element numbers (100 — Host Computer and 102 — PCIe) appear in the OCR excerpt, while the description of Figure 1 likely references additional numbered components (e.g., 104, 106) that are not present in the extracted drawing text, indicating missing element labels."
+        "WARNING: Description references drawings but no drawing file provided"
       ]
     },
     "enablement_assessment": {
       "enablement_conclusion": "NOT ENABLED",
       "missing_elements": [
-        "Detailed circuit schematics and component specifications for the analog computation fabric (e.g., integrator topology, resistor/capacitor values, op‑amp models)",
-        "Exact design of the time‑domain multiplexing mechanism (switching architecture, timing resolution, control signal waveforms)",
-        "Comprehensive calibration procedures (measurement methods, algorithms for extracting correction coefficients, calibration flowcharts)",
-        "Host interface specifications (communication protocol, register map, configuration command set)",
-        "Implementation details of the digital control subsystem (FPGA/PL logic description, state‑machine diagrams, timing constraints)",
-        "Performance benchmarks or example use‑case implementations demonstrating reproducibility"
+        "Concrete mathematical definition of the oscillatory (wave) representation for data fragments",
+        "Specific algorithm or formula for computing the resonance score between a fragment and a context input",
+        "Detailed procedure for mapping metadata to coordinates in the multi‑dimensional context space",
+        "Specification of the wave function shape, frequency, amplitude, and how it varies across dimensions",
+        "Guidelines for selecting the predetermined relevance threshold and handling ties or multiple high scores",
+        "Examples or embodiments illustrating end‑to‑end processing of actual data fragments",
+        "Hardware or software architecture requirements (e.g., processing units, memory structures) to implement the system"
       ],
       "technical_deficiencies": [
-        "Absence of concrete hardware diagrams or layout information prevents a skilled practitioner from reproducing the analog fabric",
-        "Insufficient timing information for multiplexed operation (slot duration, settling time requirements, synchronization method)",
-        "Calibration methodology is described only at a high level without quantitative models or step‑by‑step procedures",
-        "No description of how non‑idealities are measured (e.g., test points, instrumentation) or how correction coefficients are applied in hardware",
-        "Lack of detailed software/firmware interface description for host‑system integration",
-        "No guidance on scaling the architecture (number of channels, power/area considerations) which is essential for practical implementation"
+        "Vague description of “oscillatory representation” without defining the mathematical model (e.g., sinusoidal basis, Fourier components, or quantum‑like wave functions)",
+        "No disclosed method for generating or normalizing the multi‑dimensional wave functions from metadata",
+        "Absence of a clear, reproducible formula for the resonance score (e.g., inner product, convolution, correlation) and its scaling",
+        "Lack of detail on how the context input is transformed into a comparable representation in the same space",
+        "No information on how dimensionality (e.g., 11 dimensions) is concretely instantiated or how each dimension is quantified",
+        "Missing implementation specifics such as data structures, indexing schemes, or processing pipelines required to realize the claimed method",
+        "No experimental results, benchmarks, or validation examples to demonstrate that the described approach actually yields context‑relevant retrieval"
       ]
     },
     "model_used": "gpt-oss:120b-cloud"
@@ -89,12 +81,12 @@
     "\n⚖️ ENABLEMENT ISSUE:",
     "   CRITICAL: Patent disclosure lacks enablement",
     "   Action: Request additional technical details",
-    "• Sentence length varies with occasional uniformity but not overly consistent",
-    "• Transitions are appropriate and not overly repetitive (e.g., no excessive use of \"Furthermore\" or \"Moreover\")"
+    "• Sentence lengths vary with both short and complex constructions, indicating natural variation",
+    "• Transition words are used sparingly and not overly repetitive"
   ],
   "applied_rules": [],
   "metadata": {
-    "timestamp": "2026-04-08T23:48:13.726491",
+    "timestamp": "2026-04-16T18:02:38.412082",
     "config": {
       "threshold": 0.6,
       "weights": {

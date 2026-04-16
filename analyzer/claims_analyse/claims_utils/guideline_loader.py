@@ -30,10 +30,13 @@ class GuidelineLoader:
             return ""
             
     def get_clarity_guidelines(self) -> str:
-        return self.load_guideline("epo_f_iv_4_clarity.txt")
+        return self.load_guideline("clarity.txt")
         
     def get_enablement_guidelines(self) -> str:
-        return self.load_guideline("epo_f_iii_1_enablement.txt")
+        return self.load_guideline("enablement.txt")
         
     def get_support_guidelines(self) -> str:
-        return self.load_guideline("epo_f_iv_5_support.txt")
+        return self.load_guideline("support.txt")
+        
+    def get_claim_analysis_guidelines(self) -> str:
+        return self.load_guideline("claim_analysis.txt")

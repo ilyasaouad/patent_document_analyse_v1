@@ -1,81 +1,170 @@
-EPO ANSERA FULL-TEXT SEARCH OPERATOR REFERENCE
-===============================================
+ANSERA (PQL) – Proximity & Operator Rules
 
-TRUNCATION
-----------
-*   Unlimited truncation (replaces zero or more characters)
-    Example: comput*  matches compute, computer, computing, computation
+==========================================================================
+CRITICAL: TRUNCATION vs. MULTI-WORD CONCEPTS
+==========================================================================
+Do not use "*" in truncation, use "+" for more than 1 trailing characters or "?" for only 1 trailing character.
 
-?   Single-character wildcard (replaces exactly one character)
-    Example: analy?e  matches analyse, analyze
+The "+" operator is ONLY a character-level wildcard on a SINGLE word.
+It means "0 or more trailing characters". It does NOT join words together.
 
+WRONG (NEVER DO THIS):
+  analog+digital+comput+
+  → This does NOT mean "analog digital computer"
+  → PQL reads it as ONE word: "analogdigitalcomput..." (nonsense)
+
+CORRECT (ALWAYS DO THIS):
+  Use proximity operators (nW or nD) between separate words.
+  Use comma (,) for OR alternatives.
+
+  (analog, digital) 2D comput+
+  → Finds "analog" or "digital" within 2 words of "computer/computing/..."
+
+  analog 2W digital 2W comput+
+  → Finds "analog" then "digital" then "computer/..." in that order, each within 2 words
+
+MORE CORRECT EXAMPLES:
+  WRONG:  analog+digital+comput+ OR hybrid+comput+
+  RIGHT:  (analog, digital, hybrid) 2D comput+
+
+  WRONG:  field+programmable+gate+array
+  RIGHT:  field 2W programm+ 2W gate 2W array+
+
+  WRONG:  machine+learning+model+
+  RIGHT:  machine 2W learn+ 2W model+
+
+  WRONG:  heat+exchang+ OR thermal+manag+
+  RIGHT:  (heat 2D exchang+), (thermal 2D manag+)
+
+SHORTHAND OPERATORS:
+  ,       = OR        →  apple, banana  means  apple OR banana
+  space   = 0W        →  yellow banana  means  yellow 0W banana (adjacent, ordered)
+  _       = ab or a b →  white_house    matches whitehouse or white house
+
+==========================================================================
+TRUNCATION OPERATORS (character-level, SINGLE word only)
+==========================================================================
+  +  → 0 or more characters    comput+  → computer, computing, computation
+  ?  → 0 or 1 character        colo?r   → color, colour
+  #  → exactly 1 character     gr#y     → gray, grey
+
+  These apply to ONE WORD only. Never chain them to join multiple words.
+
+  The + can also appear at the START of a word for left-truncation:
+  +motor  → finds electromotor, servomotor
+
+  Combined left+right truncation: +conduct+ → semiconductor, superconductor, etc.
+
+==========================================================================
 PROXIMITY OPERATORS
--------------------
-nW  Within n words, any order (word-distance operator)
-    Example: analog 3W digital
-    Matches documents where "analog" and "digital" appear within 3 words
-    of each other in any order.
+==========================================================================
 
-nP  Within n words, ordered (positional operator)
-    Example: time 2P multiplex*
-    Matches documents where "time" appears within 2 words BEFORE "multiplex*"
+nW — Ordered proximity: a nW b
+  a appears before b with at most n unmatched words between them.
+  Example: yellow W banana → matches "yellow banana" (adjacent, ordered)
 
-PRE/n  Precedes within n words (synonym for ordered proximity in some systems)
-    Example: digital PRE/3 control
+nD — Unordered proximity: a nD b
+  a and b appear within n words of each other, in ANY order.
+  Example: yellow D banana → matches "yellow banana" AND "banana yellow"
 
-PHRASE SEARCH
--------------
-"word1 word2"  Exact phrase, words must appear adjacent and in order
-    Example: "analog computation fabric"
-    NOTE: Wildcards (* ?) are NOT supported inside quoted phrases.
-          Use proximity operators instead of phrases when truncation is needed.
-    Correct:  analog* 2W fabric
-    Incorrect: "analog* fabric"
+nS — Sentence proximity: a nS b
+  a and b within n sentences of each other.
 
+==========================================================================
+FRAMING OPERATORS (BEST PRACTICE for complex queries)
+==========================================================================
+
+nUG(term1, term2, ..., termN) — Unordered group
+  Matches word sequences of at most n words containing ALL terms in ANY order.
+
+nOG(term1, term2, ..., termN) — Ordered group
+  Same but terms must appear in the GIVEN order.
+
+OPERATOR EQUIVALENCE:
+  0D ≈ 2UG
+  1D ≈ 3UG
+  2D ≈ 4UG
+  3D ≈ 5UG
+
+Example:
+  5UG(Door, (lock, latch, bolt), installation)
+  → Finds all three concepts within a 5-word window, any order
+
+  Advantages over chained D/W:
+  - Treats all terms as one group
+  - Avoids first-match evaluation issues
+  - More robust recall
+
+==========================================================================
+COMMON FAILURE WITH CHAINED PROXIMITY + OR
+==========================================================================
+
+Query:   Door 2D (lock, actuator) D installation
+Text:    Door lock actuator installation
+Problem: "lock" matches first → "actuator" adds distance → "installation" is now too far → NO HIT
+
+KEY RULE: When chaining proximity operators, outer distance ≥ inner distance
+  Door 2D (lock, actuator) 2D installation  ← works
+
+BEST FIX: Use a single framing operator instead
+  5UG(Door, (lock, actuator), installation)  ← always works
+
+ALTERNATIVE: Expand synonyms manually
+  Door 2D lock D installation, Door 2D actuator D installation
+
+==========================================================================
+EVALUATION ORDER
+==========================================================================
+Queries are parsed LEFT → RIGHT:
+  heart 1D rate 3D frequency = (heart 1D rate) 3D frequency
+Use parentheses to control logic explicitly.
+
+==========================================================================
+ANTI-PROXIMITY OPERATORS
+==========================================================================
+!nW  — Match a but NOT when followed by b within n words
+  san !W francisco → finds "san" but not "san francisco"
+
+nov  — No overlapping
+  san nov (san francisco) → finds "san" alone
+
+==========================================================================
 BOOLEAN OPERATORS
------------------
-AND   Both terms must be present
-OR    Either term must be present
-NOT   Exclude documents containing the term
-      Example: analog NOT digital
+==========================================================================
+AND  — Both terms required
+OR   — Either term (shorthand: comma ,)
+NOT  — Exclude term
+  a NOT b = a AND NOT b
 
-OPERATOR PRECEDENCE (high to low)
-----------------------------------
-1. Proximity operators (nW, nP)
-2. NOT
-3. AND
-4. OR
+==========================================================================
+GROUPING AND ESCAPING
+==========================================================================
+( )   — Grouping: (green, red) 3D apple+
+" "   — Escape PQL operators: "3d" graphics card  (searches literal "3d")
+[ ]   — Alternatives within a word: dat[a,um,] → data, datum, dat
+&     — Literal (case-sensitive): &Cu, &CAN
 
-Use parentheses to override precedence:
-    (analog OR mixed-signal) AND (time* 2W multiplex*)
+==========================================================================
+BEST PRACTICES SUMMARY
+==========================================================================
+1. NEVER use + to join multiple words. Use nW/nD proximity instead.
+2. Use comma (,) for OR alternatives, NOT the word "OR" in proximity groups.
+3. Prefer UG/OG framing operators over chained D/W for complex queries.
+4. Use generous proximity distances (real text has reference signs, OCR artifacts).
+5. Use parentheses for clarity.
+6. Keep queries simple and readable.
 
-FIELD CODES (ANSERA / Espacenet)
----------------------------------
-TI    Title
-AB    Abstract
-DE    Description
-CL    Claims
-PA    Applicant/Assignee
-IN    Inventor
-IPC   IPC classification code
-CPC   CPC classification code
-PN    Publication number
-PD    Publication date
+RULE OF THUMB:
+  If your query has: proximity + (synonyms) + proximity
+  → Replace with a single UG/OG framing operator.
 
-Field search syntax:
-    TI="hybrid analog"
-    CL=(time* AND multiplex*)
-    IPC=G06N
+EXAMPLE SEARCH STRATEGY MARKS:
 
-COMBINING FIELD AND PROXIMITY
--------------------------------
-    CL=(analog* 3W digital*) AND TI=(multiplex* OR "time-sharing")
+Mark A — analog/digital computing hardware:
+  WRONG:  analog+digital+comput+ 3W (accelerator, card)
+  RIGHT:  (analog, digital, hybrid) 2D comput+ 3D (accelerator, card)
+  BEST:   5UG((analog, digital, hybrid), comput+, (accelerator, card, processor+))
 
-NOTES FOR EXAMINERS
---------------------
-- Always test broad strings first, then add Marks one by one to narrow.
-- Proximity operators are more powerful than phrase search for technical terms
-  because they survive word-order variation across languages and authors.
-- Use * truncation on verb forms: calibrat* catches calibrate, calibration,
-  calibrated, calibrating.
-- Combine IPC/CPC codes with keyword strings using AND for best precision.
+Mark B — heat management:
+  WRONG:  heat+exchang+ OR thermal+manag+
+  RIGHT:  (heat 2D exchang+), (thermal 2D manag+), (cool+ 2D system+)

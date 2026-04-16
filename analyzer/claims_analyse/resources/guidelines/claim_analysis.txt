@@ -1,0 +1,39 @@
+**FILE NAME:** NO_PATENTSTYRET_CLAIM_ANALYSIS_FRAMEWORK_2025.txt
+
+**SOURCE:**
+
+* Patentstyret Guidelines, Part C (Claims – general examination practice)
+* Norwegian Patents Act § 8 (2)
+
+---
+
+### 1. Identification of essential technical features
+
+Each independent claim must define the essential technical features necessary to achieve the intended technical effect of the invention.
+
+An essential feature is a feature which is necessary for solving the technical problem underlying the invention. If such a feature is missing from the claim, the scope of protection becomes unclear and may extend beyond what is supported by the description.
+
+A deficiency arises where the claim omits technical features that are consistently presented in the description as necessary for achieving the stated result. In such cases, the claim may be considered unclear and/or not supported by the description.
+
+Typical indicators of deficiency:
+
+* The description emphasizes specific parameters, steps, or structures as necessary, but these are absent from the claim
+* The claim is drafted at a higher level of abstraction than the disclosed embodiments
+* The technical effect cannot be achieved across the full scope of the claim without the omitted features
+
+Assessment approach:
+Examine whether the skilled person would understand that additional technical features are required to carry out the invention. If so, their omission from the claim indicates that the claim does not properly define the invention.
+
+Legal basis:
+
+Norwegian Patents Act § 8 (2)
+
+---
+
+**USAGE INSTRUCTION (FOR LLM):**
+
+* Use this framework to analyse the structure and completeness of claims.
+* Focus on identifying missing essential technical features.
+* Do NOT cite this framework or its section numbering in outputs.
+* Combine findings with enablement, clarity, and support assessments.
+* Express all conclusions as legal reasoning under Norwegian Patents Act § 8 (2).

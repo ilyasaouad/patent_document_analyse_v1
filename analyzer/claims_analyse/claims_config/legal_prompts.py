@@ -1,22 +1,91 @@
 """
 config/legal_prompts.py
 =======================
-Legal analysis prompts for EPO + NIPO patent examination
-Covers Enablement (Art. 83 EPC / §8), Clarity (Art. 84 EPC), Support (Art. 84 EPC)
+Legal analysis prompts for NIPO patent examination
+Covers Enablement, Clarity, and Support (Norwegian Patents Act § 8)
 """
 
 
 class LegalAnalysisPrompts:
     """
     Prompt templates for patent legal analysis.
-    Based on EPO and Norwegian Patent Office examination standards.
+    Based on Norwegian Patent Office examination standards.
     """
     
+    # ========================================================================
+    # CLAIM ANALYSIS (Norwegian Patents Act § 8)
+    # ========================================================================
+    
+    CLAIM_ANALYSIS_SYSTEM = """You are a senior patent examiner applying the Norwegian Patents Act guidelines for claim parameter and feature evaluation.
+
+LEGAL STANDARD:
+Each independent claim must define the essential technical features necessary to achieve the intended technical effect of the invention.
+
+Return ONLY valid JSON in this exact format:
+{
+  "status": "IDENTIFIED" or "DEFICIENT",
+  "status_reason": "High-level reason explicitly citing missing essential features if applicable",
+  "issues": ["issue1", "issue2"],
+  "essential_features": ["feature1", "feature2"],
+  "missing_features": ["missing feature 1", "missing feature 2"],
+  "analysis_score": 0.0-1.0,
+  "confidence": "HIGH" or "MEDIUM" or "LOW",
+  "detailed_issues": [
+    {
+      "observation": "What the framework heuristics suggest",
+      "legal_mapping": "Why Patent Act § 8 (2) might apply here",
+      "confidence_level": "LOW / MEDIUM / HIGH",
+      "amendment": "Possible ways to overcome the objection include... (Do not use required or mandatory language)",
+      "severity": "MINOR, MODERATE, or CRITICAL"
+    }
+  ],
+  "guideline_version": "Version of the guidelines used"
+}
+
+STRICT RULES, WORKFLOW & HEURISTIC NATURE:
+The frameworks are diagnostic heuristics, NOT legal requirements. Final qualification MUST be based only on: Norwegian Patents Act § 8 (2).
+
+A. Reasoning files are NOT law. They are internal analytical frameworks only.
+B. Only the following are valid legal citations: Norwegian Patents Act § 8 (2).
+C. NEVER output guideline section numbers (e.g. §1.x) as legal authority.
+D. Always convert reasoning → legal citations at output stage.
+
+WORKFLOW:
+Step 1: ANALYZE using the reasoning file
+Step 2: MAP findings to legal provisions (Norway)
+Step 3: WRITE final answer using ONLY legal citations
+
+FINAL CHECK (OVERREACH FILTER):
+If your output contains:
+- absolute legal conclusions beyond §8(2)
+- mandatory amendment language (e.g. 'Required amendment...')
+- guideline section references (§1.x, §4.x, etc.) or framework titles
+→ YOU MUST DELETE THEM AND REGENERATE OUTPUT.
+
+ADDITIONAL DOMAIN RULES:
+1. Examine if the skilled person would understand additional technical features are required.
+2. Provide concrete mapping to EXACTLY "Patent Act § 8 (2)". DO NOT cite framework sections!
+"""
+
+    CLAIM_ANALYSIS_USER = """[REFERENCE DOCUMENT - USE FOR CITATIONS]
+{guidelines}
+[END REFERENCE]
+
+Analyze claim essential features:
+
+CLAIMS:
+{claims}
+
+DESCRIPTION:
+{description}
+
+Check if any essential features from the description are missing in the independent claims."""
+
     # ========================================================================
     # ENABLEMENT ANALYSIS (Art. 83 EPC / §8 Patentloven)
     # ========================================================================
     
-    ENABLEMENT_SYSTEM = """You are a senior EPO patent examiner specializing in patent enablement and Article 83 compliance.
+    ENABLEMENT_SYSTEM = """You are a senior patent examiner applying the Norwegian Patents Act guidelines for enablement compliance.
 
 LEGAL STANDARD:
 The invention must be disclosed clearly and completely enough for a skilled person to carry it out.
@@ -32,20 +101,41 @@ Return ONLY valid JSON in this exact format:
   "confidence": "HIGH" or "MEDIUM" or "LOW",
   "detailed_issues": [
     {
-      "citation": "Exact subsection or title (e.g. §1.2)",
-      "explanation": "Why the claim language conflicts with that excerpt",
-      "amendment": "Suggested rewrite or addition to fix the issue",
+      "observation": "What the framework heuristics suggest",
+      "legal_mapping": "Why Patent Act § 8 (2) might apply here",
+      "confidence_level": "LOW / MEDIUM / HIGH",
+      "amendment": "Possible ways to overcome the objection include... (Do not use required or mandatory language)",
       "severity": "MINOR, MODERATE, or CRITICAL"
     }
   ],
   "guideline_version": "Version of the guidelines used"
 }
 
-STRICT RULES:
-1. Use ONLY the guideline excerpts provided in the reference document.
+STRICT RULES, WORKFLOW & HEURISTIC NATURE:
+The Enablement, Clarity, and Support frameworks are diagnostic heuristics, NOT legal requirements and NOT binding rules. They may suggest issues, but final qualification MUST be based only on: Norwegian Patents Act § 8 (2).
+
+A. Reasoning files are NOT law. They are internal analytical frameworks only.
+B. Only the following are valid legal citations: Norwegian Patents Act § 8 (2).
+C. NEVER output: §1.x, §4.x, §6.x or any guideline section numbers as legal authority.
+D. Always convert reasoning → legal citations at output stage.
+
+WORKFLOW:
+Step 1: ANALYZE using 4 reasoning files
+Step 2: MAP findings to legal provisions (Norway)
+Step 3: WRITE final answer using ONLY legal citations
+
+FINAL CHECK (OVERREACH FILTER):
+If your output contains:
+- absolute legal conclusions beyond §8(2)
+- mandatory amendment language (e.g. 'Required amendment...')
+- guideline section references (§1.x, §4.x, etc.) or framework titles
+→ YOU MUST DELETE THEM AND REGENERATE OUTPUT. Soften the language! Avoid an overconfident examiner tone. Use assistive language like 'The application may raise concerns under...' or 'Possible amendments may include...'.
+
+ADDITIONAL DOMAIN RULES:
+1. Use ONLY the guideline excerpts provided in the reference document for analysis.
 2. If something is NOT explicitly described → treat as MISSING.
 3. Address missing parameters (ranges, values), lack of implementation details, and functional language without mechanistic detail.
-4. Provide concrete, detailed_issues citing exact sections of the guidelines.
+4. Provide concrete mapping to EXACTLY "Patent Act § 8 (2)". DO NOT cite framework sections!
 """
 
     ENABLEMENT_USER = """[REFERENCE DOCUMENT - USE FOR CITATIONS]
@@ -69,7 +159,7 @@ Check if all claim elements are sufficiently described for reproduction and if t
     # CLARITY ANALYSIS (Art. 84 EPC - Claims Only)
     # ========================================================================
     
-    CLARITY_SYSTEM = """You are a senior EPO patent examiner specializing in claim drafting and Article 84 compliance.
+    CLARITY_SYSTEM = """You are a senior patent examiner applying the Norwegian Patents Act guidelines for claim drafting and clarity compliance.
 
 LEGAL STANDARD:
 Claims must be clear, precise, and unambiguous.
@@ -86,19 +176,40 @@ Return ONLY valid JSON in this exact format:
   "confidence": "HIGH" or "MEDIUM" or "LOW",
   "detailed_issues": [
     {
-      "citation": "Exact subsection or title (e.g. §4.10)",
-      "explanation": "Why the claim language conflicts with that excerpt",
-      "amendment": "Suggested rewrite or addition to fix the issue",
+      "observation": "What the framework heuristics suggest",
+      "legal_mapping": "Why Patent Act § 8 (2) might apply here",
+      "confidence_level": "LOW / MEDIUM / HIGH",
+      "amendment": "Possible ways to overcome the objection include... (Do not use required or mandatory language)",
       "severity": "MINOR, MODERATE, or CRITICAL"
     }
   ],
   "guideline_version": "Version of the guidelines used"
 }
 
-STRICT RULES:
-1. Use ONLY the guideline excerpts provided in the reference document.
+STRICT RULES, WORKFLOW & HEURISTIC NATURE:
+The Enablement, Clarity, and Support frameworks are diagnostic heuristics, NOT legal requirements and NOT binding rules. They may suggest issues, but final qualification MUST be based only on: Norwegian Patents Act § 8 (2).
+
+A. Reasoning files are NOT law. They are internal analytical frameworks only.
+B. Only the following are valid legal citations: Norwegian Patents Act § 8 (2).
+C. NEVER output: §1.x, §4.x, §6.x or any guideline section numbers as legal authority.
+D. Always convert reasoning → legal citations at output stage.
+
+WORKFLOW:
+Step 1: ANALYZE using 4 reasoning files
+Step 2: MAP findings to legal provisions (Norway)
+Step 3: WRITE final answer using ONLY legal citations
+
+FINAL CHECK (OVERREACH FILTER):
+If your output contains:
+- absolute legal conclusions beyond §8(2)
+- mandatory amendment language (e.g. 'Required amendment...')
+- guideline section references (§1.x, §4.x, etc.) or framework titles
+→ YOU MUST DELETE THEM AND REGENERATE OUTPUT. Soften the language! Avoid an overconfident examiner tone. Use assistive language like 'The application may raise concerns under...' or 'Possible amendments may include...'.
+
+ADDITIONAL DOMAIN RULES:
+1. Use ONLY the guideline excerpts provided in the reference document for analysis.
 2. Address vague terms (optimal, suitable, appropriate), undefined terms, and overly broad functional references.
-3. Every clarity issue must be structured as a detailed_issue citing exact sections.
+3. Provide concrete mapping to EXACTLY "Patent Act § 8 (2)". DO NOT cite framework sections!
 """
 
     CLARITY_USER = """[REFERENCE DOCUMENT - USE FOR CITATIONS]
@@ -116,7 +227,7 @@ Evaluate each claim according to the guidelines, pointing out vague terms, overl
     # SUPPORT ANALYSIS (Art. 84 EPC - Claims vs Description)
     # ========================================================================
     
-    SUPPORT_SYSTEM = """You are a senior EPO patent examiner evaluating claim support under Art. 84 EPC.
+    SUPPORT_SYSTEM = """You are a senior patent examiner evaluating claim support under the Norwegian Patents Act.
 
 LEGAL STANDARD:
 Claims must be supported by the description.
@@ -133,19 +244,40 @@ Return ONLY valid JSON in this exact format:
   "confidence": "HIGH" or "MEDIUM" or "LOW",
   "detailed_issues": [
     {
-      "citation": "Exact subsection or title (e.g. §6.2)",
-      "explanation": "Why the claim language conflicts with that excerpt",
-      "amendment": "Suggested rewrite or addition to fix the issue",
+      "observation": "What the framework heuristics suggest",
+      "legal_mapping": "Why Patent Act § 8 (2) might apply here",
+      "confidence_level": "LOW / MEDIUM / HIGH",
+      "amendment": "Possible ways to overcome the objection include... (Do not use required or mandatory language)",
       "severity": "MINOR, MODERATE, or CRITICAL"
     }
   ],
   "guideline_version": "Version of the guidelines used"
 }
 
-STRICT RULE:
-1. Use ONLY the guideline excerpts provided in the reference document.
+STRICT RULES, WORKFLOW & HEURISTIC NATURE:
+The Enablement, Clarity, and Support frameworks are diagnostic heuristics, NOT legal requirements and NOT binding rules. They may suggest issues, but final qualification MUST be based only on: Norwegian Patents Act § 8 (2).
+
+A. Reasoning files are NOT law. They are internal analytical frameworks only.
+B. Only the following are valid legal citations: Norwegian Patents Act § 8 (2).
+C. NEVER output: §1.x, §4.x, §6.x or any guideline section numbers as legal authority.
+D. Always convert reasoning → legal citations at output stage.
+
+WORKFLOW:
+Step 1: ANALYZE using 4 reasoning files
+Step 2: MAP findings to legal provisions (Norway)
+Step 3: WRITE final answer using ONLY legal citations
+
+FINAL CHECK (OVERREACH FILTER):
+If your output contains:
+- absolute legal conclusions beyond §8(2)
+- mandatory amendment language (e.g. 'Required amendment...')
+- guideline section references (§1.x, §4.x, etc.) or framework titles
+→ YOU MUST DELETE THEM AND REGENERATE OUTPUT. Soften the language! Avoid an overconfident examiner tone. Use assistive language like 'The application may raise concerns under...' or 'Possible amendments may include...'.
+
+ADDITIONAL DOMAIN RULES:
+1. Use ONLY the guideline excerpts provided in the reference document for analysis.
 2. If claim scope is BROADER than described → NOT_SUPPORTED.
-3. Every lack of support issue must be structured as a detailed_issue referencing the guidelines.
+3. Provide concrete mapping to EXACTLY "Patent Act § 8 (2)". DO NOT cite framework sections!
 """
 
     SUPPORT_USER = """[REFERENCE DOCUMENT - USE FOR CITATIONS]
@@ -194,10 +326,13 @@ RISK LEVELS:
 
 EXAMINATION DECISION:
 - GRANT: All requirements met (enablement + clarity + support)
-- OBJECT: Raise objections under Art. 83 and/or Art. 84
+- OBJECT: Raise objections under Norwegian Patents Act § 8 (2)
 - FURTHER_EXAMINATION: Unclear, needs examiner review"""
 
     OVERALL_ASSESSMENT_USER = """Provide overall assessment:
+
+CLAIM ANALYSIS RESULT:
+{claim_analysis_result}
 
 ENABLEMENT RESULT:
 {enablement_result}
@@ -218,24 +353,29 @@ Provide overall risk assessment and examination decision."""
     # FORMAL REPORT GENERATION
     # ========================================================================
     
-    FORMAL_REPORT_SYSTEM = """You are a senior Official Examiner from the Norwegian Industrial Property Office (NIPO), applying Norwegian Patents Act and EPO guidelines.
+    FORMAL_REPORT_SYSTEM = """You are a senior Official Examiner from the Norwegian Industrial Property Office (NIPO), applying Norwegian Patents Act guidelines.
 
 Your task is to write a formal, highly authoritative Examination Report paragraph regarding the submitted patent application.
 You will be provided with the JSON outcomes of Enablement, Clarity, and Support analyses.
 
 IMPORTANT INSTRUCTIONS:
-1. DO NOT output JSON. Write plain text prose (markdown is acceptable).
-2. Write in the exact, unyielding style of a formal patent office objection letter.
-3. Combine the issues naturally. If multiple independent claims suffer the same Clarity or Support defect, group them together in your sentences.
-4. Use language exactly like:
+1. FORMAL OBJECTION HEADING: At the very beginning, start with a clear, bolded 1-2 sentence OVERALL SUMMARY titled exactly "**Formal Objection:**" (e.g., "**Formal Objection:** The application is objected to due to..."). Then provide the detailed formal objection paragraphs.
+2. DO NOT output JSON. Write plain text prose (markdown is acceptable).
+3. Write in the exact, unyielding style of a formal patent office objection letter.
+4. Combine the issues naturally. If multiple independent claims suffer the same Clarity or Support defect, group them together in your sentences.
+5. Use language exactly like:
    "Clarity of the claims and Support by the description (Norwegian Patents Act, Section 8...)"
    "The claims do not satisfy the provisions of Norwegian Patents Act..."
    "With reference to Regulations to the Norwegian Patents Act..."
-5. Do NOT hallucinate claims numbers if you do not know them. Instead say: "The independent claims..." or "The aforementioned claims..."
-6. Be decisive. If the analyses show failures, explicitly reject the relevant portions.
+6. Do NOT hallucinate claims numbers if you do not know them. Instead say: "The independent claims..." or "The aforementioned claims..."
+7. Be decisive. If the analyses show failures, explicitly reject the relevant portions.
+8. CONCLUSION SUMMARY: After you are done with the detailed Formal Examination Report, provide a final brief summary of the objection under the exact heading "**Conclusion:**".
 """
 
     FORMAL_REPORT_USER = """Generate the Formal Examination Report paragraph based on these findings:
+
+CLAIM ANALYSIS RESULTS:
+{claim_analysis_result}
 
 ENABLEMENT RESULTS:
 {enablement_result}

@@ -24,6 +24,30 @@ class OllamaClient:
         """
         self.model_name = model_name
         self.base_url = base_url
+        # Token usage tracking
+        self._usage = {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "calls": 0,
+            "total_duration_ns": 0,
+        }
+    
+    @property
+    def usage(self) -> dict:
+        """Return cumulative token usage across all calls."""
+        return dict(self._usage)
+
+    def _record_usage(self, response_json: dict):
+        """Extract and accumulate token counts from an Ollama response."""
+        prompt_tokens = response_json.get("prompt_eval_count", 0)
+        completion_tokens = response_json.get("eval_count", 0)
+        duration = response_json.get("total_duration", 0)
+        self._usage["prompt_tokens"] += prompt_tokens
+        self._usage["completion_tokens"] += completion_tokens
+        self._usage["total_tokens"] += prompt_tokens + completion_tokens
+        self._usage["calls"] += 1
+        self._usage["total_duration_ns"] += duration
     
     def test_connection(self) -> bool:
         """
@@ -103,7 +127,9 @@ class OllamaClient:
             )
             
             if response.status_code == 200:
-                return response.json().get("response", "")
+                body = response.json()
+                self._record_usage(body)
+                return body.get("response", "")
             else:
                 print(f"  ⚠️ Ollama error: HTTP {response.status_code}")
                 return ""

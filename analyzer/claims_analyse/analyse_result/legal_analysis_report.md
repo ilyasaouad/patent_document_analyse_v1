@@ -1,132 +1,179 @@
 ======================================================================
-PATENT LEGAL ANALYSIS - EPO + NIPO
+PATENT LEGAL ANALYSIS - NIPO
 ======================================================================
 
 EXAMINATION DECISION: OBJECT
 RISK LEVEL: HIGH
 
-The application lacks essential enablement details (analog integrator specs, timing parameters, calibration algorithms, digital control architecture, host interface protocol) and contains unclear claim language (vague terms, functional wording, overly broad scope). While support is adequate, the combined enablement and clarity deficiencies constitute a high risk of rejection.
+The application suffers from major enablement, clarity, and support deficiencies. Key technical features such as the oscillatory representation, resonance score calculation, and specific parameter ranges are not sufficiently disclosed, are drafted functionally with vague terms, and lack a clear basis in the description.
 
 ======================================================================
 FORMAL EXAMINATION REPORT
 ======================================================================
 
-**Examination Report – Formal Objection**  
+**Formal Objection:** The application is objected to on the grounds that the claims lack the clarity, enablement and support required by § 8 (2) of the Norwegian Patents Act and the accompanying regulations.
 
-The European Patent Office’s Regulations to the Norwegian Patents Act, in conjunction with the Norwegian Patents Act, require that a patent application (i) disclose the invention in a manner sufficiently clear and complete for a person skilled in the art to carry it out (Art. 71 (1) NP Act, corresponding to Art. 83 EPC); (ii) define the claimed subject‑matter in a clear and unambiguous way (Regulations §§ 4.1, 4.6, 4.10); and (iii) be supported by the description (Norwegian Patents Act, Section 8).  
+**Clarity of the claims and Support by the description (Norwegian Patents Act, § 8 (2)).**  
+The claims are drafted in functional language and contain a multitude of vague and undefined technical terms – e.g. “oscillatory representation”, “wave function”, “resonance score”, “predetermined relevance threshold”, “most context‑relevant” and an incompletely defined numerical range for *N* (“N is between 8 and inclusive”). Such terminology prevents a clear definition of the matter for which protection is sought and renders the scope of protection indeterminate. The use of these qualifiers without precise structural features or measurable parameters violates the requirement that claims be clear, concise and understandable without recourse to the description. Consequently, the claims do not satisfy the provisions of § 8 (2) concerning clarity.
 
-1. **Enablement (Art. 71 (1) NP Act / Art. 83 EPC)** – The independent claims recite a “plurality of logical computation channels … greater than the number of physical analog computation elements” and a “continuous‑time mathematical‑operation fabric” without providing the essential technical parameters required to reproduce the system over the full claimed scope. The description contains only high‑level block diagrams and functional statements; it omits:
+**Enablement (Norwegian Patents Act, § 8 (2)).**  
+The disclosure fails to provide a complete technical teaching that would enable a person skilled in the art to practice the invention across the full scope of the claims. Specifically, the application does not disclose:
 
-   * quantitative specifications of the analog integrator circuits (component values, op‑amp models, bandwidth, and design rules for the TDM switching network);  
-   * exact timing parameters for the time‑domain multiplexing (slot length, settling time, jitter tolerances, allowable skew);  
-   * a complete calibration methodology (algorithmic steps, reference standards, frequency of recalibration, storage format of correction coefficients);  
-   * structural details of the digital control subsystem (FPGA/SoM resource allocation, state‑machine diagram, register map, firmware interfaces); and  
-   * a defined host‑interface protocol (e.g., PCI‑Express Gen 3 lane count, register map, DMA timing).
+* how the oscillatory (wave‑like) representation of a data fragment is generated from fragment metadata (no definition of amplitude, frequency, phase or the mapping algorithm);  
+* a concrete mathematical formula for the resonance score, nor any weighting scheme for distance, similarity or frequency‑domain characteristics;  
+* the method for determining the “predetermined relevance threshold” or any statistical basis for its selection;  
+* implementation details for embedding, storage and retrieval of fragments in an *N*‑dimensional context space, while the claims cover any *N* ≥ 2 but the description only exemplifies an 11‑dimensional embodiment;  
+* measurement procedures for the parameters of the multi‑dimensional context space.
 
-   Consequently, a skilled person would be faced with an undue burden to determine the means for achieving the claimed functions, which is a clear breach of the enablement requirement. The deficiencies are classified as **critical** (see detailed issues § 1.2 and § 1.1 of the analysis).  
+Because these essential technical details are absent, a skilled practitioner would be forced to engage in undue trial‑and‑error to realise the claimed method. The lack of enablement is therefore a critical deficiency under § 8 (2).
 
-2. **Clarity of the claims (Regulations §§ 4.1, 4.6, 4.10)** – The claims suffer from multiple clarity defects:
+**Support by the description (Norwegian Patents Act, § 8 (2)).**  
+Several claim features are not disclosed or justified in the specification, resulting in a lack of support. Notably:
 
-   * Use of vague relative terms such as “high‑speed” (claim 8) without quantitative definition, violating § 4.6.  
-   * Undefined technical terms “non‑idealities”, “logical computation channels”, and “analog computation fabric” (claims 1, 5), contravening § 4.1.  
-   * Overly functional language (“configured to perform continuous‑time mathematical operations”, “configured to control, schedule, and supervise operation”) that does not recite structural features, breaching § 4.1.  
-   * Result‑to‑be‑achieved phrasing in claim 10 (“execute differential equation solving, optimisation, control, or signal‑processing tasks”) without reciting the means to obtain that result, in violation of § 4.10.  
+* The specific range for *N* (claim 2) and the exact breakdown of the 11 dimensions (claim 3) are absent from the description.  
+* Coordinate‑based embedding using metadata (claim 4), explicit wave parameters (claim 5), and the detailed resonance‑score formula (claim 7) are introduced without any teaching in the specification.  
+* Weighted combinations of distance, cosine similarity and frequency‑domain characteristics (claim 8) and the selection mechanisms based on maximum score or threshold (claims 9‑10) are not exemplified.  
+* The memory architecture with context‑indexed storage and deterministic reconstruction (claims 12‑13) is only mentioned in broad terms and lacks structural detail.
 
-   These ambiguities render the claims unclear to the skilled person and therefore non‑compliant with the statutory clarity provisions. The most serious deficiencies are marked **critical** (functional language) and **moderate** (relative term “high‑speed”).  
+The claim set therefore extends beyond the technical teaching provided, contravening the support requirement of § 8 (2) and the Regulations to the Norwegian Patents Act.
 
-3. **Support by the description (Norwegian Patents Act, Section 8)** – The analysis confirms that all claim features have a basis in the disclosed embodiments; the support requirement is satisfied.  
-
-**Conclusion**  
-
-The application, in its present form, does **not** satisfy the enablement requirement of Art. 71 (1) NP Act (Art. 83 EPC) and fails to meet the clarity standards of the Regulations §§ 4.1, 4.6, 4.10. Accordingly, the claims are rejected insofar as they stand.  
-
-**Required amendments**  
-
-* Provide detailed schematics of the analog integrators (including component values, op‑amp models, and bandwidth), and specify the design rules for the TDM switching network (switch resistance, charge‑injection limits, maximum channel‑to‑element ratio).  
-* State the exact time‑slot duration, required analog settling time, jitter and skew tolerances, and include timing diagrams illustrating the multiplexing schedule.  
-* Describe the calibration routine in full, with algorithmic steps, reference standards, frequency of recalibration, and the format of correction coefficients.  
-* Disclose the digital control subsystem architecture (resource allocation, state‑machine diagram, register definitions, example HDL snippets) and the host‑interface protocol (PCI‑Express generation, lane count, register map, DMA parameters).  
-* Replace vague and functional language with concrete structural features, e.g., “comprising a digital control unit including a programmable logic device that generates control signals for the analog computation fabric” and define “high‑speed” by a quantitative data‑rate (e.g., ≥ 10 GB/s).  
-* Re‑phrase result‑to‑be‑achieved claims to recite the structural means that enable the stated tasks.  
-
-The applicant is invited to file a complete amendment addressing the above deficiencies within the statutory time limit. Failure to do so will result in the final refusal of the application.
+**Conclusion:**  
+The application does not meet the statutory requirements of § 8 (2) with respect to clarity, enablement and support. Accordingly, the claims must be amended to remove functional and vague language, to provide concrete technical definitions and algorithms, and to ensure that all claimed features are fully disclosed in the description. Until such amendments are made, the application cannot be granted.
 
 
 ======================================================================
-ENABLEMENT (Art. 83 EPC / §8)
+CLAIM ANALYSIS (§ 8)
+======================================================================
+Status: IDENTIFIED
+Reason: The independent claim defines all technical features that are necessary to achieve the disclosed context‑driven data processing effect.
+Analysis Score: 85.0%
+
+======================================================================
+ENABLEMENT (§ 8)
 ======================================================================
 Status: NOT_ENABLED
-Reason: Fails §1.2 Level of details and §1.3 Objections under Art. 83 – the disclosure lacks essential technical parameters and concrete implementation steps required for a skilled person to reproduce the system across the full claimed scope.
+Reason: The disclosure does not meet the requirement of Norwegian Patents Act § 8 (2) that the invention be described clearly and completely enough for a skilled person to carry it out.
 Reproducibility: 28.0%
 
 Missing Elements:
-  • Analog integrator circuit topologies, component values, and bandwidth specifications.
-  • Exact time‑slot duration, required analog settling time, and allowable timing skew.
-  • Calibration sequence steps, reference standards, frequency of recalibration, and storage format of correction coefficients.
-  • FPGA/SoM resource allocation, control logic flowcharts, and timing diagrams for scheduling.
-  • PCIe (or alternative) register map, command set, and DMA transfer parameters.
+  • Explicit definition of wave parameters (amplitude, frequency, phase) and how they are derived from fragment metadata
+  • Mathematical description of the resonance function, including distance and similarity calculations
+  • Procedures for determining the predetermined relevance threshold and weighting scheme
+  • Examples or embodiments illustrating the end‑to‑end process with concrete values
 
 ======================================================================
-CLARITY (Art. 84 EPC)
+CLARITY (§ 8)
 ======================================================================
 Status: UNCLEAR
-Reason: Multiple clarity defects: vague relative terms, undefined functional language and result‑to‑be‑achieved wording violate §§4.1, 4.6 and 4.10.
-Clarity Score: 38.0%
+Reason: The claims contain functional language and undefined technical terms that prevent a clear definition of the matter for which protection is sought under Norwegian Patents Act § 8 (2)
+Clarity Score: 32.0%
 
 Vague Terms:
-  • high‑speed
+  • predetermined relevance threshold
+  • predetermined threshold value
+  • most context-relevant
+  • in particular embodiments N is between 8 and inclusive
 
 ======================================================================
-SUPPORT (Art. 84 EPC)
+SUPPORT (§ 8)
 ======================================================================
-Status: SUPPORTED
-Reason: All claim features have a basis in the description; the scope does not exceed what is disclosed (§6.1 General Support).
-Support Score: 95.0%
+Status: NOT_SUPPORTED
+Reason: The claims contain features that are not disclosed or justified in the description, violating the requirement that claims be supported by the description under Norwegian Patents Act § 8 (2).
+Support Score: 28.0%
+
+Unsupported Elements:
+  • Specific range for N (8 to inclusive) in claim 2
+  • Exact breakdown of the 11 dimensions in claim 3
+  • Coordinate‑based embedding using metadata (claim 4)
+  • Explicit wave parameters (amplitude, frequency, phase) in claim 5
+  • Formula for resonance score based on distance and similarity (claim 7)
+  • Weighted combination of distance, cosine similarity, frequency‑domain characteristics etc. (claim 8)
+  • Selection mechanisms based on maximum score or threshold (claims 9 and 10)
+  • Fragmentation of an input dataset and extraction of contextual metadata (claim 11)
+  • Memory architecture with unique context‑indexed storage and deterministic reconstruction (claims 12‑13)
+
+--- Detailed Claim Analysis Violations ---
+[MINOR] Confidence: HIGH
+          Observation: The claim captures the core technical steps required for the resonance‑based selection mechanism described in the specification.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that an independent claim define the essential technical features necessary to achieve the intended technical effect; this requirement is satisfied.
+          Suggestion: No amendment is required; the claim already includes the essential features.
 
 --- Detailed Enablement Violations ---
-[CRITICAL] Citation: §1.2 Level of details
-          Reason: The description provides only high‑level block diagrams and generic functional statements. A skilled person cannot reproduce the analog fabric, timing, or calibration without specific circuit parameters, timing budgets, and algorithmic steps, leading to an undue burden.
-          Suggestion: Add detailed schematics of the analog integrators (capacitor, resistor values, op‑amp models), specify the TDM slot length (e.g., 10 µs) and required settling time (e.g., 2 µs), and include a flowchart of the calibration routine with measurement points and coefficient calculation formulas.
-[MODERATE] Citation: §1.3 Objections under Art. 83
-          Reason: The application asserts that the system can compute “continuous‑time mathematical operations” across an arbitrary number of logical channels but does not disclose the means to achieve this across the entire claimed range (e.g., how many channels can be supported, how performance scales). This is a result‑oriented description lacking enabling means.
-          Suggestion: Provide a scalability analysis showing the maximum channel‑to‑element ratio, including switching network specifications, crosstalk limits, and timing constraints, together with example configurations (e.g., 8 logical channels on 2 integrators).
-[CRITICAL] Citation: §1.1 General Principle
-          Reason: The overall disclosure does not meet the requirement of being “sufficiently clear and complete” because key implementation details (digital control firmware, host‑interface protocol) are omitted, preventing a skilled person from carrying out the invention.
-          Suggestion: Include a detailed description of the digital control subsystem: state‑machine diagram, register definitions, timing of control signals, and example HDL code snippets. Also, specify the host interface protocol (PCIe Gen3, lane count, register map).
+[CRITICAL] Confidence: MEDIUM
+          Observation: The application states that each fragment is embedded as an oscillatory representation but does not specify how the wave function is generated from fragment metadata.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires sufficient disclosure for a skilled person to carry out the invention without undue trial and error.
+          Suggestion: Providing a concrete algorithm or set of rules for mapping metadata to wave parameters (amplitude, frequency, phase) would help satisfy the enablement requirement.
+[MODERATE] Confidence: MEDIUM
+          Observation: The resonance score is described in abstract terms (distance, similarity) without a defined formula or weighting scheme.
+          Legal Mapping: Norwegian Patents Act § 8 (2) mandates that the description enable the skilled person to perform the claimed computations.
+          Suggestion: Including explicit mathematical expressions for the resonance calculation and examples of weight selection would address the deficiency.
+[MODERATE] Confidence: LOW
+          Observation: Threshold values and selection criteria are mentioned only qualitatively (e.g., “predetermined relevance threshold”) with no guidance on how such thresholds are set or adjusted.
+          Legal Mapping: Under Norwegian Patents Act § 8 (2) the skilled person must be able to implement the selection step without inventive effort.
+          Suggestion: Describing a method for determining appropriate threshold values (e.g., based on statistical analysis of scores) would improve enablement.
+[CRITICAL] Confidence: LOW
+          Observation: The claims cover any number of dimensions N ≥ 2, yet the description only details an 11‑dimensional embodiment.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that the disclosure enable the full scope of the claims.
+          Suggestion: Providing guidance on how the method adapts to different dimensionalities, or limiting the claim scope to the disclosed embodiments, would align the disclosure with the enablement requirement.
 
 --- Detailed Clarity Violations ---
-[CRITICAL] Citation: §4.1
-          Reason: The claim uses functional wording such as "configured to perform" and "configured to control, schedule, and supervise" without reciting structural features that achieve these functions. This makes the claim unclear to the skilled person.
-          Suggestion: Replace functional language with concrete structural elements, e.g., "comprising a digital control unit comprising a programmable logic device configured to generate control signals for the analog computation fabric".
-[MODERATE] Citation: §4.6
-          Reason: "high‑speed peripheral interconnect" is a relative term. Its technical meaning is not objectively defined in the claim, rendering it unclear.
-          Suggestion: Specify a quantitative parameter, e.g., "a peripheral interconnect having a data rate of at least 10 GB/s".
-[CRITICAL] Citation: §4.10
-          Reason: Claim 10 defines the invention in terms of a result to be achieved ("execute differential equation solving, optimization, control, or signal processing tasks") without providing the means to achieve that result across the full scope.
-          Suggestion: Re‑phrase to recite the structural means that enable those tasks, e.g., "wherein the analog computation fabric comprises a network of integrators that, when driven by the digital control subsystem, solves differential equations".
-[MODERATE] Citation: §4.6
-          Reason: The term "non‑idealities" is undefined; the skilled person cannot determine which non‑idealities are covered (gain error, offset, drift, etc.).
-          Suggestion: Define the term in the claim or replace with specific parameters, e.g., "measure and compensate for gain error, offset voltage, temperature drift, and component mismatch".
-[MODERATE] Citation: §4.1
-          Reason: The phrase "hardware accelerator card installable in a computing system" is functional and does not describe the structural features that make the system an accelerator card.
-          Suggestion: Add structural features, e.g., "comprising a printed circuit board having a PCI‑Express form factor and a power connector".
+[CRITICAL] Confidence: HIGH
+          Observation: Claim 1 defines the method in functional terms (e.g., “oscillatory representation”, “resonance score”) without specifying concrete technical features or parameters that would enable the skilled person to implement the invention across the full scope.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires claims to define the matter for which protection is sought in clear and concise terms.
+          Suggestion: Consider adding explicit structural features for the oscillatory representation (e.g., mathematical form of the wave function, parameter ranges) and defining how the resonance score is calculated, including any weighting factors.
+[MODERATE] Confidence: MEDIUM
+          Observation: The term “predetermined relevance threshold” in claims 1, 9 and 10 is vague; the threshold value is not defined or linked to any measurable parameter.
+          Legal Mapping: Norwegian Patents Act § 8 (2) demands that claim language be clear and unambiguous.
+          Suggestion: Specify the method for determining the threshold (e.g., a numeric range, a statistical criterion) or reference a definition in the description.
+[MODERATE] Confidence: MEDIUM
+          Observation: Reference to “most context‑relevant” in claim 1 is functional and lacks an objective technical meaning.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that claims be understandable without reliance on the description for essential features.
+          Suggestion: Replace the functional phrase with a concrete metric (e.g., highest resonance score as defined in claim 7) and ensure the metric is fully defined.
+[MINOR] Confidence: HIGH
+          Observation: Claim 2 introduces “N is between 8 and inclusive” without stating the upper bound, creating ambiguity.
+          Legal Mapping: Norwegian Patents Act § 8 (2) obliges the claim to be clear in its numerical limits.
+          Suggestion: State the complete range (e.g., “N is an integer between 8 and 16”) or define the upper limit in the description.
+[MODERATE] Confidence: HIGH
+          Observation: Claims 4‑8 introduce technical concepts (wave parameters, distance metrics, cosine similarity) without linking them to a specific implementation or providing sufficient detail for the skilled person.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that the claimed subject‑matter be sufficiently disclosed to enable the skilled person to carry out the invention.
+          Suggestion: Provide concrete definitions for each parameter (e.g., amplitude range, frequency units) and describe the calculation methods for distance and similarity measures.
+[MODERATE] Confidence: MEDIUM
+          Observation: Claims 11‑13 refer to “contextual metadata”, “memory with an association to its context space coordinate”, and “deterministic reconstruction” without clear structural description of how these are realized.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that claims define the invention in clear technical terms, not merely functional outcomes.
+          Suggestion: Add structural features describing the data structures, indexing mechanisms, and retrieval algorithms that implement the described functions.
+
+--- Detailed Support Violations ---
+[CRITICAL] Confidence: HIGH
+          Observation: The description provides a high‑level concept of a multi‑dimensional context space and p‑wave representations, but does not disclose the numeric range for N or the specific 11‑dimensional breakdown claimed.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that each claim feature be supported by the description; absent disclosure of the range and breakdown, the claims exceed the disclosed teaching.
+          Suggestion: Consider limiting the claim to the generic multi‑dimensional space without specifying a numeric range or detailed dimension categories, or add explicit embodiments describing those specifics.
+[MODERATE] Confidence: MEDIUM
+          Observation: Claims 4, 5 and 7 introduce concrete technical parameters (metadata‑driven coordinates, wave amplitude/frequency/phase, distance‑based resonance formulas) that are not explicitly taught in the description.
+          Legal Mapping: Under § 8 (2) the claims must be supported by the description; introducing undefined parameters creates a lack of support.
+          Suggestion: Provide detailed examples of how metadata determines coordinates and how the resonance score is computed, or remove those specific parameter definitions.
+[MODERATE] Confidence: MEDIUM
+          Observation: Claims 8‑10 describe weighted combinations of multiple similarity metrics and selection thresholds that are absent from the disclosed teaching.
+          Legal Mapping: The lack of disclosure of these computational steps means the claims are not supported by the description per § 8 (2).
+          Suggestion: Add embodiments illustrating the weighted‑factor calculation and selection criteria, or narrow the claims to the generic resonance‑based selection already described.
+[MINOR] Confidence: LOW
+          Observation: Claims 11‑13 introduce a memory architecture with unique context‑indexed storage and deterministic reconstruction, which the description mentions only in broad terms of reducing duplication.
+          Legal Mapping: Specific structural features of the memory system must be disclosed to satisfy § 8 (2); the current description does not provide sufficient detail.
+          Suggestion: Include concrete examples of the memory indexing scheme and reconstruction process, or delete these features from the claims.
 
 ======================================================================
 CRITICAL ISSUES
 ======================================================================
-  🚨 Insufficient quantitative and structural details to enable the analog computation fabric and its time‑domain multiplexing.
-  🚨 Missing timing specifications (slot length, settling time, jitter tolerances) for reliable operation.
-  🚨 Calibration methodology is only conceptual; no algorithms, sequences, or coefficient ranges are disclosed.
-  🚨 Digital control subsystem and host interface lack architectural description, state‑machine flow, and protocol/register specifications.
-  🚨 Claims use vague and functional language (e.g., "high‑speed", "non‑idealities", "configured to perform…") leading to lack of clarity and over‑broad scope.
+  🚨 Insufficient detail on constructing the oscillatory (wave) representation of data fragments
+  🚨 No concrete algorithms or formulas for computing the resonance score
+  🚨 Vague functional language (e.g., "predetermined relevance threshold") without definition
+  🚨 Claims include specific ranges and parameters (e.g., N = 8, 11 dimensions, wave parameters) that are not supported by the description
 
 ======================================================================
 RECOMMENDATIONS
 ======================================================================
-  1. Provide complete circuit diagrams with component values, bandwidth, and integrator topology details.
-  2. Specify exact time‑slot durations, required analog settling times, jitter tolerances, and timing diagrams for the multiplexing mechanism.
-  3. Include detailed calibration procedures: reference standards, step‑by‑step sequences, algorithmic description, frequency of recalibration, and storage format of correction coefficients.
-  4. Describe the digital control subsystem architecture (FPGA/SoC resource allocation, state‑machine flowcharts, firmware interfaces) and supply timing diagrams for scheduling.
-  5. Define all functional terms in the claims, replace vague language with concrete technical features, and narrow claim scope to match the disclosed embodiments.
+  1. Provide explicit definitions of wave parameters (amplitude, frequency, phase) and how they are derived from metadata
+  2. Include a full mathematical description of the resonance function, distance and similarity calculations, and weighting scheme
+  3. Add concrete implementation examples with numerical values to demonstrate the end‑to‑end process
+  4. Amend claims to replace functional recitations with structural features and limit the scope to what is actually disclosed
 
 ======================================================================

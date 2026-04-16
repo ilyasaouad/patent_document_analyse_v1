@@ -183,13 +183,14 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
 
                 # ── Step 3.7: Legal Analysis (EPO/NIPO) ──
                 legal_result = None
+                legal_client = None
                 try:
                     claims_to_analyze = claims_text if claims_text else extracted_claims_text
                     if claims_to_analyze and desc_text:
                         with st.spinner("⚖️ Running Patent Legal Analysis (gpt-oss:120b-cloud)..."):
                             from claims_core import OllamaClient
-                            client = OllamaClient(model_name="gpt-oss:120b-cloud")
-                            legal_analyzer = PatentLegalAnalyzer(ollama_client=client)
+                            legal_client = OllamaClient(model_name="gpt-oss:120b-cloud")
+                            legal_analyzer = PatentLegalAnalyzer(ollama_client=legal_client)
                             
                             legal_result = legal_analyzer.analyze(
                                 claims=claims_to_analyze,
@@ -211,6 +212,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
 
                 # ── Step 3.8: Search Strategy Analysis ──
                 search_result = None
+                search_client = None
                 try:
                     claims_to_analyze = claims_text if claims_text else extracted_claims_text
                     if claims_to_analyze and desc_text:
@@ -245,7 +247,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                 output_files = [f for f in OUTPUT_DIR.iterdir() if f.is_file()]
                 st.code("\n".join([f"  {f.name}" for f in output_files]))
 
-                tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis", "⚖️ Legal Analysis", "🔎 Search Strategy"])
+                tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["📑 Description", "⚖️ Claims", "🖼️ Drawings", "🔍 Extracted Claims", "🤖 AI Analysis", "⚖️ Legal Analysis", "🔎 Search Strategy", "📊 LLM Usage"])
 
                 with tab1:
                     if desc_text:
@@ -322,13 +324,15 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         st.markdown(f"_{legal_result.summary}_")
                         
                         st.markdown("---")
-                        colA, colB, colC = st.columns(3)
+                        colA, colB, colC, colD = st.columns(4)
                         
                         with colA:
-                            st.metric("Enablement", "✓ PASS" if legal_result.enablement.status == "ENABLED" else "❌ FAIL")
+                            st.metric("Claim Analysis", "✓ PASS" if hasattr(legal_result, 'claim_analysis') and legal_result.claim_analysis.status == "IDENTIFIED" else "❌ FAIL")
                         with colB:
-                            st.metric("Clarity", "✓ PASS" if legal_result.clarity.status == "CLEAR" else "❌ FAIL")
+                            st.metric("Enablement", "✓ PASS" if legal_result.enablement.status == "ENABLED" else "❌ FAIL")
                         with colC:
+                            st.metric("Clarity", "✓ PASS" if legal_result.clarity.status == "CLEAR" else "❌ FAIL")
+                        with colD:
                             st.metric("Support", "✓ PASS" if legal_result.support.status == "SUPPORTED" else "❌ FAIL")
                             
                         if legal_result.critical_issues:
@@ -421,6 +425,105 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                                 st.json(search_result.to_dict())
                     else:
                         st.warning("No result produced by Search Strategy Analyzer.")
+
+                with tab8:
+                    st.subheader("📊 LLM Token Usage & Cost Estimation")
+                    st.markdown("_Token counts from Ollama API. Cost estimates based on **OpenAI GPT-4.1** pricing._")
+                    
+                    # OpenAI GPT-4.1 pricing (per 1M tokens)
+                    INPUT_COST_PER_M  = 2.00   # $2.00 per 1M input tokens
+                    OUTPUT_COST_PER_M = 8.00   # $8.00 per 1M output tokens
+                    
+                    # Collect usage from both clients
+                    usage_rows = []
+                    total_prompt = 0
+                    total_completion = 0
+                    total_duration_s = 0.0
+                    
+                    if legal_client:
+                        u = legal_client.usage
+                        dur_s = u["total_duration_ns"] / 1e9
+                        usage_rows.append({
+                            "Module": "⚖️ Legal Analysis",
+                            "API Calls": u["calls"],
+                            "Prompt Tokens": f"{u['prompt_tokens']:,}",
+                            "Completion Tokens": f"{u['completion_tokens']:,}",
+                            "Total Tokens": f"{u['total_tokens']:,}",
+                            "Duration (s)": f"{dur_s:.1f}",
+                        })
+                        total_prompt += u["prompt_tokens"]
+                        total_completion += u["completion_tokens"]
+                        total_duration_s += dur_s
+                    
+                    if search_client:
+                        u = search_client.usage
+                        dur_s = u["total_duration_ns"] / 1e9
+                        usage_rows.append({
+                            "Module": "🔎 Search Strategy",
+                            "API Calls": u["calls"],
+                            "Prompt Tokens": f"{u['prompt_tokens']:,}",
+                            "Completion Tokens": f"{u['completion_tokens']:,}",
+                            "Total Tokens": f"{u['total_tokens']:,}",
+                            "Duration (s)": f"{dur_s:.1f}",
+                        })
+                        total_prompt += u["prompt_tokens"]
+                        total_completion += u["completion_tokens"]
+                        total_duration_s += dur_s
+                    
+                    total_all = total_prompt + total_completion
+                    
+                    if usage_rows:
+                        # Summary metrics
+                        colA, colB, colC, colD = st.columns(4)
+                        with colA:
+                            st.metric("Total Prompt Tokens", f"{total_prompt:,}")
+                        with colB:
+                            st.metric("Total Completion Tokens", f"{total_completion:,}")
+                        with colC:
+                            st.metric("Total Tokens", f"{total_all:,}")
+                        with colD:
+                            st.metric("Total Duration", f"{total_duration_s:.1f}s")
+                        
+                        st.markdown("---")
+                        
+                        # Per-module breakdown table
+                        st.markdown("#### 📋 Per-Module Breakdown")
+                        import pandas as pd
+                        df = pd.DataFrame(usage_rows)
+                        st.dataframe(df, use_container_width=True, hide_index=True)
+                        
+                        st.markdown("---")
+                        
+                        # Cost estimation
+                        st.markdown("#### 💰 Estimated Cost (if using OpenAI GPT-4.1)")
+                        st.caption("Pricing: Input $2.00/1M tokens · Output $8.00/1M tokens · [openai.com/api/pricing](https://openai.com/api/pricing)")
+                        
+                        input_cost  = (total_prompt / 1_000_000) * INPUT_COST_PER_M
+                        output_cost = (total_completion / 1_000_000) * OUTPUT_COST_PER_M
+                        total_cost  = input_cost + output_cost
+                        
+                        colX, colY, colZ = st.columns(3)
+                        with colX:
+                            st.metric("Input Cost", f"${input_cost:.4f}")
+                        with colY:
+                            st.metric("Output Cost", f"${output_cost:.4f}")
+                        with colZ:
+                            st.metric("Total Estimated Cost", f"${total_cost:.4f}")
+                        
+                        # Cost context
+                        st.markdown("---")
+                        st.markdown("#### 📈 Cost at Scale")
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Per 10 Patents", f"${total_cost * 10:.2f}")
+                        with col2:
+                            st.metric("Per 100 Patents", f"${total_cost * 100:.2f}")
+                        with col3:
+                            st.metric("Per 1,000 Patents", f"${total_cost * 1000:.2f}")
+                        
+                        st.success("✅ You are currently using a **local LLM** via Ollama — actual cost: **$0.00**")
+                    else:
+                        st.info("No LLM calls were made during this analysis session.")
 
             except Exception as e:
                 st.error(f"Error: {str(e)}")
