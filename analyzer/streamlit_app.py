@@ -324,15 +324,13 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                         st.markdown(f"_{legal_result.summary}_")
                         
                         st.markdown("---")
-                        colA, colB, colC, colD = st.columns(4)
+                        colA, colB, colC = st.columns(3)
                         
                         with colA:
-                            st.metric("Claim Analysis", "✓ PASS" if hasattr(legal_result, 'claim_analysis') and legal_result.claim_analysis.status == "IDENTIFIED" else "❌ FAIL")
-                        with colB:
                             st.metric("Enablement", "✓ PASS" if legal_result.enablement.status == "ENABLED" else "❌ FAIL")
-                        with colC:
+                        with colB:
                             st.metric("Clarity", "✓ PASS" if legal_result.clarity.status == "CLEAR" else "❌ FAIL")
-                        with colD:
+                        with colC:
                             st.metric("Support", "✓ PASS" if legal_result.support.status == "SUPPORTED" else "❌ FAIL")
                             
                         if legal_result.critical_issues:

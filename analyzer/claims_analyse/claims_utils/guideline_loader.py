@@ -37,6 +37,3 @@ class GuidelineLoader:
         
     def get_support_guidelines(self) -> str:
         return self.load_guideline("support.txt")
-        
-    def get_claim_analysis_guidelines(self) -> str:
-        return self.load_guideline("claim_analysis.txt")

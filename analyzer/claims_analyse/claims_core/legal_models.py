@@ -12,36 +12,6 @@ from datetime import datetime
 
 
 @dataclass
-class ClaimAnalysisResult:
-    """
-    Claim analysis result (Norwegian Patents Act § 8 (2)).
-    
-    Attributes:
-        status: "IDENTIFIED" or "DEFICIENT"
-        status_reason: str
-        issues: List[str]
-        essential_features: List[str]
-        missing_features: List[str]
-        analysis_score: float
-        confidence: str
-        detailed_issues: List[Dict[str, Any]]
-        guideline_version: Optional[str] = None
-    """
-    status: str
-    status_reason: str
-    issues: List[str]
-    essential_features: List[str]
-    missing_features: List[str]
-    analysis_score: float
-    confidence: str
-    detailed_issues: List[Dict[str, Any]]
-    guideline_version: Optional[str] = None
-    
-    def has_missing_features(self) -> bool:
-        return len(self.missing_features) > 0
-
-
-@dataclass
 class EnablementResult:
     """
     Enablement analysis result (Norwegian Patents Act § 8 (2)).
@@ -149,7 +119,6 @@ class LegalAnalysisResult:
     Combines enablement, clarity, and support analysis with overall assessment.
     
     Attributes:
-        claim_analysis: ClaimAnalysisResult
         enablement: EnablementResult
         clarity: ClarityResult
         support: SupportResult
@@ -160,7 +129,6 @@ class LegalAnalysisResult:
         examination_decision: "GRANT", "OBJECT", or "FURTHER_EXAMINATION"
         metadata: Optional metadata (timestamp, version, etc.)
     """
-    claim_analysis: ClaimAnalysisResult
     enablement: EnablementResult
     clarity: ClarityResult
     support: SupportResult
@@ -185,7 +153,6 @@ class LegalAnalysisResult:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
-            "claim_analysis": asdict(self.claim_analysis),
             "enablement": asdict(self.enablement),
             "clarity": asdict(self.clarity),
             "support": asdict(self.support),
@@ -221,9 +188,6 @@ class LegalAnalysisResult:
         """Get list of legal violations."""
         violations = []
         
-        if not self.claim_analysis.status == "IDENTIFIED":
-            violations.append("Patent Act § 8 (2) - Missing essential features")
-        
         if not self.enablement.is_enabled():
             violations.append("Patent Act § 8 (2) - Insufficient enablement")
         
@@ -250,18 +214,6 @@ class LegalAnalysisResult:
             report.append("FORMAL EXAMINATION REPORT")
             report.append("="*70)
             report.append(f"\n{self.formal_report}\n")
-            
-        report.append(f"\n{'='*70}")
-        report.append("CLAIM ANALYSIS (§ 8)")
-        report.append(f"{'='*70}")
-        report.append(f"Status: {self.claim_analysis.status}")
-        if getattr(self.claim_analysis, "status_reason", ""):
-            report.append(f"Reason: {self.claim_analysis.status_reason}")
-        report.append(f"Analysis Score: {self.claim_analysis.analysis_score:.1%}")
-        if getattr(self.claim_analysis, "missing_features", []):
-            report.append("\nMissing Essential Features:")
-            for feat in self.claim_analysis.missing_features:
-                report.append(f"  • {feat}")
             
         report.append(f"\n{'='*70}")
         report.append("ENABLEMENT (§ 8)")
@@ -315,7 +267,6 @@ class LegalAnalysisResult:
                     report.append(f"          Legal Mapping: {legal_mapping}")
                     report.append(f"          Suggestion: {amendment}")
                     
-        append_detailed_issues("Claim Analysis", getattr(self.claim_analysis, "detailed_issues", []))
         append_detailed_issues("Enablement", getattr(self.enablement, "detailed_issues", []))
         append_detailed_issues("Clarity", getattr(self.clarity, "detailed_issues", []))
         append_detailed_issues("Support", getattr(self.support, "detailed_issues", []))
@@ -344,7 +295,6 @@ class LegalAnalysisResult:
             f"LegalAnalysisResult(\n"
             f"  Decision: {self.examination_decision}\n"
             f"  Risk: {self.risk_level}\n"
-            f"  Claim Analysis: {self.claim_analysis.status}\n"
             f"  Enablement: {self.enablement.status}\n"
             f"  Clarity: {self.clarity.status}\n"
             f"  Support: {self.support.status}\n"

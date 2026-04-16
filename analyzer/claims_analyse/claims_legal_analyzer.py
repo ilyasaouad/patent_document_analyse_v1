@@ -22,7 +22,6 @@ from claims_config import AnalyzerConfig
 from claims_config.legal_prompts import LegalAnalysisPrompts
 from claims_core import OllamaClient
 from claims_core.legal_models import (
-    ClaimAnalysisResult,
     EnablementResult,
     ClarityResult,
     SupportResult,
@@ -63,7 +62,6 @@ class PatentLegalAnalyzer:
         self.enablement_guidelines = loader.get_enablement_guidelines()
         self.clarity_guidelines = loader.get_clarity_guidelines()
         self.support_guidelines = loader.get_support_guidelines()
-        self.claim_analysis_guidelines = loader.get_claim_analysis_guidelines()
         
         self.combined_guidelines = f"""[INPUT LAYER]
 
@@ -76,8 +74,6 @@ class PatentLegalAnalyzer:
 === SUPPORT FRAMEWORK ===
 {self.support_guidelines or 'Not provided'}
 
-=== CLAIM ANALYSIS FRAMEWORK ===
-{self.claim_analysis_guidelines or 'Not provided'}
 
 === LEGAL AUTHORITIES ===
 - Norwegian Patents Act § 8 (2)
@@ -119,35 +115,29 @@ class PatentLegalAnalyzer:
         print("Legal Framework: Norwegian Patents Act § 8 (2)")
         print(f"{'='*70}\n")
         
-        # Phase 1: Claim Analysis
-        print("Step 1/5: Claim analysis (WHAT is the invention?)...")
-        claim_analysis_result = self._analyze_claim_analysis(claims, description)
-
-        # Phase 2: Enablement Analysis
-        print("Step 2/5: Enablement analysis (CAN it be carried out?)...")
+        # Phase 1: Enablement Analysis
+        print("Step 1/4: Enablement analysis (§ 8)...")
         enablement_result = self._analyze_enablement(claims, description, drawings)
         
-        # Phase 3: Clarity Analysis
-        print("Step 3/5: Clarity analysis (IS it clear?)...")
+        # Phase 2: Clarity Analysis
+        print("Step 2/4: Clarity analysis (§ 8)...")
         clarity_result = self._analyze_clarity(claims)
         
-        # Phase 4: Support Analysis
-        print("Step 4/5: Support analysis (IS it disclosed?)...")
+        # Phase 3: Support Analysis
+        print("Step 3/4: Support analysis (§ 8)...")
         support_result = self._analyze_support(claims, description, drawings)
         
-        # Phase 5: Overall Assessment
-        print("Step 5/5: Legal synthesis (§ 8 (2) conclusion)...")
+        # Phase 4: Overall Assessment
+        print("Step 4/5: Overall assessment...")
         overall = self._overall_assessment(
-            claim_analysis_result,
             enablement_result,
             clarity_result,
             support_result
         )
 
-        # Output: Formal Report Synthesis
-        print("Drafting formal NIPO examination report...")
+        # Phase 5: Formal Report Synthesis
+        print("Step 5/5: Drafting formal NIPO examination report...")
         formal_report = self._generate_formal_report(
-            claim_analysis_result,
             enablement_result,
             clarity_result,
             support_result
@@ -155,7 +145,6 @@ class PatentLegalAnalyzer:
         
         # Build final result
         result = LegalAnalysisResult(
-            claim_analysis=claim_analysis_result,
             enablement=enablement_result,
             clarity=clarity_result,
             support=support_result,
@@ -172,50 +161,7 @@ class PatentLegalAnalyzer:
         
         return result
     
-    def _analyze_claim_analysis(self, claims: str, description: str) -> ClaimAnalysisResult:
-        """
-        Analyze claim essential features (WHAT is the invention?).
-        """
-        prompt = LegalAnalysisPrompts.format_prompt(
-            LegalAnalysisPrompts.CLAIM_ANALYSIS_USER,
-            guidelines=self.claim_analysis_guidelines,
-            claims=truncate_text(claims, 6000),
-            description=truncate_text(description, 8000)
-        )
-        
-        sys_prompt = LegalAnalysisPrompts.CLAIM_ANALYSIS_SYSTEM
-            
-        response = self.client.generate(
-            prompt=prompt,
-            system_prompt=sys_prompt,
-            max_tokens=self.config.MAX_TOKENS,
-            temperature=self.config.TEMPERATURE
-        )
-        response = clean_llm_output(response)
-        
-        result_dict = parse_json_safe(response, {
-            "status": "DEFICIENT",
-            "status_reason": "Analysis incomplete or missing.",
-            "issues": ["Analysis incomplete"],
-            "essential_features": [],
-            "missing_features": [],
-            "analysis_score": 0.5,
-            "confidence": "LOW",
-            "detailed_issues": [],
-            "guideline_version": "Unknown"
-        })
-        
-        return ClaimAnalysisResult(
-            status=result_dict.get("status", "DEFICIENT"),
-            status_reason=result_dict.get("status_reason", ""),
-            issues=result_dict.get("issues", []),
-            essential_features=result_dict.get("essential_features", []),
-            missing_features=result_dict.get("missing_features", []),
-            analysis_score=result_dict.get("analysis_score", 0.5),
-            confidence=result_dict.get("confidence", "LOW"),
-            detailed_issues=result_dict.get("detailed_issues", []),
-            guideline_version=result_dict.get("guideline_version")
-        )
+
 
     def _analyze_enablement(
         self,
@@ -376,7 +322,6 @@ class PatentLegalAnalyzer:
     
     def _overall_assessment(
         self,
-        claim_analysis: ClaimAnalysisResult,
         enablement: EnablementResult,
         clarity: ClarityResult,
         support: SupportResult
@@ -388,11 +333,6 @@ class PatentLegalAnalyzer:
         """
         prompt = LegalAnalysisPrompts.format_prompt(
             LegalAnalysisPrompts.OVERALL_ASSESSMENT_USER,
-            claim_analysis_result=json.dumps({
-                "status": claim_analysis.status,
-                "issues": claim_analysis.issues,
-                "missing_features": claim_analysis.missing_features
-            }, indent=2),
             enablement_result=json.dumps({
                 "status": enablement.status,
                 "issues": enablement.issues,
@@ -427,7 +367,6 @@ class PatentLegalAnalyzer:
 
     def _generate_formal_report(
         self,
-        claim_analysis: ClaimAnalysisResult,
         enablement: EnablementResult,
         clarity: ClarityResult,
         support: SupportResult
@@ -437,14 +376,12 @@ class PatentLegalAnalyzer:
         Disables strict JSON formatting to allow unstructured prose.
         """
         # Serialize the findings back to JSON so the LLM can read them natively
-        ca_json = json.dumps(claim_analysis.__dict__, default=lambda x: str(x), indent=2)
         enb_json = json.dumps(enablement.__dict__, default=lambda x: str(x), indent=2)
         clr_json = json.dumps(clarity.__dict__, default=lambda x: str(x), indent=2)
         sup_json = json.dumps(support.__dict__, default=lambda x: str(x), indent=2)
         
         prompt = LegalAnalysisPrompts.format_prompt(
             LegalAnalysisPrompts.FORMAL_REPORT_USER,
-            claim_analysis_result=ca_json,
             enablement_result=enb_json,
             clarity_result=clr_json,
             support_result=sup_json

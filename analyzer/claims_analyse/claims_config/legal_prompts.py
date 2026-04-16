@@ -13,75 +13,6 @@ class LegalAnalysisPrompts:
     """
     
     # ========================================================================
-    # CLAIM ANALYSIS (Norwegian Patents Act § 8)
-    # ========================================================================
-    
-    CLAIM_ANALYSIS_SYSTEM = """You are a senior patent examiner applying the Norwegian Patents Act guidelines for claim parameter and feature evaluation.
-
-LEGAL STANDARD:
-Each independent claim must define the essential technical features necessary to achieve the intended technical effect of the invention.
-
-Return ONLY valid JSON in this exact format:
-{
-  "status": "IDENTIFIED" or "DEFICIENT",
-  "status_reason": "High-level reason explicitly citing missing essential features if applicable",
-  "issues": ["issue1", "issue2"],
-  "essential_features": ["feature1", "feature2"],
-  "missing_features": ["missing feature 1", "missing feature 2"],
-  "analysis_score": 0.0-1.0,
-  "confidence": "HIGH" or "MEDIUM" or "LOW",
-  "detailed_issues": [
-    {
-      "observation": "What the framework heuristics suggest",
-      "legal_mapping": "Why Patent Act § 8 (2) might apply here",
-      "confidence_level": "LOW / MEDIUM / HIGH",
-      "amendment": "Possible ways to overcome the objection include... (Do not use required or mandatory language)",
-      "severity": "MINOR, MODERATE, or CRITICAL"
-    }
-  ],
-  "guideline_version": "Version of the guidelines used"
-}
-
-STRICT RULES, WORKFLOW & HEURISTIC NATURE:
-The frameworks are diagnostic heuristics, NOT legal requirements. Final qualification MUST be based only on: Norwegian Patents Act § 8 (2).
-
-A. Reasoning files are NOT law. They are internal analytical frameworks only.
-B. Only the following are valid legal citations: Norwegian Patents Act § 8 (2).
-C. NEVER output guideline section numbers (e.g. §1.x) as legal authority.
-D. Always convert reasoning → legal citations at output stage.
-
-WORKFLOW:
-Step 1: ANALYZE using the reasoning file
-Step 2: MAP findings to legal provisions (Norway)
-Step 3: WRITE final answer using ONLY legal citations
-
-FINAL CHECK (OVERREACH FILTER):
-If your output contains:
-- absolute legal conclusions beyond §8(2)
-- mandatory amendment language (e.g. 'Required amendment...')
-- guideline section references (§1.x, §4.x, etc.) or framework titles
-→ YOU MUST DELETE THEM AND REGENERATE OUTPUT.
-
-ADDITIONAL DOMAIN RULES:
-1. Examine if the skilled person would understand additional technical features are required.
-2. Provide concrete mapping to EXACTLY "Patent Act § 8 (2)". DO NOT cite framework sections!
-"""
-
-    CLAIM_ANALYSIS_USER = """[REFERENCE DOCUMENT - USE FOR CITATIONS]
-{guidelines}
-[END REFERENCE]
-
-Analyze claim essential features:
-
-CLAIMS:
-{claims}
-
-DESCRIPTION:
-{description}
-
-Check if any essential features from the description are missing in the independent claims."""
-
-    # ========================================================================
     # ENABLEMENT ANALYSIS (Art. 83 EPC / §8 Patentloven)
     # ========================================================================
     
@@ -120,7 +51,7 @@ C. NEVER output: §1.x, §4.x, §6.x or any guideline section numbers as legal a
 D. Always convert reasoning → legal citations at output stage.
 
 WORKFLOW:
-Step 1: ANALYZE using 4 reasoning files
+Step 1: ANALYZE using 3 reasoning files
 Step 2: MAP findings to legal provisions (Norway)
 Step 3: WRITE final answer using ONLY legal citations
 
@@ -195,7 +126,7 @@ C. NEVER output: §1.x, §4.x, §6.x or any guideline section numbers as legal a
 D. Always convert reasoning → legal citations at output stage.
 
 WORKFLOW:
-Step 1: ANALYZE using 4 reasoning files
+Step 1: ANALYZE using 3 reasoning files
 Step 2: MAP findings to legal provisions (Norway)
 Step 3: WRITE final answer using ONLY legal citations
 
@@ -263,7 +194,7 @@ C. NEVER output: §1.x, §4.x, §6.x or any guideline section numbers as legal a
 D. Always convert reasoning → legal citations at output stage.
 
 WORKFLOW:
-Step 1: ANALYZE using 4 reasoning files
+Step 1: ANALYZE using 3 reasoning files
 Step 2: MAP findings to legal provisions (Norway)
 Step 3: WRITE final answer using ONLY legal citations
 
@@ -331,9 +262,6 @@ EXAMINATION DECISION:
 
     OVERALL_ASSESSMENT_USER = """Provide overall assessment:
 
-CLAIM ANALYSIS RESULT:
-{claim_analysis_result}
-
 ENABLEMENT RESULT:
 {enablement_result}
 
@@ -373,9 +301,6 @@ IMPORTANT INSTRUCTIONS:
 """
 
     FORMAL_REPORT_USER = """Generate the Formal Examination Report paragraph based on these findings:
-
-CLAIM ANALYSIS RESULTS:
-{claim_analysis_result}
 
 ENABLEMENT RESULTS:
 {enablement_result}
