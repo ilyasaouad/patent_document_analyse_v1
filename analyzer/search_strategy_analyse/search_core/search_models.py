@@ -40,7 +40,8 @@ class KeywordMark:
     narrow_terms:  List[str] = field(default_factory=list)
     must_have:     List[str] = field(default_factory=list)
     optional:      List[str] = field(default_factory=list)
-    proximity_example: str = ""
+    broad_query:   str = ""
+    narrow_query:  str = ""
 
 
 @dataclass
@@ -76,8 +77,11 @@ class SearchStrategyResult:
     search_combinations:     List[SearchCombination] = field(default_factory=list)
     broad_boolean_string:    str = ""        # Section 6 broad string
     narrow_boolean_string:   str = ""        # Section 6 narrow string
+    mixed_boolean_string:    str = ""        # Section 6 mixed classification string
     classification_codes:    List[str] = field(default_factory=list)  # Section 8
-    examiner_notes:          str = ""        # Section 10 text
+    classification_table:    str = ""        # Section 8 full table markdown
+    mixed_search_analysis:   str = ""        # Section 9 mixed search strategies text
+    examiner_notes:          str = ""        # Section 11 text
 
     # ── Status ────────────────────────────────────────────────────────────────
     status:        str = "SUCCESS"   # SUCCESS | PARTIAL | ERROR
@@ -197,10 +201,13 @@ def extract_marks(report: str) -> List[KeywordMark]:
         mark.must_have    = _extract_list(block, "Must-have terms")
         mark.optional     = _extract_list(block, "Optional terms")
 
-        # Extract proximity example from code block
-        code_match = re.search(r"```\n(.+?)\n```", block, re.DOTALL)
-        if code_match:
-            mark.proximity_example = code_match.group(1).strip()
+        # Extract queries from code blocks
+        code_blocks = re.findall(r"```(?:sql|text|ansera|pql|)?\n(.*?)\n```", block, re.DOTALL)
+        if len(code_blocks) >= 2:
+            mark.broad_query = code_blocks[0].strip()
+            mark.narrow_query = code_blocks[1].strip()
+        elif len(code_blocks) == 1:
+            mark.broad_query = code_blocks[0].strip()
 
         marks.append(mark)
 
@@ -215,14 +222,15 @@ def extract_classification_codes(report: str) -> List[str]:
 
 def extract_boolean_strings(report: str) -> tuple:
     """
-    Return (broad_string, narrow_string) from Section 6.
-    Both are extracted from fenced code blocks in that section.
+    Return (broad_string, narrow_string, mixed_string) from Section 6.
+    They are extracted from fenced code blocks in that section.
     """
     section = extract_section(report, "SECTION 6")
-    code_blocks = re.findall(r"```(?:sql|text|ansera|)?\n(.*?)\n```", section, re.DOTALL)
+    code_blocks = re.findall(r"```(?:sql|text|ansera|pql|)?\n(.*?)\n```", section, re.DOTALL)
     broad  = code_blocks[0].strip() if len(code_blocks) > 0 else ""
     narrow = code_blocks[1].strip() if len(code_blocks) > 1 else ""
-    return broad, narrow
+    mixed  = code_blocks[2].strip() if len(code_blocks) > 2 else ""
+    return broad, narrow, mixed
 
 
 def parse_full_result(report: str, input_status: InputStatus) -> SearchStrategyResult:
@@ -235,10 +243,12 @@ def parse_full_result(report: str, input_status: InputStatus) -> SearchStrategyR
     result.input_status  = input_status
 
     result.technical_conclusion  = extract_section(report, "SECTION 3")
-    result.examiner_notes        = extract_section(report, "SECTION 10")
+    result.examiner_notes        = extract_section(report, "SECTION 11")
     result.marks                 = extract_marks(report)
+    result.classification_table  = extract_section(report, "SECTION 8")
+    result.mixed_search_analysis = extract_section(report, "SECTION 9")
     result.classification_codes  = extract_classification_codes(report)
-    result.broad_boolean_string, result.narrow_boolean_string = extract_boolean_strings(report)
+    result.broad_boolean_string, result.narrow_boolean_string, result.mixed_boolean_string = extract_boolean_strings(report)
 
     # Search combinations — keep as simple count for now
     n = count_search_combinations(report)

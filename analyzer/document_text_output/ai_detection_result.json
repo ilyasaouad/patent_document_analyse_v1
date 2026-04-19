@@ -1,50 +1,51 @@
 {
-  "is_likely_ai_generated": false,
-  "confidence_score": 0.572,
-  "risk_level": "LOW",
+  "is_likely_ai_generated": true,
+  "confidence_score": 0.61,
+  "risk_level": "MEDIUM",
   "feature_scores": {
     "fingerprint": 0.24,
-    "anchor_similarity": 0.71,
-    "hallucination": 0.73,
+    "anchor_similarity": 0.78,
+    "hallucination": 0.78,
     "drawing": 0.7
   },
   "detailed_analysis": {
     "fingerprint_analysis": {
       "score": 0.24,
       "findings": [
-        "Sentence lengths vary with both short and complex constructions, indicating natural variation",
-        "Transition words are used sparingly and not overly repetitive",
-        "Technical terminology and domain-specific jargon present, reducing generic noise",
-        "Passive voice appears but is balanced with active constructions",
-        "Paragraphs differ in length and structure, lacking uniformity"
+        "Sentence lengths vary with a mix of short and long constructions, indicating low burstiness",
+        "No repetitive transitional phrases such as \"Furthermore\" or \"Moreover\" are present",
+        "Technical terminology is specific (e.g., \"11-dimensional\", \"oscillatory encodings\"), showing some domain noise",
+        "Passive voice appears but not excessively; the text balances active and passive constructions",
+        "Paragraphs and bullet points differ in length and structure, avoiding overly uniform formatting"
       ]
     },
     "anchor_analysis": {
-      "similarity": 0.71,
+      "similarity": 0.78,
       "findings": [
-        "Both texts use very similar phrasing such as “present invention relates to” / “present disclosure relates to” and repeatedly refer to a “multi‑dimensional context space” and “oscillatory (wave‑like) representations”.",
-        "The logical flow mirrors each other: an introductory field/background section followed by a description of the system architecture and its components, reflecting a comparable structural outline.",
-        "Sentence patterns are alike, often employing compound sentences that introduce a concept and immediately qualify it (e.g., “the core of the invention is the representation of each data fragment as an oscillatory entity…”).",
-        "Technical terminology overlaps heavily – terms like “embedding”, “context engine”, “resonance score”, “data fragment”, “coordinate vector”, and “high‑dimensional” appear in both, indicating shared lexical choices.",
-        "Stylistic differences are evident: the original is more narrative and problem‑oriented, while the AI‑generated version is more formal, includes a table, and uses patent‑style boilerplate (“any modifications that fall within the scope of the appended claims”)."
+        "Both texts use nearly identical technical terminology such as \"multi‑dimensional\", \"context‑driven\", \"oscillatory (wave‑function) embedding\", and reference an 11‑dimensional space.",
+        "The logical structure mirrors each other: an introductory field/background section followed by an overview of a multi‑dimensional context space and its dimensional breakdown.",
+        "Sentence patterns are closely aligned, often beginning with \"The present invention/ disclosure relates to...\" and describing dimensions in a tabular or enumerated format.",
+        "Phrasing choices overlap significantly, e.g., \"context‑dependent filtering\", \"efficient associative retrieval\", and \"dynamic processing of data in a unified multi‑dimensional space\" appear in both descriptions."
       ]
     },
     "hallucination_analysis": {
-      "score": 0.73,
+      "score": 0.78,
       "findings": [
-        "machine learning models",
-        "neural networks",
-        "latent vectors",
+        "probability wave",
         "attention mechanisms",
         "keyword matching",
-        "probabilistic models",
-        "deterministic reliability",
-        "parallel context consideration",
-        "multiple hypotheses",
+        "latent vectors",
+        "neural networks",
+        "static embeddings",
+        "exact keys",
+        "rigid indexing schemes",
+        "lowdimensional",
+        "parallel hypotheses",
         "redundancy",
         "scalability",
-        "static relevance scores",
-        "dynamic context limitations"
+        "deterministic reliability",
+        "probabilistic models",
+        "dynamic processing"
       ]
     },
     "drawing_analysis": {
@@ -57,36 +58,38 @@
       "enablement_conclusion": "NOT ENABLED",
       "missing_elements": [
         "Concrete mathematical definition of the oscillatory (wave) representation for data fragments",
-        "Specific algorithm or formula for computing the resonance score between a fragment and a context input",
-        "Detailed procedure for mapping metadata to coordinates in the multi‑dimensional context space",
-        "Specification of the wave function shape, frequency, amplitude, and how it varies across dimensions",
-        "Guidelines for selecting the predetermined relevance threshold and handling ties or multiple high scores",
-        "Examples or embodiments illustrating end‑to‑end processing of actual data fragments",
-        "Hardware or software architecture requirements (e.g., processing units, memory structures) to implement the system"
+        "Algorithmic steps for converting metadata into coordinate vectors and associated wave functions",
+        "Explicit formula or procedure for computing the resonance score between a fragment’s wave function and a context input",
+        "Specification of how the predetermined relevance threshold is set or adapted",
+        "Detailed description of system architecture, hardware or software components required to implement the method",
+        "Illustrative examples or experimental data demonstrating successful context‑driven retrieval"
       ],
       "technical_deficiencies": [
-        "Vague description of “oscillatory representation” without defining the mathematical model (e.g., sinusoidal basis, Fourier components, or quantum‑like wave functions)",
-        "No disclosed method for generating or normalizing the multi‑dimensional wave functions from metadata",
-        "Absence of a clear, reproducible formula for the resonance score (e.g., inner product, convolution, correlation) and its scaling",
-        "Lack of detail on how the context input is transformed into a comparable representation in the same space",
-        "No information on how dimensionality (e.g., 11 dimensions) is concretely instantiated or how each dimension is quantified",
-        "Missing implementation specifics such as data structures, indexing schemes, or processing pipelines required to realize the claimed method",
-        "No experimental results, benchmarks, or validation examples to demonstrate that the described approach actually yields context‑relevant retrieval"
+        "Vague terminology (e.g., “oscillatory representation”, “resonance score”) without quantitative definitions",
+        "Absence of parameter values or ranges (e.g., frequency ranges, amplitude functions, dimensional scaling factors)",
+        "No guidance on handling dimensionality reduction, normalization, or computational complexity in an 11‑dimensional space",
+        "Lack of implementation details for embedding process, such as data structures, encoding schemes, or learning/training procedures",
+        "No description of how to map abstract semantic dimensions to measurable features",
+        "Missing error handling, robustness considerations, and performance benchmarks"
       ]
     },
     "model_used": "gpt-oss:120b-cloud"
   },
   "recommendations": [
-    "✓ LOW RISK: Minimal AI indicators",
+    "🚨 CRITICAL: High anchor similarity (>75%) - strong AI signal",
+    "   AI generated very similar text when given same claims",
+    "   Action: Manual review required before filing",
+    "⚠️ MEDIUM RISK: Moderate AI indicators detected",
+    "   Action: Spot-check sections with repetitive patterns",
     "\n⚖️ ENABLEMENT ISSUE:",
     "   CRITICAL: Patent disclosure lacks enablement",
     "   Action: Request additional technical details",
-    "• Sentence lengths vary with both short and complex constructions, indicating natural variation",
-    "• Transition words are used sparingly and not overly repetitive"
+    "• Sentence lengths vary with a mix of short and long constructions, indicating low burstiness",
+    "• No repetitive transitional phrases such as \"Furthermore\" or \"Moreover\" are present"
   ],
   "applied_rules": [],
   "metadata": {
-    "timestamp": "2026-04-16T18:02:38.412082",
+    "timestamp": "2026-04-19T21:59:22.981929",
     "config": {
       "threshold": 0.6,
       "weights": {

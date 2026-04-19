@@ -57,6 +57,18 @@ class SearchStrategySettings:
         default_factory=lambda: _RESOURCES_DIR / "database_priority.txt"
     )
 
+    # ── EPO Linked Data API (for hybrid CPC enrichment) ────────────────────
+    epo_api_base_url: str = "https://data.epo.org/linked-data/def/cpc"
+    epo_api_timeout:  int = 15      # Seconds per API call
+    epo_api_depth:    int = 2       # Recursion depth: 0=symbol only, 1=children, 2=grandchildren
+    epo_api_workers:  int = 8       # Thread pool size for parallel requests
+    epo_api_retries:  int = 3       # Max retry attempts for transient errors
+    epo_api_cache:    Optional[str] = field(
+        default_factory=lambda: str(_THIS_DIR / ".epo_cache.db")
+    )
+    enable_epo_enrichment: bool = True   # Set False to skip Phase 1 / API and use static hints only
+    phase1_max_tokens: int = 256    # Phase 1 is a short response (just class codes)
+
     # ── Prompt behaviour ──────────────────────────────────────────────────────
     # Set to False to omit resource file content from the system prompt
     # (useful when using a very small context-window model)

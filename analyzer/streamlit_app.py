@@ -393,23 +393,37 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                                             st.markdown("**Must-have:** " + ", ".join(mark.must_have))
                                         if mark.optional:
                                             st.markdown("**Optional:** " + ", ".join(mark.optional))
-                                        if mark.proximity_example:
-                                            st.code(mark.proximity_example)
+                                        if hasattr(mark, 'broad_query') and mark.broad_query:
+                                            st.markdown("**Broad Search String:**")
+                                            st.code(mark.broad_query)
+                                        if hasattr(mark, 'narrow_query') and mark.narrow_query:
+                                            st.markdown("**Narrow Search String:**")
+                                            st.code(mark.narrow_query)
                             
                             # Boolean strings
-                            if search_result.broad_boolean_string or search_result.narrow_boolean_string:
-                                st.markdown("#### 🔗 Boolean Search Strings")
+                            if search_result.broad_boolean_string or search_result.narrow_boolean_string or search_result.mixed_boolean_string:
+                                st.markdown("#### 🔗 Overall Boolean Search Strings")
                                 if search_result.broad_boolean_string:
                                     st.markdown("**Broad:**")
                                     st.code(search_result.broad_boolean_string, language="sql")
                                 if search_result.narrow_boolean_string:
                                     st.markdown("**Narrow:**")
                                     st.code(search_result.narrow_boolean_string, language="sql")
+                                if search_result.mixed_boolean_string:
+                                    st.markdown("**Mixed Classification + Keyword:**")
+                                    st.code(search_result.mixed_boolean_string, language="sql")
                             
                             # Classification codes
                             if search_result.classification_codes:
-                                st.markdown("#### 📋 Classification Codes")
-                                st.markdown(", ".join([f"`{c}`" for c in search_result.classification_codes]))
+                                st.markdown("#### 📋 Classification Codes & Relevance Statistics")
+                                if search_result.classification_table:
+                                    st.markdown(search_result.classification_table)
+                                else:
+                                    st.markdown(", ".join([f"`{c}`" for c in search_result.classification_codes]))
+                                
+                                if search_result.mixed_search_analysis:
+                                    st.markdown("#### 🔀 Mixed Searches using Class + Keyword")
+                                    st.info(search_result.mixed_search_analysis)
                             
                             # Examiner notes
                             if search_result.examiner_notes:

@@ -8,6 +8,8 @@ Do not use "*" in truncation, use "+" for more than 1 trailing characters or "?"
 The "+" operator is ONLY a character-level wildcard on a SINGLE word.
 It means "0 or more trailing characters". It does NOT join words together.
 
+Never use space to connect words in a query! NEVER have a bare space between search terms like "context space". Use comma (,) for OR alternatives, and nW, nD, UG, OG, or P for proximity.
+
 WRONG (NEVER DO THIS):
   analog+digital+comput+
   → This does NOT mean "analog digital computer"
@@ -38,8 +40,8 @@ MORE CORRECT EXAMPLES:
 
 SHORTHAND OPERATORS:
   ,       = OR        →  apple, banana  means  apple OR banana
-  space   = 0W        →  yellow banana  means  yellow 0W banana (adjacent, ordered)
   _       = ab or a b →  white_house    matches whitehouse or white house
+  (NEVER use a bare space: "yellow banana" without an operator is strictly forbidden)
 
 ==========================================================================
 TRUNCATION OPERATORS (character-level, SINGLE word only)
@@ -70,6 +72,9 @@ nD — Unordered proximity: a nD b
 nS — Sentence proximity: a nS b
   a and b within n sentences of each other.
 
+P — Paragraph proximity: a P b
+  a and b within the same paragraph.
+
 ==========================================================================
 FRAMING OPERATORS (BEST PRACTICE for complex queries)
 ==========================================================================
@@ -96,21 +101,17 @@ Example:
   - More robust recall
 
 ==========================================================================
-COMMON FAILURE WITH CHAINED PROXIMITY + OR
+CRITICAL FORBIDDEN PATTERN: CHAINED PROXIMITY (e.g. A nW B nW C)
 ==========================================================================
 
-Query:   Door 2D (lock, actuator) D installation
-Text:    Door lock actuator installation
-Problem: "lock" matches first → "actuator" adds distance → "installation" is now too far → NO HIT
+NEVER CHAIN MULTIPLE nW OR nD OPERATORS TOGETHER!
+You are strictly forbidden from stringing more than 2 elements together using W or D operators. Max 2 operands. 
+WRONG: (A) 2W (B) 2W (C)
+WRONG: Door 2D (lock, actuator) D installation
 
-KEY RULE: When chaining proximity operators, outer distance ≥ inner distance
-  Door 2D (lock, actuator) 2D installation  ← works
-
-BEST FIX: Use a single framing operator instead
-  5UG(Door, (lock, actuator), installation)  ← always works
-
-ALTERNATIVE: Expand synonyms manually
-  Door 2D lock D installation, Door 2D actuator D installation
+If you have 3 or more concepts to link in proximity, YOU MUST use the UG, OG, P, or nS operators.
+RIGHT: 5UG(Door, (lock, actuator), installation)
+RIGHT: Door P lock P installation
 
 ==========================================================================
 EVALUATION ORDER
@@ -160,11 +161,19 @@ RULE OF THUMB:
 
 EXAMPLE SEARCH STRATEGY MARKS:
 
-Mark A — analog/digital computing hardware:
-  WRONG:  analog+digital+comput+ 3W (accelerator, card)
-  RIGHT:  (analog, digital, hybrid) 2D comput+ 3D (accelerator, card)
-  BEST:   5UG((analog, digital, hybrid), comput+, (accelerator, card, processor+))
+(Use generous truncation and framing, avoiding nested W/D where simple OR/UG is sufficient)
 
-Mark B — heat management:
-  WRONG:  heat+exchang+ OR thermal+manag+
-  RIGHT:  (heat 2D exchang+), (thermal 2D manag+), (cool+ 2D system+)
+Mark A: 5UG((crew?, passenger?, personnel, human), rescu+, (water, sea, ocean))
+Mark B: hub, gateway?, communicat+, control+
+Mark C: propulsion, diver+, steer+, propel+
+Mark D: float+, life_boat?, life_raft?
+Mark E: camera
+Mark F: notif+, alert+, warn+
+Mark G: signal?
+Mark H: VHF, AIS, satellite
+Mark I: passenger?, crew?, personnel, individual, human
+Mark J: fall+, drown+, casual+
+Mark K: over_board, on_board
+Mark L: vessel?, ship?, boat?
+Mark M: wear+
+Mark N: water, sea, ocean

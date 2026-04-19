@@ -132,6 +132,17 @@ def render_search_strategy_page():
                 "context-window models."
             ),
         )
+    with st.container():
+        enable_epo = st.checkbox(
+            "Enable Dynamic EPO CPC Classification",
+            value=True,
+            help=(
+                "When enabled, uses a 2-phase approach: asks the LLM to identify relevant "
+                "classes, then fetches the live hierarchy from the EPO Linked Open Data API "
+                "before generating the final report. When disabled, uses the static hints "
+                "file only (1 LLM call)."
+            ),
+        )
 
     # ── Generate button ───────────────────────────────────────────────────────
     st.markdown("---")
@@ -147,6 +158,9 @@ def render_search_strategy_page():
     if run_button:
         with st.spinner("🔍 Analysing claims and generating prior-art search strategy..."):
             try:
+                import time
+                start_time = time.time()
+                
                 from search_core.ollama_client       import OllamaClient
                 from search_config.settings          import SearchStrategySettings
                 from search_strategy_analyzer        import SearchStrategyAnalyzer
@@ -158,6 +172,7 @@ def render_search_strategy_page():
                     inject_ansera_operators=inject_resources,
                     inject_ipc_hints=inject_resources,
                     inject_database_priority=inject_resources,
+                    enable_epo_enrichment=enable_epo,
                 )
 
                 client   = OllamaClient(
@@ -185,7 +200,8 @@ def render_search_strategy_page():
                 "Review the full report below."
             )
         else:
-            st.success("✅ Search strategy report generated successfully!")
+            elapsed_time = time.time() - start_time
+            st.success(f"✅ Search strategy report generated successfully in {elapsed_time:.1f}s!")
 
         if result.error_message:
             st.warning(result.error_message)
