@@ -5,188 +5,145 @@ PATENT LEGAL ANALYSIS - NIPO
 EXAMINATION DECISION: OBJECT
 RISK LEVEL: HIGH
 
-The application suffers from major enablement, clarity, and support deficiencies. No concrete algorithm or numerical parameters are disclosed, key terms are vague, and several claim features lack any basis in the description.
+The application suffers from major enablement deficiencies, unclear terminology, and lack of support for several claim features. No concrete algorithm or parameter ranges are disclosed, key terms are vague, and multiple claim elements are not supported by the description.
 
 ======================================================================
 FORMAL EXAMINATION REPORT
 ======================================================================
 
 **Formal Objection:**  
-The application fails to meet the substantive requirements of the Norwegian Patents Act §§ 8 (2) and 8 (2) with respect to enablement, clarity of the claims and support by the description. Consequently, the independent claims as drafted are objected to in their present form.
+The application is objected to on the grounds that the claims fail to meet the requirements of Norwegian Patents Act § 8 (2) with respect to enablement, clarity and support by the description.  
 
----
+**Enablement**  
+The disclosure does not enable a person skilled in the art to practice the invention without undue burden.  The description provides only a vague reference to an “oscillatory (wave) representation” and to a “resonance score” without furnishing a mathematical definition of the wave function, the exact formula or pseudo‑code for the resonance‑score calculation, nor any concrete parameter values (amplitudes, frequencies, phases, thresholds, etc.).  Moreover, the method for transforming metadata into coordinates in the multi‑dimensional space is described only in generic terms, and no examples or experimental data are supplied.  Consequently, the invention is not described clearly and completely enough to satisfy the enablement requirement of Norwegian Patents Act § 8 (2).  
 
-### 1.  Enablement (Norwegian Patents Act § 8 (2))
+**Clarity of the claims**  
+The claims are drafted in functional and ambiguous language that does not define the matter for which protection is sought in clear and concise terms, contrary to Norwegian Patents Act § 8 (2).  Terms such as “oscillatory representation”, “multi‑dimensional context space”, “resonance score”, “predetermined relevance threshold”, and “most context‑relevant” are neither defined nor linked to measurable parameters.  Phrases such as “providing an information output that is most context‑relevant according to said resonance scores” and “selecting at least one data fragment based on the resonance scores” are purely result‑oriented and lack structural definition.  The range for the variable N is expressed ambiguously (“N is between 8 and inclusive”), and the claims repeatedly employ functional language without specifying the underlying algorithms or data structures.  This lack of precision renders the claims unclear under the statutory requirement.  
 
-The disclosure does not describe the invention “clearly and completely enough for a skilled person to carry it out.”  
+**Support by the description**  
+Several claim features are not directly supported by the disclosure and extend beyond the embodiments described, breaching the support requirement of § 8 (2).  Specifically:  
 
-* The claim recites an **oscillatory (wave) representation** of data fragments but provides no explicit mathematical model, nor any numeric ranges for amplitude, frequency or phase. This omission prevents a skilled person from reproducing the embodiment (critical deficiency).  
-* The **resonance‑score** is defined only in functional terms (“distance, similarity, weighted combination”) without a concrete formula, algorithmic steps, or definition of the weighting factors. A skilled practitioner cannot calculate the score without inventive effort (critical deficiency).  
-* The **predetermined relevance threshold** is mentioned without any method for its determination, nor any example values. The lack of objective criteria defeats the requirement that the invention be reproducible across the full claim scope (moderate deficiency).  
-* The claimed dimensionality “N ≥ 2, up to 11” (and the broader range “between 8 and inclusive”) is not accompanied by guidance on how the embedding and score calculations adapt to different N values, nor is a concrete embodiment for the preferred N = 11 disclosed (moderate deficiency).  
-* No experimental data, worked examples or illustrative embodiments are provided to demonstrate that the method can be carried out in practice (minor deficiency).  
+* The independent claim defining a range for N (8 to an unspecified upper limit) is not disclosed; the description only exemplifies N = 11.  
+* Claims requiring explicit wave‑frequency and phase parameters are not taught in the description, which merely mentions “oscillatory representation” without quantitative detail.  
+* The claim that specifies a weighted combination of distance, cosine similarity, frequency‑domain difference and a learned metric lacks any supporting disclosure.  
 
-In sum, the specification fails to enable the skilled person to practice the invention over the entire claimed scope.
-
-### 2.  Clarity of the Claims (Norwegian Patents Act § 8 (2))
-
-The claims are unacceptably vague and overly functional, thereby not defining the matter for which protection is sought in clear and concise terms.
-
-* Terms such as **“oscillatory representation,” “resonance score,” “predetermined relevance threshold,” “most context‑relevant,” “deterministic reconstruction,”** and **“contextually collapse”** are used without any objective technical definition.  
-* Structural elements – the **multi‑dimensional context space, wave function, amplitude, frequency, phase parameters, and the nature of the data fragment** – are left undefined, rendering the claim language ambiguous.  
-* Phrases such as “providing an information output that is most context‑relevant according to said resonance scores” and “selecting at least one data fragment” describe a desired result rather than the technical means to achieve it, contrary to the clarity requirement of § 8 (2).  
-* The numerical range expression “N is between 8 and inclusive” is ambiguous and must be rewritten to a precise bound.  
-
-Because the claims do not clearly delineate the technical features, they fail the clarity requirement.
-
-### 3.  Support by the Description (Norwegian Patents Act § 8 (2))
-
-The claims extend beyond the technical teaching disclosed in the specification.
-
-* **Claim 2** – the range “between 8 and inclusive” for the dimensionality is not disclosed; the description only exemplifies N = 11.  
-* **Claim 3** – the specific allocation of dimensions (3 spatial, 1 temporal, 1 frequency, 3 momentum, 3 abstract) is absent from the description.  
-* **Claim 5** – the definition of the oscillatory representation by explicit amplitude, frequency and phase parameters is not taught.  
-* **Claim 8** – the weighted combination of Euclidean distance, cosine similarity, frequency‑domain characteristics and learned metrics is not described.  
-* **Claim 11** – the procedural step of fragmenting an input dataset and extracting contextual metadata for embedding is not disclosed.  
-
-Each of these features lacks a basis in the specification, constituting unsupported generalisations. Accordingly, the claims violate the support requirement of § 8 (2).
-
-### 4.  Overall Effect
-
-Given the critical deficiencies in enablement, the pervasive lack of clarity, and the numerous unsupported claim features, the application cannot be granted in its current form. The independent claims must be substantially amended to:
-
-1. Provide a complete, quantitative description of the wave‑function model, resonance‑score formula, threshold‑determination method and dimensionality handling;  
-2. Replace functional, result‑oriented language with precise technical features and structural definitions;  
-3. Align every claim feature with a clear disclosure in the specification, removing or supporting the presently unsupported elements.
-
-Until such amendments are made, the application remains non‑compliant with the Norwegian Patents Act.
-
----
+These unsupported features constitute an impermissible broadening of the invention relative to the disclosed embodiments.  
 
 **Conclusion:**  
-The present claims are not enabled, are unclear, and are not supported by the description pursuant to Norwegian Patents Act §§ 8 (2). The application is therefore objected to in its entirety and must be amended to satisfy the statutory requirements before any further consideration can be given.
+The application fails to satisfy the enablement, clarity and support requirements of Norwegian Patents Act § 8 (2).  The claims, as presently drafted, must be amended to include a complete mathematical definition of the oscillatory representation, a concrete algorithm (or pseudo‑code) for the resonance‑score calculation, precise parameter ranges, and clear structural features; alternatively, the unsupported claim features must be removed.  Until such amendments are made, the application cannot proceed to grant.
 
 
 ======================================================================
 ENABLEMENT (§ 8)
 ======================================================================
 Status: NOT_ENABLED
-Reason: The disclosure does not meet the requirement of Norwegian Patents Act § 8 (2) that the invention be described clearly and completely enough for a skilled person to carry it out.
+Reason: The disclosure does not meet the requirement of Norwegian Patents Act § 8 (2) that the invention be described clearly and completely enough for a skilled person to carry it out.
 Reproducibility: 28.0%
 
 Missing Elements:
-  • Explicit algorithmic steps for embedding fragments into the multi‑dimensional space
-  • Definition of wave‑function parameters (e.g., amplitude, frequency, phase) with numeric ranges
-  • Formula or procedure for calculating distance, similarity, and weighted combination in the resonance score
-  • Specification of measurement methods for the context dimensions
-  • Illustrative embodiments or use‑case scenarios
+  • Mathematical definition of the wave function used for each data fragment
+  • Exact formula or pseudo‑code for the resonance‑score calculation
+  • Procedures for selecting the predetermined relevance threshold or top‑N selection
+  • Examples or experimental data illustrating the method in practice
 
 ======================================================================
 CLARITY (§ 8)
 ======================================================================
 Status: UNCLEAR
-Reason: Fails §8(2) clarity requirement due to vague and functional language that prevents the claim from defining the matter for which protection is sought in clear and concise terms
-Clarity Score: 35.0%
+Reason: Fails Norwegian Patents Act § 8 (2) requirement that the claims define the matter for which protection is sought in clear and concise terms
+Clarity Score: 42.0%
 
 Vague Terms:
-  • oscillatory representation
-  • resonance score
   • predetermined relevance threshold
   • predetermined threshold value
-  • most context-relevant
-  • deterministic reconstruction
-  • contextually collapse
+  • most context‑relevant
 
 ======================================================================
 SUPPORT (§ 8)
 ======================================================================
 Status: NOT_SUPPORTED
-Reason: The claims extend beyond the technical teaching disclosed in the description, violating the requirement that claims be supported by the description under Norwegian Patents Act § 8 (2)
-Support Score: 38.0%
+Reason: Fails §8(2) because one or more claim features are not directly supported by the description and some claims extend beyond the disclosed embodiments
+Support Score: 55.0%
 
 Unsupported Elements:
-  • Claim 2 – range of dimensions stated as “between 8 and inclusive” is not disclosed
-  • Claim 3 – specific allocation of 3 spatial, 1 temporal, 1 frequency, 3 momentum, and 3 abstract dimensions lacks support
-  • Claim 5 – definition of oscillatory representation by amplitude, frequency and phase parameters is not taught
-  • Claim 8 – weighted combination of Euclidean distance, cosine similarity, frequency‑domain characteristics and learned metrics is not described
-  • Claim 11 – explicit step of fragmenting an input dataset and extracting contextual metadata for embedding is not disclosed
+  • Claim 2 (range of N)
+  • Claim 5 (frequency/phase parameters)
+  • Claim 8 (specific weighted combination of distance, cosine similarity, frequency‑domain difference, learned metric)
 
 --- Detailed Enablement Violations ---
-[CRITICAL] Confidence: MEDIUM
-          Observation: The claim defines an oscillatory representation of data fragments but provides no explicit mathematical model or parameter values.
-          Legal Mapping: Norwegian Patents Act § 8 (2) requires a clear and complete description enabling the skilled person to practice the invention.
-          Suggestion: Include concrete equations for the wave function, specify amplitude and frequency ranges, and give examples of how the representation is generated from fragment metadata.
 [CRITICAL] Confidence: HIGH
-          Observation: Computation of the resonance score is described only in functional terms (distance, similarity, weighted combination) without detailed formulas or algorithmic steps.
-          Legal Mapping: Norwegian Patents Act § 8 (2) mandates sufficient detail so that the skilled person can perform the calculation without inventive effort.
-          Suggestion: Provide the exact mathematical expression for the resonance score, define each weighting factor, and describe how the weights are chosen or learned.
+          Observation: The claim and description refer to an "oscillatory representation" and a wave function but provide no explicit mathematical formulation or parameter ranges.
+          Legal Mapping: This may contravene Norwegian Patents Act § 8 (2) which requires a disclosure that enables the skilled person to practice the invention without undue burden.
+          Suggestion: Consider adding a detailed definition of the wave function, including equations, typical amplitude and frequency ranges, and how these are derived from fragment metadata.
 [MODERATE] Confidence: MEDIUM
-          Observation: Threshold values for selecting fragments are mentioned as “predetermined” but no method for determining or setting these thresholds is disclosed.
-          Legal Mapping: Under Norwegian Patents Act § 8 (2) the description must enable the skilled person to implement the selection step across the full claim scope.
-          Suggestion: Specify how thresholds are derived (e.g., statistical analysis, training data, empirical tuning) and give example threshold values for typical embodiments.
-[MODERATE] Confidence: LOW
-          Observation: The dimensionality of the context space (N ≥ 2, up to 11) is claimed without guidance on how the invention adapts to different N values.
-          Legal Mapping: Norwegian Patents Act § 8 (2) requires that the disclosure support the entire claimed scope.
-          Suggestion: Describe how the embedding and resonance calculations scale with N, and provide at least one concrete embodiment for the preferred N = 11.
+          Observation: The method for computing the resonance score is described only in general terms (distance, similarity) without a concrete algorithm, weighting scheme, or example calculation.
+          Legal Mapping: Under Norwegian Patents Act § 8 (2) the disclosure must provide sufficient information for the skilled person to carry out the invention, which is lacking here.
+          Suggestion: Including pseudo‑code or a step‑by‑step procedure that specifies how distances, cosine similarity, and any learned metrics are combined would address the deficiency.
+[MODERATE] Confidence: MEDIUM
+          Observation: Selection criteria such as the "predetermined relevance threshold" or "top‑N" are mentioned without any guidance on how these values are set or adjusted.
+          Legal Mapping: The lack of concrete guidance may prevent the skilled person from reliably reproducing the method, contrary to Norwegian Patents Act § 8 (2).
+          Suggestion: Providing example threshold values, criteria for choosing N, or a method for determining them based on system performance would improve enablement.
 [MINOR] Confidence: LOW
-          Observation: No experimental or illustrative examples are provided to demonstrate that the method works in practice.
-          Legal Mapping: Norwegian Patents Act § 8 (2) expects the invention to be reproducible in a reliable manner.
-          Suggestion: Add a worked example (e.g., a small dataset with defined metadata) showing the full process from embedding to output.
+          Observation: The description of mapping metadata to coordinates in the multi‑dimensional space is generic and does not specify the transformation rules or required data structures.
+          Legal Mapping: Sufficient disclosure under Norwegian Patents Act § 8 (2) requires that such transformations be described in enough detail for implementation.
+          Suggestion: Adding a concrete mapping scheme (e.g., how each metadata field influences each dimension) would help the skilled person implement the embedding step.
 
 --- Detailed Clarity Violations ---
+[MODERATE] Confidence: HIGH
+          Observation: Claim 1 defines the method in functional terms (e.g., “providing an information output that is most context‑relevant”) without specifying concrete structural features of the output step.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires claims to be clear in themselves and when read in light of common general knowledge.
+          Suggestion: Consider describing the output step in terms of a specific data structure or signal that is generated, rather than using a purely result‑oriented phrase.
 [CRITICAL] Confidence: HIGH
-          Observation: The claim defines the invention primarily by the result "most context‑relevant" rather than by concrete technical steps.
-          Legal Mapping: May raise concerns under §8(2) which requires claims to be clear in themselves without reliance on result‑oriented language.
-          Suggestion: Consider recasting the claim to specify the technical features that achieve the result, e.g., defining the exact algorithmic steps and parameters used to compute the resonance score.
+          Observation: The term “oscillatory representation” is introduced without definition or reference to known technical concepts, making its scope uncertain.
+          Legal Mapping: Norwegian Patents Act § 8 (2) demands that claim language be clear and unambiguous.
+          Suggestion: Provide a definition of the oscillatory representation, for example by linking it to a known mathematical model or specifying its parameters.
+[MODERATE] Confidence: HIGH
+          Observation: “Multi‑dimensional context space” is used throughout the claims but lacks a concrete description of its construction or limits beyond a generic dimensionality.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that the claimed subject‑matter be understandable without undue burden to the skilled person.
+          Suggestion: Include in the description (and optionally in the claim) a clear definition of how the space is formed, e.g., by enumerating the axes or providing a method for determining coordinates.
 [MODERATE] Confidence: MEDIUM
-          Observation: Terms such as "oscillatory representation" and "resonance score" are not given an objective technical meaning in the claim.
-          Legal Mapping: These vague terms may breach the clarity requirement of §8(2).
-          Suggestion: Provide explicit definitions or reference standard measurement methods that enable a skilled person to understand the parameters involved.
+          Observation: Expressions such as “predetermined relevance threshold” and “predetermined threshold value” are not quantified or linked to measurable criteria.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that qualifying terms be objectively interpretable by the skilled person.
+          Suggestion: Specify how the threshold is set, for example by referencing a numerical range, a statistical measure, or a calibration procedure.
+[MINOR] Confidence: MEDIUM
+          Observation: Claim 2 and 3 introduce the variable N and list dimensions, but the phrase “in particular embodiments N is between 8 and inclusive” is ambiguous regarding the upper bound.
+          Legal Mapping: Norwegian Patents Act § 8 (2) calls for precise claim language.
+          Suggestion: Rewrite to state the exact range, e.g., “N is an integer of at least 8 and not greater than X”.
 [MODERATE] Confidence: MEDIUM
-          Observation: Expressions like "predetermined relevance threshold" and "predetermined threshold value" lack concrete numerical limits or criteria.
-          Legal Mapping: Such qualifying terms can be unclear under §8(2) unless supported by objective criteria.
-          Suggestion: Specify how the threshold is determined, e.g., by a defined percentage, statistical metric, or reference to a known standard.
-[MINOR] Confidence: HIGH
-          Observation: The phrase "N is between 8 and inclusive" is ambiguous and may be interpreted inconsistently.
-          Legal Mapping: Ambiguities in numerical ranges can affect the clarity of the claim under §8(2).
-          Suggestion: Rewrite the range as "N is an integer of at least 8" or provide a clear upper bound if intended.
-[MODERATE] Confidence: MEDIUM
-          Observation: Key structural elements such as the nature of the "multi‑dimensional context space" and how a "wave function" is instantiated are not described in the claim.
-          Legal Mapping: Lack of structural definition may impede the claim’s clarity as required by §8(2).
-          Suggestion: Include brief structural descriptors, for example, whether the space is a vector space, how dimensions are realized, and how the wave function is mathematically represented.
+          Observation: Claims 7–10 describe the computation of a resonance score using functional language (e.g., “evaluating a function of … distance … and similarity …”) without defining the mathematical form or measurement method.
+          Legal Mapping: Norwegian Patents Act § 8 (2) requires that the claim be clear enough for the skilled person to carry out the invention.
+          Suggestion: Provide at least one example of the function or reference a standard algorithm known in the field.
+[MINOR] Confidence: MEDIUM
+          Observation: Claims 11–13 introduce storage and retrieval mechanisms that rely on “context index” and “deterministic reconstruction” without detailing how these indices are generated or used.
+          Legal Mapping: Norwegian Patents Act § 8 (2) mandates that the claims be understandable without excessive reliance on the description.
+          Suggestion: Add structural features to the claim, such as a data structure or mapping table, that concretely embody the context index.
 
 --- Detailed Support Violations ---
 [MODERATE] Confidence: MEDIUM
-          Observation: The description mentions a high‑dimensional context space and gives an exemplary embodiment with N=11, but does not define a lower bound of 8 dimensions or a range “between 8 and inclusive”.
-          Legal Mapping: Norwegian Patents Act § 8 (2) requires that each claim feature have a basis in the description; the claimed range lacks such basis.
-          Suggestion: Consider limiting the claim to the disclosed embodiments (e.g., N≥2 or the specific N=11 example) or adding a description of the broader range.
+          Observation: The description provides an example of N=11 but does not disclose a lower bound of 8 or any range for N.
+          Legal Mapping: The claim may be broader than the disclosed invention, violating the support requirement of §8(2).
+          Suggestion: Consider limiting the claim to the specific embodiments disclosed (e.g., N=11) or adding a description of the broader range.
 [MODERATE] Confidence: MEDIUM
-          Observation: A detailed breakdown of the 11 dimensions into three spatial, one temporal, etc., is not found in the description; only a generic statement about meaningful aspects of context is provided.
-          Legal Mapping: Under § 8 (2) the claim must be justified by the disclosed teaching; the specific allocation is not supported.
-          Suggestion: Either remove the detailed allocation from the claim or include a corresponding embodiment in the description.
-[CRITICAL] Confidence: HIGH
-          Observation: Claims 5 and 8 introduce wave parameters (frequency, phase) and particular weighting formulas that are not described in the specification.
-          Legal Mapping: § 8 (2) prohibits claim features that are not disclosed in the description, as they constitute unsupported generalisation.
-          Suggestion: Provide explicit disclosure of these parameters and weighting methods, or delete/limit the corresponding claim features.
+          Observation: Wave parameters such as frequency and phase are mentioned only in general terms; the description lacks explicit teaching of these parameters.
+          Legal Mapping: Absence of a clear basis for these features breaches the support requirement of §8(2).
+          Suggestion: Provide a detailed embodiment that defines the frequency and phase aspects of the oscillatory representation.
 [MODERATE] Confidence: MEDIUM
-          Observation: Claim 11 requires a step of fragmenting the input dataset and extracting contextual metadata, which the description does not explicitly teach.
-          Legal Mapping: The lack of a disclosed procedural step means the claim is not supported under § 8 (2).
-          Suggestion: Add a detailed embodiment describing the fragmentation and metadata extraction, or remove this step from the claim.
+          Observation: Claim 8 lists a specific weighted combination of distance, cosine similarity, frequency‑domain differences, and learned metrics, none of which are described.
+          Legal Mapping: Introducing technical details not disclosed in the description fails the support test under §8(2).
+          Suggestion: Add supporting disclosure for the proposed weighting scheme or remove the detailed formula from the claim.
 
 ======================================================================
 CRITICAL ISSUES
 ======================================================================
-  🚨 Absence of explicit algorithmic steps and mathematical formulas for the oscillatory (wave) representation and resonance score calculation
-  🚨 Vague functional language (e.g., "oscillatory representation", "resonance score", "predetermined relevance threshold") without defined parameters or ranges
-  🚨 Claims (2, 3, 5, 8, 11) contain features that are not supported by the description or embodiments
-  🚨 Missing examples, experimental data, or illustrative embodiments to demonstrate reproducibility
+  🚨 Enablement: No defined wave function, resonance‑score formula, or parameter values; insufficient guidance to practice the invention.
+  🚨 Clarity: Use of undefined terms such as "predetermined relevance threshold" and "most context‑relevant"; overly functional language.
+  🚨 Support: Claims 2, 5 and 8 contain features (range of N, frequency/phase parameters, weighted factors) not disclosed in the specification.
 
 ======================================================================
 RECOMMENDATIONS
 ======================================================================
-  1. Provide a detailed, step‑by‑step algorithm with concrete mathematical expressions for embedding fragments, computing distances, similarities, and the weighted resonance score
-  2. Define all functional terms with specific parameters (amplitude, frequency, phase, weighting factors, threshold values) and give numeric ranges
-  3. Add experimental results or worked examples that show how the method can be carried out across the full claim scope
-  4. Amend the claims to align with the disclosed embodiments or expand the description to fully support the claimed features
+  1. Provide a complete mathematical definition of the wave representation and a step‑by‑step algorithm (or pseudo‑code) for computing the resonance score, including all required parameter ranges.
+  2. Define all functional terms precisely and replace vague language with structural features; include objective criteria for thresholds and relevance.
+  3. Amend the claims to remove or properly support the disputed features (range of N, specific frequency/phase parameters, weighted factor combination) or add the necessary disclosure to the specification.
 
 ======================================================================

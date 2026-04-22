@@ -2,10 +2,10 @@
 Streamlit Frontend — Patent Prior-Art Search Strategy Generator.
 
 Place this file at:
-    analyzer/search_strategy_analyse/search_strategy_app.py
+    analyzer/search_strategy_analyse/search_strategy_ui.py
 
 Run standalone:
-    streamlit run search_strategy_app.py
+    streamlit run search_strategy_ui.py
 
 Or call render_search_strategy_page() from the main app as a tab.
 """
@@ -61,18 +61,25 @@ def _file_status(path: Path, label: str, required: bool = False):
 # Main render function
 # ─────────────────────────────────────────────────────────────────────────────
 
-def render_search_strategy_page():
+def render_search_strategy_page(standalone: bool = True):
     """
     Render the Prior-Art Search Strategy page.
     Call from the main app or run standalone.
     """
 
-    st.title("🔍 Prior-Art Search Strategy Generator")
-    st.markdown(
-        "Generates a structured 10-section prior-art search strategy report "
-        "from extracted patent documents. "
-        "Run the **Patent Document Analyser** tab first to extract text."
-    )
+    if standalone:
+        st.title("🔍 Prior-Art Search Strategy Generator")
+        st.markdown(
+            "Generates a structured 10-section prior-art search strategy report "
+            "from extracted patent documents. "
+            "Run the **Patent Document Analyser** tab first to extract text."
+        )
+    else:
+        st.header("🔎 Search Strategy Workbench")
+        st.markdown(
+            "Fine-tune settings and (re)generate the search strategy report. "
+            "This uses the currently extracted text files."
+        )
 
     # ── Input file status ─────────────────────────────────────────────────────
     st.markdown("---")
@@ -310,4 +317,4 @@ def _render_results(result):
 
 # ── Standalone entry point ────────────────────────────────────────────────────
 if __name__ == "__main__":
-    render_search_strategy_page()
+    render_search_strategy_page(standalone=True)

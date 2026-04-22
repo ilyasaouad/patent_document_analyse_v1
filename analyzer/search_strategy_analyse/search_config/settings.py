@@ -60,7 +60,7 @@ class SearchStrategySettings:
     # ── EPO Linked Data API (for hybrid CPC enrichment) ────────────────────
     epo_api_base_url: str = "https://data.epo.org/linked-data/def/cpc"
     epo_api_timeout:  int = 15      # Seconds per API call
-    epo_api_depth:    int = 2       # Recursion depth: 0=symbol only, 1=children, 2=grandchildren
+    epo_api_depth:    int = 4       # Recursion depth: 0=symbol only, 1=main group, 2...4=subgroups
     epo_api_workers:  int = 8       # Thread pool size for parallel requests
     epo_api_retries:  int = 3       # Max retry attempts for transient errors
     epo_api_cache:    Optional[str] = field(

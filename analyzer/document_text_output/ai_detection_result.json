@@ -1,51 +1,51 @@
 {
   "is_likely_ai_generated": true,
-  "confidence_score": 0.61,
+  "confidence_score": 0.621,
   "risk_level": "MEDIUM",
   "feature_scores": {
-    "fingerprint": 0.24,
-    "anchor_similarity": 0.78,
+    "fingerprint": 0.45,
+    "anchor_similarity": 0.65,
     "hallucination": 0.78,
     "drawing": 0.7
   },
   "detailed_analysis": {
     "fingerprint_analysis": {
-      "score": 0.24,
+      "score": 0.45,
       "findings": [
-        "Sentence lengths vary with a mix of short and long constructions, indicating low burstiness",
-        "No repetitive transitional phrases such as \"Furthermore\" or \"Moreover\" are present",
-        "Technical terminology is specific (e.g., \"11-dimensional\", \"oscillatory encodings\"), showing some domain noise",
-        "Passive voice appears but not excessively; the text balances active and passive constructions",
-        "Paragraphs and bullet points differ in length and structure, avoiding overly uniform formatting"
+        "Moderate use of passive constructions (e.g., \"is presented\", \"is used\")",
+        "Paragraphs are uniformly structured with similar length and formatting across sections",
+        "Limited presence of idiosyncratic technical jargon; language leans toward generic, high‑level descriptors"
       ]
     },
     "anchor_analysis": {
-      "similarity": 0.78,
+      "similarity": 0.65,
       "findings": [
-        "Both texts use nearly identical technical terminology such as \"multi‑dimensional\", \"context‑driven\", \"oscillatory (wave‑function) embedding\", and reference an 11‑dimensional space.",
-        "The logical structure mirrors each other: an introductory field/background section followed by an overview of a multi‑dimensional context space and its dimensional breakdown.",
-        "Sentence patterns are closely aligned, often beginning with \"The present invention/ disclosure relates to...\" and describing dimensions in a tabular or enumerated format.",
-        "Phrasing choices overlap significantly, e.g., \"context‑dependent filtering\", \"efficient associative retrieval\", and \"dynamic processing of data in a unified multi‑dimensional space\" appear in both descriptions."
+        "Both texts open with a phrase of the form “The present invention/disclosure relates to a context‑driven, multi‑dimensional …” showing near‑identical introductory wording.",
+        "Shared technical terminology such as “oscillatory”, “wave‑based”, “multi‑dimensional (or n‑dimensional) context space”, “embedding”, and “fragment” appears in both descriptions.",
+        "Conceptual overlap: each describes converting data fragments/metadata into vectors in a high‑dimensional space and evaluating their alignment with a supplied context.",
+        "Differences in structure: the original uses narrative paragraphs under “Field of the Invention” and “Background”, while the AI‑generated version employs a technical summary, a tabular module list, and explicit system‑overview headings.",
+        "Sentence patterns diverge after the opening; the original lists problems in prose, whereas the AI version presents functional module descriptions in concise bullet‑style sentences."
       ]
     },
     "hallucination_analysis": {
       "score": 0.78,
       "findings": [
         "probability wave",
-        "attention mechanisms",
-        "keyword matching",
-        "latent vectors",
-        "neural networks",
-        "static embeddings",
-        "exact keys",
-        "rigid indexing schemes",
-        "lowdimensional",
-        "parallel hypotheses",
+        "associative retrieval",
+        "dynamic processing",
+        "parallel context consideration",
         "redundancy",
         "scalability",
-        "deterministic reliability",
+        "static relevance scores",
         "probabilistic models",
-        "dynamic processing"
+        "deterministic reliability",
+        "attention mechanisms",
+        "keyword matching",
+        "context integration challenges",
+        "parallel hypotheses",
+        "lowdimensional",
+        "static spaces",
+        "latent vectors"
       ]
     },
     "drawing_analysis": {
@@ -57,39 +57,35 @@
     "enablement_assessment": {
       "enablement_conclusion": "NOT ENABLED",
       "missing_elements": [
-        "Concrete mathematical definition of the oscillatory (wave) representation for data fragments",
+        "Precise mathematical definition of the oscillatory (wave) representation for data fragments",
         "Algorithmic steps for converting metadata into coordinate vectors and associated wave functions",
-        "Explicit formula or procedure for computing the resonance score between a fragment’s wave function and a context input",
-        "Specification of how the predetermined relevance threshold is set or adapted",
-        "Detailed description of system architecture, hardware or software components required to implement the method",
-        "Illustrative examples or experimental data demonstrating successful context‑driven retrieval"
+        "Explicit formula or method for computing the resonance score between a fragment’s wave function and a context input",
+        "Specification of how to select thresholds or determine the “highest” resonance score in practice",
+        "Details of system architecture, hardware requirements, and software components needed to implement the multi‑dimensional context space",
+        "Training or calibration procedures for tuning the wave functions and resonance calculations",
+        "Concrete examples or experimental data demonstrating successful operation of the method"
       ],
       "technical_deficiencies": [
-        "Vague terminology (e.g., “oscillatory representation”, “resonance score”) without quantitative definitions",
-        "Absence of parameter values or ranges (e.g., frequency ranges, amplitude functions, dimensional scaling factors)",
-        "No guidance on handling dimensionality reduction, normalization, or computational complexity in an 11‑dimensional space",
-        "Lack of implementation details for embedding process, such as data structures, encoding schemes, or learning/training procedures",
-        "No description of how to map abstract semantic dimensions to measurable features",
-        "Missing error handling, robustness considerations, and performance benchmarks"
+        "The disclosure provides only high‑level conceptual descriptions without concrete mathematical models or algorithms, leaving a skilled practitioner without a clear implementation path.",
+        "Key parameters (e.g., amplitude functions, frequency components, dimensional scaling, normalization) are not defined, making reproducibility impossible.",
+        "No guidance is given on how to handle data fragment diversity, dimensionality reduction, or computational complexity of resonance calculations in an 11‑dimensional space.",
+        "Absence of implementation examples, flowcharts, or pseudo‑code prevents verification that the method can be practically realized."
       ]
     },
     "model_used": "gpt-oss:120b-cloud"
   },
   "recommendations": [
-    "🚨 CRITICAL: High anchor similarity (>75%) - strong AI signal",
-    "   AI generated very similar text when given same claims",
-    "   Action: Manual review required before filing",
     "⚠️ MEDIUM RISK: Moderate AI indicators detected",
     "   Action: Spot-check sections with repetitive patterns",
     "\n⚖️ ENABLEMENT ISSUE:",
     "   CRITICAL: Patent disclosure lacks enablement",
     "   Action: Request additional technical details",
-    "• Sentence lengths vary with a mix of short and long constructions, indicating low burstiness",
-    "• No repetitive transitional phrases such as \"Furthermore\" or \"Moreover\" are present"
+    "• Moderate use of passive constructions (e.g., \"is presented\", \"is used\")",
+    "• Paragraphs are uniformly structured with similar length and formatting across sections"
   ],
   "applied_rules": [],
   "metadata": {
-    "timestamp": "2026-04-19T21:59:22.981929",
+    "timestamp": "2026-04-22T16:48:06.818934",
     "config": {
       "threshold": 0.6,
       "weights": {

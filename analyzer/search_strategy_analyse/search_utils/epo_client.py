@@ -61,8 +61,9 @@ class CPCNode:
     title: str
     level: int = 0
     children: list["CPCNode"] = field(default_factory=list)
+    score: float = 0.0  # Relevance score (0.0 to 1.0+)
 
-    def to_tree_string(self, _indent: int = 0, _last: bool = True) -> str:
+    def to_tree_string(self, _indent: int = 0, _last: bool = True, show_score: bool = False) -> str:
         """Render this node and its children as an indented tree string."""
         if _indent == 0:
             prefix = ""
@@ -71,12 +72,13 @@ class CPCNode:
             prefix = "│   " * (_indent - 1)
             connector = "└── " if _last else "├── "
 
-        line = f"{prefix}{connector}{self.symbol}  —  {self.title}"
+        score_tag = f" [{self.score:.2f}]" if show_score else ""
+        line = f"{prefix}{connector}{self.symbol}{score_tag}  —  {self.title}"
         lines = [line]
 
         for i, child in enumerate(self.children):
             is_last = (i == len(self.children) - 1)
-            lines.append(child.to_tree_string(_indent + 1, _last=is_last))
+            lines.append(child.to_tree_string(_indent + 1, _last=is_last, show_score=show_score))
 
         return "\n".join(lines)
 
@@ -172,19 +174,8 @@ class EPOClassificationClient:
 
     def build_enriched_hints(self, class_symbols: list[str]) -> str:
         """
-        Fetch hierarchies for the given classes and format them as a
+        Fetch hierarchies, rank them if possible, and format them as a
         text block suitable for injection into the LLM system prompt.
-
-        Parameters
-        ----------
-        class_symbols : list[str]
-            CPC class symbols identified by Phase 1, e.g. ["G06", "H03"].
-
-        Returns
-        -------
-        str
-            Formatted text block with full CPC trees, or a fallback
-            message if no data could be fetched.
         """
         nodes = self.fetch_multiple(class_symbols)
 
@@ -199,25 +190,122 @@ class EPOClassificationClient:
             "LIVE CPC CLASSIFICATION HIERARCHY (from EPO Linked Open Data)",
             "=" * 65,
             "",
-            "The following CPC hierarchy trees were fetched live from the EPO",
-            "API for the classes identified as most relevant to this patent.",
-            "Select the most specific subgroup(s) from these trees for Section 8.",
+            "The following CPC hierarchy trees were fetched live for the",
+            "classes most relevant to this patent.",
             "",
         ]
 
         for node in nodes:
             parts.append("─" * 65)
-            parts.append(node.to_tree_string())
+            # Show score if it's been calculated
+            parts.append(node.to_tree_string(show_score=(node.score > 0)))
             parts.append("")
 
         parts.append("─" * 65)
-        parts.append(
-            "NOTE: These are the verified, up-to-date CPC codes. Prefer these\n"
-            "over your training data. Select codes at the most specific level\n"
-            "that matches the patent's technical features."
-        )
-
         return "\n".join(parts)
+
+    def score_and_rank(
+        self,
+        nodes: list[CPCNode],
+        phase1_data: dict,
+        ollama_client,
+        embed_model: str = "nomic-embed-text"
+    ) -> list[CPCNode]:
+        """
+        FULL SCORE ENGINE (STEP 2, 4 & 5)
+        """
+        raw_terms = phase1_data.get("terms", [])
+        sections = phase1_data.get("cpc_sections", [])
+        
+        if not nodes or not raw_terms:
+            return []
+
+        # ── STEP 2: Rank terms & select Top-K ─────────────────────────
+        # Criteria: importance (LLM) + specificity (word count)
+        scored_terms = []
+        for t in raw_terms:
+            term_str = t.get("term", "")
+            if not term_str: continue
+            importance = float(t.get("importance", 3))
+            # specificity bonus: longer phrases are usually better than single words
+            specificity = len(term_str.split()) * 0.5
+            scored_terms.append({
+                "term": term_str,
+                "score": importance + specificity
+            })
+        
+        scored_terms.sort(key=lambda x: x["score"], reverse=True)
+        top_k = scored_terms[:8] # Select top 8 terms for scoring
+        
+        # 1. Pre-calculate embeddings for top-k terms
+        term_vecs = []
+        for t in top_k:
+            try:
+                vec = ollama_client.embeddings(t["term"], model=embed_model)
+                term_vecs.append({"term": t["term"], "vector": vec})
+            except Exception as e:
+                logger.warning(f"Embedding failed: {e}")
+
+        # ── STEP 4: Tree Node Scoring ─────────────────────────────────
+        # Formula: 0.5 * Similarity + 0.3 * Overlap + 0.2 * SectionBonus
+        def score_recursive(node: CPCNode):
+            if not node.title:
+                node.score = 0.0
+            else:
+                # A. Embedding Similarity (0.5)
+                sim_score = 0.0
+                if term_vecs:
+                    try:
+                        node_vec = ollama_client.embeddings(node.title, model=embed_model)
+                        # We use the average similarity to the cluster of top terms
+                        similarities = [cosine_similarity(node_vec, tv["vector"]) for tv in term_vecs]
+                        sim_score = max(similarities) if similarities else 0.0
+                    except Exception: sim_score = 0.0
+
+                # B. Term Overlap (0.3)
+                overlap_count = 0
+                node_lower = node.title.lower()
+                for tv in term_vecs:
+                    if tv["term"].lower() in node_lower:
+                        overlap_count += 1
+                overlap_score = min(1.0, overlap_count / 3.0) # Cap at 1.0 (3+ terms)
+
+                # C. Section Bonus (0.2)
+                section_bonus = 1.0 if node.symbol and node.symbol[0] in sections else 0.0
+
+                # COMPOSITE SCORE
+                node.score = (0.5 * sim_score) + (0.3 * overlap_score) + (0.2 * section_bonus)
+
+            for child in node.children:
+                score_recursive(child)
+
+        for root in nodes:
+            score_recursive(root)
+
+        # ── STEP 5: Final Selection ───────────────────────────────────
+        all_nodes = []
+        def flatten(node):
+            all_nodes.append(node)
+            for c in node.children: flatten(c)
+        for root in nodes: flatten(root)
+
+        all_nodes.sort(key=lambda n: n.score, reverse=True)
+
+        final_selection = []
+        seen_parents = set()
+        for n in all_nodes:
+            if len(final_selection) >= 5: break
+            if n.score < 0.25: continue
+            
+            # Diversity: skip if same branch prefix
+            prefix = n.symbol.split("/")[0] if "/" in n.symbol else n.symbol[:6]
+            if prefix in seen_parents and len(final_selection) > 1:
+                continue
+            
+            final_selection.append(n)
+            seen_parents.add(prefix)
+
+        return final_selection
 
     # ── Internal methods ──────────────────────────────────────────────────────
 
@@ -357,6 +445,18 @@ class EPOClassificationClient:
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+
+def cosine_similarity(v1: list[float], v2: list[float]) -> float:
+    """Manual cosine similarity calculation."""
+    if not v1 or not v2 or len(v1) != len(v2):
+        return 0.0
+    dot_product = sum(a * b for a, b in zip(v1, v2))
+    magnitude1 = sum(a * a for a in v1) ** 0.5
+    magnitude2 = sum(b * b for b in v2) ** 0.5
+    if magnitude1 == 0 or magnitude2 == 0:
+        return 0.0
+    return dot_product / (magnitude1 * magnitude2)
+
 
 def _extract_title(raw: str | list[str] | None) -> str:
     """

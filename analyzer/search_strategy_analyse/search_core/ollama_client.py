@@ -145,3 +145,37 @@ class OllamaClient:
             raise RuntimeError(
                 f"Unexpected Ollama response structure: {str(body)[:300]}"
             )
+
+    def embeddings(self, text: str, model: str = "nomic-embed-text") -> list[float]:
+        """
+        Generate a vector embedding for the given text.
+
+        Parameters
+        ----------
+        text : str
+            The input string to embed.
+        model : str
+            The embedding model to use (default: nomic-embed-text).
+
+        Returns
+        -------
+        list of float
+            The embedding vector.
+        """
+        endpoint = f"{self.base_url}/api/embeddings"
+        payload = {"model": model, "prompt": text}
+        data = json.dumps(payload).encode("utf-8")
+
+        request = urllib.request.Request(
+            endpoint,
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+
+        try:
+            with urllib.request.urlopen(request, timeout=20) as response:
+                body = json.loads(response.read().decode("utf-8"))
+                return body["embedding"]
+        except Exception as e:
+            raise RuntimeError(f"Embedding call failed: {e}")

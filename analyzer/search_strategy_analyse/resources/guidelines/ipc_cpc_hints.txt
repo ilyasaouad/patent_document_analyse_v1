@@ -203,6 +203,11 @@ G12    Instrument details
 ── ICT for Specific Applications ──
 G16    Information and communication technology (ICT) for specific application fields
 
+── Business / Administration (NON-TECHNICAL) ──
+G06Q   Data processing systems/methods adapted for administrative, commercial, or financial purposes.
+       WARNING: Only use for BUSINESS logic. If the invention is about memory, databases, 
+       or low-level technical processing, use G06F instead.
+
 ── Nucleonics ──
 G21    Nuclear physics; nuclear engineering
 

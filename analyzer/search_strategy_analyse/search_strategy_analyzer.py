@@ -132,8 +132,9 @@ class SearchStrategyAnalyzer:
                 + "\n"
                 + "For the classification section you MUST output TWO separate tables:\n"
                 + "1. ## SECTION 8A — CLASSIFICATION CODES (USING LIVE EPO API)\n"
-                + "   Use ONLY the exact CPC subgroups provided in the LIVE CPC CLASSIFICATION HIERARCHY\n"
-                + "   block in the system prompt. Do not invent codes.\n"
+                + "   Use ONLY the exact CPC symbols found in the system prompt.\n"
+                + "   CRITICAL: Start your table with the relevant Main Classes (Subclasses like G06F)\n"
+                + "   before listing the more specific subgroups. Ensure technical terms mapping is provided.\n"
                 + "2. ## SECTION 8B — CLASSIFICATION CODES (LLM INTERNAL BASELINE)\n"
                 + "   Use your own internal knowledge to suggest CPC codes\n"
                 + "   INDEPENDENTLY of the API data above.\n"
@@ -221,7 +222,18 @@ class SearchStrategyAnalyzer:
             logger.warning("Phase 1 returned empty response. Falling back to static hints.")
             return build_system_prompt(self.settings)
 
-        # ── Parse class codes from Phase 1 response ───────────────────────────
+        # ── Parse structural analysis and class codes from Phase 1 response ───
+        import json
+        import re
+        phase1_data = {}
+        try:
+            # Clean potential markdown block markers
+            text = re.sub(r"```(?:json)?\s*|\s*```", "", phase1_response).strip()
+            phase1_data = json.loads(text)
+            logger.info("Phase 1 structural analysis successfully parsed.")
+        except (json.JSONDecodeError, TypeError):
+            logger.warning("Phase 1 JSON parsing failed. Falling back to regex extraction.")
+
         class_codes = parse_phase1_classes(phase1_response)
         logger.info(f"Phase 1 identified classes: {class_codes}")
 
@@ -229,7 +241,7 @@ class SearchStrategyAnalyzer:
             logger.warning("Phase 1 returned no valid class codes. Falling back to static hints.")
             return build_system_prompt(self.settings)
 
-        # ── EPO API: Fetch live CPC hierarchy ─────────────────────────────────
+        # ── EPO API: Fetch live CPC hierarchy (STEP 3) ─────────────────────────
         logger.info(f"Fetching CPC hierarchy from EPO API for: {class_codes}")
         epo_client = EPOClassificationClient(
             base_url=self.settings.epo_api_base_url,
@@ -239,9 +251,29 @@ class SearchStrategyAnalyzer:
             retries=self.settings.epo_api_retries,
             cache_path=self.settings.epo_api_cache,
         )
-
-        enriched_text = epo_client.build_enriched_hints(class_codes)
-
+        
+        # We fetch the tree nodes directly to perform scoring
+        nodes = epo_client.fetch_multiple(class_codes)
+        
+        # ── Deterministic Scoring & Ranking (STEP 4 & 5) ──────────────────────
+        logger.info("Ranking CPC nodes using algorithmic scoring engine...")
+        top_ranked_nodes = epo_client.score_and_rank(
+            nodes=nodes,
+            phase1_data=phase1_data,
+            ollama_client=self.client,
+            embed_model="nomic-embed-text" # Should be pulled in Ollama
+        )
+        
+        # Store for display or injection
+        phase1_data["final_ranked_codes"] = top_ranked_nodes
+        
         # ── Build enriched Phase 2 prompt ─────────────────────────────────────
-        logger.info("Building enriched system prompt with live CPC data.")
-        return build_enriched_system_prompt(self.settings, enriched_text)
+        logger.info("Building enriched system prompt with ranked CPC data.")
+        # We pass the full nodes (for the tree display) and the ranked results
+        enriched_text = epo_client.build_enriched_hints(class_codes)
+        
+        return build_enriched_system_prompt(
+            self.settings, 
+            enriched_text, 
+            phase1_data=phase1_data
+        )

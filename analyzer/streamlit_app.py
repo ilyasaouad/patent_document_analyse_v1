@@ -43,6 +43,7 @@ from claims_legal_analyzer import PatentLegalAnalyzer
 sys.path.insert(0, str(analyzer_dir / "search_strategy_analyse"))
 from search_strategy_analyzer import SearchStrategyAnalyzer
 
+
 st.set_page_config(
     page_title="Patent Document Extractor", page_icon="📄", layout="wide"
 )
@@ -437,6 +438,7 @@ if st.button("🚀 Extract Text", type="primary", use_container_width=True):
                                 st.json(search_result.to_dict())
                     else:
                         st.warning("No result produced by Search Strategy Analyzer.")
+
 
                 with tab8:
                     st.subheader("📊 LLM Token Usage & Cost Estimation")

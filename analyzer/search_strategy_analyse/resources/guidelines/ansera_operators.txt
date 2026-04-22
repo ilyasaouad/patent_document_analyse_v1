@@ -4,6 +4,7 @@ ANSERA (PQL) – Proximity & Operator Rules
 CRITICAL: TRUNCATION vs. MULTI-WORD CONCEPTS
 ==========================================================================
 Do not use "*" in truncation, use "+" for more than 1 trailing characters or "?" for only 1 trailing character.
+AGAIN DO NOT USE "*" IN TRUNCATION.
 
 The "+" operator is ONLY a character-level wildcard on a SINGLE word.
 It means "0 or more trailing characters". It does NOT join words together.
